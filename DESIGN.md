@@ -25,7 +25,8 @@ The application should make short practice sessions pleasant, preserve multi-day
 - A persisted daily practice session with a ten-word check-in, fifteen explicit new-word presentations, and due-review rounds.
 - Per-word, per-direction latest first-presentation evidence with an initial 1/3/7/14/30/60-day schedule.
 - Tier coverage reporting for distinct tested words and their latest first-presentation result.
-- A concise one-page result review for onboarding, each daily-session stage, and extra quizzes.
+- A concise, single-column result review for onboarding, each daily-session stage, and extra quizzes, including each word's scheduled review gap as a demonstrated-mastery signal.
+- A deduplicated whole-day vocabulary review available from the section-results screen.
 - End-of-practice choices for another quiz or another full simulated-day session.
 - A testing-only “Start another full session” control that advances the effective practice date and exercises due reviews, streaks, and daily baselines without waiting overnight.
 - Versioned IndexedDB history for practice sessions, quiz rounds, and every submitted answer, including reprise attempts and exact question snapshots.

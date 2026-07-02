@@ -10,7 +10,22 @@ const TIER_LABELS = Object.freeze({
   expanding: "Expanding assessment",
 });
 
-function questionItem(attempt, relatedAttempts) {
+const REVIEW_GAPS = Object.freeze([1, 3, 7, 14, 30, 60]);
+
+export function reviewGapDays(word) {
+  const intervalDays = word?.schedule?.intervalDays;
+  if (Number.isInteger(intervalDays) && intervalDays >= 0) return intervalDays;
+  const intervalIndex = word?.schedule?.intervalIndex;
+  return Number.isInteger(intervalIndex) ? REVIEW_GAPS[intervalIndex] ?? null : null;
+}
+
+export function reviewGapLabel(days) {
+  if (!Number.isInteger(days)) return "Review gap not set";
+  if (days === 0) return "Review due now";
+  return `Review gap: ${days} ${days === 1 ? "day" : "days"}`;
+}
+
+function questionItem(attempt, relatedAttempts, learningWords) {
   return Object.freeze({
     vocabularyId: attempt.vocabularyId,
     prompt: attempt.promptText,
@@ -19,13 +34,14 @@ function questionItem(attempt, relatedAttempts) {
     correct: attempt.correct,
     direction: attempt.direction,
     recoveryAttempts: Math.max(0, relatedAttempts.length - 1),
+    reviewGapDays: reviewGapDays(learningWords[attempt.vocabularyId]),
   });
 }
 
-function questionSection(id, title, attempts) {
+function questionSection(id, title, attempts, learningWords) {
   const items = attempts.filter((attempt) => attempt.phase === "main").map((attempt) => {
     const related = attempts.filter((candidate) => candidate.vocabularyId === attempt.vocabularyId);
-    return questionItem(attempt, related);
+    return questionItem(attempt, related, learningWords);
   });
   return Object.freeze({
     id,
@@ -37,7 +53,14 @@ function questionSection(id, title, attempts) {
   });
 }
 
-export function buildHistoryReview({ rounds, attempts, practiceSessionId = null, roundId = null, newWords = [] }) {
+export function buildHistoryReview({
+  rounds,
+  attempts,
+  practiceSessionId = null,
+  roundId = null,
+  newWords = [],
+  learningWords = {},
+}) {
   const selectedRounds = rounds.filter((round) => (
     roundId ? round.id === roundId : round.practiceSessionId === practiceSessionId
   ));
@@ -56,6 +79,7 @@ export function buildHistoryReview({ rounds, attempts, practiceSessionId = null,
             vocabularyId: entry.id,
             spanish: entry.spanish,
             english: entry.english,
+            reviewGapDays: reviewGapDays(learningWords[entry.id]),
           }))),
         }));
       }
@@ -68,13 +92,35 @@ export function buildHistoryReview({ rounds, attempts, practiceSessionId = null,
     const stageAttempts = selectedAttempts
       .filter((attempt) => stageRoundIds.has(attempt.quizRoundId))
       .sort((left, right) => left.answeredAt.localeCompare(right.answeredAt));
-    sections.push(questionSection(stage, STAGE_LABELS[stage], stageAttempts));
+    sections.push(questionSection(stage, STAGE_LABELS[stage], stageAttempts, learningWords));
   }
 
   return Object.freeze(sections);
 }
 
-export function buildAssessmentReview(assessmentResult, vocabulary) {
+export function buildAllWordsReview({ vocabularyIds, vocabulary, learningWords = {} }) {
+  const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
+  const items = [...new Set(vocabularyIds)]
+    .map((vocabularyId) => entries.get(vocabularyId))
+    .filter(Boolean)
+    .map((entry) => Object.freeze({
+      vocabularyId: entry.id,
+      spanish: entry.spanish,
+      english: entry.english,
+      reviewGapDays: reviewGapDays(learningWords[entry.id]),
+    }))
+    .sort((left, right) => left.spanish.localeCompare(right.spanish, "es"));
+
+  if (items.length === 0) return Object.freeze([]);
+  return Object.freeze([Object.freeze({
+    id: "all-words",
+    title: "All words seen",
+    kind: "vocabulary",
+    items: Object.freeze(items),
+  })]);
+}
+
+export function buildAssessmentReview(assessmentResult, vocabulary, learningWords = {}) {
   const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
   return Object.freeze(["foundation", "everyday", "expanding"].map((tier) => {
     const items = assessmentResult.attempts.filter((attempt) => attempt.tier === tier).map((attempt) => {
@@ -88,6 +134,7 @@ export function buildAssessmentReview(assessmentResult, vocabulary) {
         correct: attempt.correct,
         direction: attempt.direction,
         recoveryAttempts: 0,
+        reviewGapDays: reviewGapDays(learningWords[attempt.vocabularyId]),
       });
     });
     return Object.freeze({

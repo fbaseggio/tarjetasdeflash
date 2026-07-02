@@ -31,6 +31,7 @@ assert.deepEqual(coverage.expanding, { tested: 0, latestCorrect: 0, latestWrong:
 learning.recordPresentations("franco", dataset, [vocabulary[2]]);
 let snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-02");
+assert.equal(snapshot.words.recurso.schedule.intervalDays, 0);
 assert.equal(learning.getCoverage("franco", dataset).expanding.tested, 0);
 
 learning.recordFirstAttempts("franco", dataset, [{
@@ -41,6 +42,7 @@ learning.recordFirstAttempts("franco", dataset, [{
 }]);
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-03");
+assert.equal(snapshot.words.recurso.schedule.intervalDays, 1);
 assert.equal(snapshot.words.recurso.directions["spanish-to-english"].testCount, 1);
 
 currentDate = new Date(2026, 6, 3, 9);
@@ -52,6 +54,7 @@ learning.recordFirstAttempts("franco", dataset, [{
 }]);
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-06");
+assert.equal(snapshot.words.recurso.schedule.intervalDays, 3);
 assert.equal(snapshot.words.recurso.directions["spanish-to-english"].testCount, 2);
 
 learning.recordFirstAttempts("franco", dataset, [{

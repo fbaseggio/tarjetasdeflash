@@ -569,8 +569,8 @@ h1 {
 
 .review-items {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -584,6 +584,19 @@ h1 {
   padding: 7px 0;
   border-top: 1px solid #ebe6da;
   font-size: 0.84rem;
+}
+
+.review-item > div {
+  min-width: 0;
+}
+
+.review-item strong,
+.review-item .review-answer {
+  display: block;
+}
+
+.review-item .review-answer {
+  margin-top: 2px;
 }
 
 .review-mark {
@@ -601,16 +614,6 @@ h1 {
 .review-answer {
   color: var(--muted);
   font-size: 0.76rem;
-}
-
-.review-pair strong,
-.review-pair span {
-  display: block;
-}
-
-.review-pair span {
-  margin-top: 2px;
-  color: var(--muted);
 }
 
 .results-intro {

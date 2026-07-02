@@ -133,7 +133,12 @@ export function createLearningStorage(storage, now = () => new Date()) {
       const word = learning.words[entry.id] ?? emptyWord(entry, timestamp);
       word.presentations += 1;
       word.encounteredAt ??= timestamp;
-      word.schedule ??= { intervalIndex: -1, dueDate: effectiveDate, lastReviewedAt: null };
+      word.schedule ??= {
+        intervalIndex: -1,
+        intervalDays: 0,
+        dueDate: effectiveDate,
+        lastReviewedAt: null,
+      };
       learning.words[entry.id] = word;
     });
 
@@ -168,6 +173,7 @@ export function createLearningStorage(storage, now = () => new Date()) {
         : 0;
       word.schedule = {
         intervalIndex,
+        intervalDays: REVIEW_INTERVALS[intervalIndex],
         dueDate: addDays(effectiveDate, REVIEW_INTERVALS[intervalIndex]),
         lastReviewedAt: timestamp,
       };

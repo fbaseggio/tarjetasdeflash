@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import {
   answerFeedback,
+  buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
+  reviewGapDays,
+  reviewGapLabel,
 } from "../src/review-results.js";
 
 const rounds = [
@@ -38,6 +41,10 @@ const sessionSections = buildHistoryReview({
   attempts,
   practiceSessionId: "franco:2026-07-03",
   newWords: [{ id: "viaje", spanish: "viaje", english: "trip" }],
+  learningWords: {
+    agua: { schedule: { intervalIndex: 0, dueDate: "2026-07-04" } },
+    viaje: { schedule: { intervalIndex: 2, dueDate: "2026-07-10" } },
+  },
 });
 assert.deepEqual(sessionSections.map((section) => section.id), [
   "check-in", "new-words", "due-review",
@@ -45,7 +52,9 @@ assert.deepEqual(sessionSections.map((section) => section.id), [
 assert.equal(sessionSections[0].wrongCount, 1);
 assert.equal(sessionSections[0].items[0].recoveryAttempts, 1);
 assert.equal(sessionSections[1].items[0].spanish, "viaje");
+assert.equal(sessionSections[1].items[0].reviewGapDays, 7);
 assert.equal(sessionSections[2].correctCount, 1);
+assert.equal(sessionSections[0].items[0].reviewGapDays, 1);
 
 const extraSections = buildHistoryReview({ rounds, attempts, roundId: "extra" });
 assert.equal(extraSections.length, 1);
@@ -61,7 +70,29 @@ assert.equal(assessment.length, 1);
 assert.equal(assessment[0].items[0].prompt, "agua");
 assert.equal(assessment[0].wrongCount, 1);
 
+const allWords = buildAllWordsReview({
+  vocabularyIds: ["viaje", "agua", "viaje"],
+  vocabulary: [
+    { id: "agua", spanish: "agua", english: "water" },
+    { id: "viaje", spanish: "viaje", english: "trip" },
+  ],
+  learningWords: {
+    agua: { schedule: { intervalDays: 3 } },
+    viaje: { schedule: { intervalIndex: 2 } },
+  },
+});
+assert.equal(allWords.length, 1);
+assert.deepEqual(allWords[0].items.map((item) => item.vocabularyId), ["agua", "viaje"]);
+assert.deepEqual(allWords[0].items.map((item) => item.reviewGapDays), [3, 7]);
+
+assert.equal(reviewGapDays({ schedule: { intervalDays: 14, intervalIndex: 0 } }), 14);
+assert.equal(reviewGapDays({ schedule: { intervalIndex: 5 } }), 60);
+assert.equal(reviewGapDays({ schedule: null }), null);
+assert.equal(reviewGapLabel(1), "Review gap: 1 day");
+assert.equal(reviewGapLabel(7), "Review gap: 7 days");
+assert.equal(reviewGapLabel(null), "Review gap not set");
+
 assert.equal(answerFeedback(true), "Correct.");
 assert.equal(answerFeedback(false), "Incorrect.");
 
-console.log("Assessment, session, extra-quiz review sections, and feedback messages passed.");
+console.log("Assessment, section, all-words, review-gap, and feedback checks passed.");

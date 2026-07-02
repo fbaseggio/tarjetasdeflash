@@ -20,8 +20,10 @@ import { createQuizSession } from "./quiz-session.js";
 import { initializeRecognition } from "./recognition.js";
 import {
   answerFeedback,
+  buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
+  reviewGapLabel,
 } from "./review-results.js";
 
 const panels = {
@@ -73,6 +75,7 @@ const reviewResultsButton = document.querySelector("#review-results-button");
 const reviewTitleElement = document.querySelector("#review-title");
 const reviewSummaryElement = document.querySelector("#review-summary");
 const reviewSectionsElement = document.querySelector("#review-sections");
+const reviewAllWordsButton = document.querySelector("#review-all-words-button");
 const backFromReviewButton = document.querySelector("#back-from-review-button");
 const exportButton = document.querySelector("#export-diagnostics");
 const exportStatusElement = document.querySelector("#export-status");
@@ -106,6 +109,9 @@ const pendingHistoryWrites = new Set();
 let latestAssessmentResult = null;
 let reviewContext = null;
 let reviewReturn = null;
+let sectionReviewState = [];
+let allWordsReviewState = [];
+let showingAllWords = false;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -552,15 +558,15 @@ function reviewItemElement(item, kind) {
   const mark = document.createElement("span");
   const content = document.createElement("div");
 
-  if (kind === "presentations") {
+  if (kind === "presentations" || kind === "vocabulary") {
     mark.className = "review-mark";
     mark.textContent = "•";
-    const spanish = document.createElement("strong");
-    const english = document.createElement("span");
-    spanish.textContent = item.spanish;
-    spanish.lang = "es";
-    english.textContent = item.english;
-    content.append(spanish, english);
+    const pair = document.createElement("strong");
+    const detail = document.createElement("span");
+    pair.textContent = `${item.spanish} — ${item.english}`;
+    detail.className = "review-answer";
+    detail.textContent = reviewGapLabel(item.reviewGapDays);
+    content.append(pair, detail);
   } else {
     mark.className = `review-mark ${item.correct ? "correct" : "incorrect"}`;
     mark.textContent = item.correct ? "✓" : "✕";
@@ -573,7 +579,7 @@ function reviewItemElement(item, kind) {
     const recoveryText = item.recoveryAttempts > 0
       ? ` · ${item.recoveryAttempts} follow-up ${item.recoveryAttempts === 1 ? "try" : "tries"}`
       : "";
-    detail.textContent = `${resultText}${recoveryText}`;
+    detail.textContent = `${resultText}${recoveryText} · ${reviewGapLabel(item.reviewGapDays)}`;
     content.append(answer, detail);
   }
 
@@ -581,15 +587,15 @@ function reviewItemElement(item, kind) {
   return listItem;
 }
 
-function renderReviewSections(title, sections) {
+function renderReviewSections(title, sections, summary = null) {
   reviewTitleElement.textContent = title;
   reviewSectionsElement.replaceChildren();
   const questionSections = sections.filter((section) => section.kind === "questions");
   const correct = questionSections.reduce((sum, section) => sum + section.correctCount, 0);
   const wrong = questionSections.reduce((sum, section) => sum + section.wrongCount, 0);
-  reviewSummaryElement.textContent = questionSections.length > 0
-    ? `${correct} right and ${wrong} wrong on first presentation, organized by section.`
-    : "Presented vocabulary, organized by section.";
+  reviewSummaryElement.textContent = summary ?? (questionSections.length > 0
+    ? `${correct} right and ${wrong} wrong on first presentation. Longer review gaps show stronger demonstrated mastery.`
+    : "Presented vocabulary. Longer review gaps show stronger demonstrated mastery.");
 
   if (sections.length === 0) {
     const empty = document.createElement("p");
@@ -634,10 +640,13 @@ async function showReviewResults() {
   reviewTitleElement.textContent = "Loading review…";
   reviewSummaryElement.textContent = "";
   reviewSectionsElement.replaceChildren();
+  reviewAllWordsButton.hidden = true;
+  showingAllWords = false;
 
   let sections;
+  const learning = learningStorage.getSnapshot(activeProfileId, datasetMetadata);
   if (reviewContext.type === "assessment") {
-    sections = buildAssessmentReview(reviewContext.result, vocabulary);
+    sections = buildAssessmentReview(reviewContext.result, vocabulary, learning.words);
   } else {
     await Promise.allSettled([...pendingHistoryWrites]);
     const history = await historyStorage.getProfileHistory(activeProfileId);
@@ -647,10 +656,46 @@ async function showReviewResults() {
       practiceSessionId: reviewContext.practiceSessionId,
       roundId: reviewContext.roundId,
       newWords: reviewContext.newWords ?? [],
+      learningWords: learning.words,
     });
   }
-  renderReviewSections(reviewContext.title, sections);
+  sectionReviewState = sections;
+  allWordsReviewState = buildAllWordsReview({
+    vocabularyIds: reviewContext.allWordIds ?? [],
+    vocabulary,
+    learningWords: learning.words,
+  });
+  reviewAllWordsButton.hidden = allWordsReviewState.length === 0;
+  reviewAllWordsButton.textContent = "Review all words seen this day";
+  renderReviewSections(reviewContext.title, sectionReviewState);
   backFromReviewButton.focus();
+}
+
+function toggleAllWordsReview() {
+  if (allWordsReviewState.length === 0) return;
+  showingAllWords = !showingAllWords;
+  if (showingAllWords) {
+    const count = allWordsReviewState[0].items.length;
+    const dateLabel = reviewContext.date ? ` · ${displayDate(reviewContext.date)}` : "";
+    renderReviewSections(
+      `All words seen${dateLabel}`,
+      allWordsReviewState,
+      `${count} distinct ${count === 1 ? "word" : "words"}. Longer review gaps show stronger demonstrated mastery.`,
+    );
+    reviewAllWordsButton.textContent = "Back to section results";
+  } else {
+    renderReviewSections(reviewContext.title, sectionReviewState);
+    reviewAllWordsButton.textContent = "Review all words seen this day";
+  }
+}
+
+function sessionWordIds(session) {
+  if (!session) return [];
+  return [...new Set([
+    ...(session.checkInIds ?? []),
+    ...(session.newWordIds ?? []),
+    ...(session.reviewIds ?? []),
+  ])];
 }
 
 function showResultsBase(correctCount, wrongCount, summary) {
@@ -684,6 +729,8 @@ function showSessionResults() {
     title: `Session review · ${displayDate(dailySession.date)}`,
     practiceSessionId: `${activeProfileId}:${dailySession.date}`,
     newWords: entryList(dailySession.newWordIds),
+    date: dailySession.date,
+    allWordIds: sessionWordIds(dailySession),
   };
   reviewReturn = showSessionResults;
   showResultsBase(
@@ -706,6 +753,11 @@ function showQuizResults(state, activity) {
     type: "extra",
     title: "Extra quiz review",
     roundId: currentRoundRecord.id,
+    date: dailySession?.date ?? localDateKey(new Date()),
+    allWordIds: [...new Set([
+      ...sessionWordIds(dailySession),
+      ...roundEntries.map((entry) => entry.id),
+    ])],
   };
   reviewReturn = () => showQuizResults(state, activity);
   showResultsBase(state.correctCount, state.wrongCount, activity);
@@ -880,6 +932,7 @@ reviewAssessmentButton.addEventListener("click", () => {
   showReviewResults();
 });
 reviewResultsButton.addEventListener("click", showReviewResults);
+reviewAllWordsButton.addEventListener("click", toggleAllWordsReview);
 backFromReviewButton.addEventListener("click", () => reviewReturn?.());
 
 initializeRecognition({
