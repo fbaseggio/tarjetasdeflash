@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A tiny Spanish vocabulary quiz.">
+    <title>Tarjetas de Flash</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="Tarjetas de Flash home">
+          <span class="brand-mark" aria-hidden="true">¡!</span>
+          <span>Tarjetas de Flash</span>
+        </a>
+        <span class="prototype-badge">First look</span>
+      </header>
+
+      <section class="quiz-panel" aria-labelledby="quiz-title">
+        <div class="eyebrow">Spanish → English</div>
+        <h1 id="quiz-title">What does this word mean?</h1>
+
+        <div class="word-card">
+          <span id="prompt" lang="es">Loading…</span>
+        </div>
+
+        <div id="choices" class="choices" aria-label="Answer choices"></div>
+
+        <p id="feedback" class="feedback" aria-live="polite"></p>
+
+        <button id="next-button" class="next-button" type="button" hidden>
+          Next question
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      <footer>
+        A small beginning. One word at a time.
+      </footer>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
