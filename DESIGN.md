@@ -13,6 +13,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
 - Four playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
+- A separate, versioned 1,500-entry CC BY-SA testing vocabulary with three 500-entry bands, source attribution, retained original IDs, a reproducible build script, and validation tests. It is not yet active in the quiz.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
 - Silent automatic advancement: no correctness feedback appears after a submission.
@@ -23,7 +24,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ### Next local-learning work
 
-- A larger, approximately 1,500-entry CC BY-SA testing vocabulary with stable semantic IDs, difficulty tiers, attribution, and migration support for the eventual user-provided vocabulary.
+- Deliberate activation of the 1,500-entry testing vocabulary and migration support for the eventual user-provided vocabulary.
 - A daily **practice session** containing a check-in, explicit presentation of new words, and due-review rounds.
 - Persistent per-word attempts, direction-specific knowledge, estimated learner level, and spaced-repetition due dates.
 - Vocabulary-aware selection instead of entirely random selection.
@@ -59,7 +60,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## 4. Vocabulary universe
 
-The vocabulary universe is currently the placeholder file [`assets/vocabulary.json`](assets/vocabulary.json), containing 100 entries. A larger CC BY-SA testing set of roughly 1,500 entries is planned before the final user-provided list arrives. Each current entry has this shape:
+The active vocabulary universe is currently the placeholder file [`assets/vocabulary.json`](assets/vocabulary.json), containing 100 entries. A separate 1,500-entry CC BY-SA testing set now exists at [`assets/vocabulary-test-v1.json`](assets/vocabulary-test-v1.json), with metadata and attribution alongside it. It remains inactive until per-word persistence and migration behavior are ready. Each active entry has this shape:
 
 ```json
 {
@@ -82,7 +83,7 @@ The vocabulary file remains a static application asset in the MVP. Moving vocabu
 
 Future vocabulary IDs identify a lemma, part of speech, and intended sense rather than a row or dataset version. Per-word history belongs to the learner, not to a particular vocabulary file. When the final vocabulary arrives, exact semantic matches retain their history and schedule; probable matches require review; ambiguous or changed senses start fresh; removed entries are archived rather than silently deleted. This allows evidence for durable words such as `gato`, `perro`, `rojo`, and `uno` to survive a dataset replacement.
 
-The larger testing data should carry a dataset version and source metadata. Its attribution and CC BY-SA licensing should be documented separately from application code. Likely sources include Wiktionary/Kaikki for lexical structure and `wordfreq` for frequency ranking, with manual filtering and learner-appropriate glosses.
+The larger testing data carries a dataset version and source metadata. Its attribution and CC BY-SA licensing are documented separately from application code. It uses English Wiktionary lexical data and the FrequencyWords corpus through the CC-licensed `doozan/spanish_data` compilation, with automated filtering and reviewed learner-facing gloss overrides.
 
 ## 5. Core concepts
 
@@ -494,7 +495,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 1B — Local learning sessions (next)
 
-- [ ] Approximately 1,500-entry tiered CC BY-SA testing vocabulary with attribution and stable semantic IDs.
+- [x] Approximately 1,500-entry tiered CC BY-SA testing vocabulary with attribution, retained original IDs, and version metadata.
 - [ ] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
 - [ ] IndexedDB profiles, quiz rounds, attempts, learner-level evidence, and summary counters.
 - [ ] Per-word, per-direction progress and the initial 1/3/7/14/30/60-day review schedule.

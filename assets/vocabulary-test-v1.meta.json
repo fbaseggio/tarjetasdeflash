@@ -1,0 +1,46 @@
+{
+  "id": "spanish-high-school-test-v1",
+  "version": 1,
+  "createdOn": "2026-07-02",
+  "entryCount": 1500,
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "applicationStatus": "testing-only-not-yet-active",
+  "tiers": [
+    {
+      "id": "foundation",
+      "entryCount": 500,
+      "approximateVocabularyBand": "A1"
+    },
+    {
+      "id": "everyday",
+      "entryCount": 500,
+      "approximateVocabularyBand": "A2"
+    },
+    {
+      "id": "expanding",
+      "entryCount": 500,
+      "approximateVocabularyBand": "B1 with selected B2 vocabulary"
+    }
+  ],
+  "sources": [
+    {
+      "id": "project-placeholder-v1",
+      "description": "The project's original 100 beginner entries, retained in the foundation tier with their IDs and translations.",
+      "entryCount": 100
+    },
+    {
+      "id": "doozan-spanish-data-2026-06-01",
+      "description": "Lemmatized Spanish frequency data and English Wiktionary glosses assembled by Jeff Doozan.",
+      "url": "https://github.com/doozan/spanish_data",
+      "commit": "30384d5ab45d072c113bff8807ea59dae1c38d0a",
+      "entryCount": 1400
+    }
+  ],
+  "notes": [
+    "This is a broad testing vocabulary, not an official CEFR placement instrument.",
+    "Tier assignment is primarily frequency-based after preserving the original beginner entries.",
+    "English glosses were shortened and selected for multiple-choice testing; they do not represent every sense.",
+    "The active application continues to use assets/vocabulary.json until a deliberate migration is implemented."
+  ]
+}
