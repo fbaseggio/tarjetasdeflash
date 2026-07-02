@@ -1,10 +1,20 @@
 import { createActivityStorage } from "./activity-storage.js";
 import { createAssessmentSession } from "./assessment.js";
 import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js";
+import {
+  buildDiagnosticExport,
+  diagnosticFilename,
+  downloadDiagnostic,
+} from "./diagnostic-export.js";
+import {
+  createIndexedHistory,
+  practiceSessionRecord,
+  quizRoundRecord,
+} from "./indexed-history.js";
 import { createLearningStorage, localDateKey } from "./learning-storage.js";
 import { createOnboardingStorage } from "./onboarding-storage.js";
 import { createProfileStorage } from "./profile-storage.js";
-import { buildQuiz, buildQuizFromAnswers } from "./questions.js";
+import { buildQuizFromAnswers } from "./questions.js";
 import { selectQuizVocabulary } from "./quiz-selection.js";
 import { createQuizSession } from "./quiz-session.js";
 import { initializeRecognition } from "./recognition.js";
@@ -52,10 +62,13 @@ const firstQuizErrorElement = document.querySelector("#stat-first-error");
 const overallErrorElement = document.querySelector("#stat-overall-error");
 const coverageReportElement = document.querySelector("#coverage-report");
 const coverageRowsElement = document.querySelector("#coverage-rows");
+const exportButton = document.querySelector("#export-diagnostics");
+const exportStatusElement = document.querySelector("#export-status");
 
 const activityStorage = createActivityStorage(window.localStorage);
 const onboardingStorage = createOnboardingStorage(window.localStorage);
 const learningStorage = createLearningStorage(window.localStorage);
+const historyStorage = createIndexedHistory(window.indexedDB);
 const percentFormatter = new Intl.NumberFormat(undefined, {
   style: "percent",
   maximumFractionDigits: 1,
@@ -70,9 +83,14 @@ let assessmentSession = null;
 let onboardingRecord = null;
 let dailySession = null;
 let activeProfileId = null;
+let activeProfile = null;
 let roundKind = null;
 let roundEntries = [];
 let roundFirstAttempts = [];
+let currentRoundRecord = null;
+let roundAttemptCount = 0;
+let precedingAttemptIds = new Map();
+const pendingHistoryWrites = new Set();
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -180,9 +198,40 @@ function attemptFromState(state, correct, source) {
   };
 }
 
+function recordImmutableAttempt(state, selectedAnswer, correct) {
+  const attemptId = historyStorage.createId("attempt");
+  const vocabularyId = state.question.vocabularyId;
+  roundAttemptCount += 1;
+  const record = {
+    id: attemptId,
+    quizRoundId: currentRoundRecord.id,
+    practiceSessionId: currentRoundRecord.practiceSessionId,
+    profileId: activeProfileId,
+    vocabularyId,
+    precedingAttemptId: precedingAttemptIds.get(vocabularyId) ?? null,
+    stage: currentRoundRecord.stage,
+    phase: state.phase,
+    direction: state.direction,
+    promptLanguage: state.question.promptLanguage,
+    answerLanguage: state.question.answerLanguage,
+    promptText: state.question.prompt,
+    choices: [...state.question.choices],
+    correctAnswer: state.question.correctAnswer,
+    selectedAnswer,
+    correct,
+    attemptIndex: roundAttemptCount,
+    mainQuestionIndex: state.mainPosition,
+    answeredAt: historyStorage.nowIso(),
+  };
+  precedingAttemptIds.set(vocabularyId, attemptId);
+  queueHistoryWrite(historyStorage.saveAttempt(record));
+}
+
 function handleAnswer(event) {
   const before = quizSession.getState();
-  const answer = quizSession.submitAnswer(event.currentTarget.dataset.answer);
+  const selectedAnswer = event.currentTarget.dataset.answer;
+  const answer = quizSession.submitAnswer(selectedAnswer);
+  recordImmutableAttempt(before, selectedAnswer, answer.correct);
   if (before.phase === "main") {
     roundFirstAttempts.push(attemptFromState(before, answer.correct, roundKind ?? "extra"));
   }
@@ -232,8 +281,16 @@ function entryList(ids) {
   return ids.map((id) => vocabularyById.get(id)).filter(Boolean);
 }
 
+function queueHistoryWrite(promise) {
+  pendingHistoryWrites.add(promise);
+  promise.finally(() => pendingHistoryWrites.delete(promise));
+}
+
 function saveDailySession() {
   learningStorage.saveDailySession(activeProfileId, datasetMetadata, dailySession);
+  queueHistoryWrite(historyStorage.savePracticeSession(
+    practiceSessionRecord(activeProfileId, dailySession),
+  ));
 }
 
 function showSessionIntro() {
@@ -264,8 +321,8 @@ function prepareDailySession() {
       learningStorage.getSnapshot(activeProfileId, datasetMetadata),
       today,
     );
-    saveDailySession();
   }
+  saveDailySession();
   if (dailySession.status === "complete") {
     showSessionResults();
   } else {
@@ -289,7 +346,19 @@ function startRound(entries, kind) {
   roundKind = kind;
   roundEntries = entries;
   roundFirstAttempts = [];
-  quizSession = createQuizSession(buildQuizFromAnswers(vocabulary, entries));
+  roundAttemptCount = 0;
+  precedingAttemptIds = new Map();
+  const definitions = buildQuizFromAnswers(vocabulary, entries);
+  quizSession = createQuizSession(definitions);
+  currentRoundRecord = quizRoundRecord({
+    id: historyStorage.createId("round"),
+    profileId: activeProfileId,
+    practiceSessionId: kind === "extra" ? null : `${activeProfileId}:${dailySession.date}`,
+    stage: kind === "review" ? "due-review" : kind,
+    definitions,
+    startedAt: historyStorage.nowIso(),
+  });
+  queueHistoryWrite(historyStorage.saveQuizRound(currentRoundRecord));
   renderQuestion();
 }
 
@@ -361,6 +430,14 @@ function startNextReviewRound() {
 }
 
 function completeQuizRound(state) {
+  currentRoundRecord = {
+    ...currentRoundRecord,
+    status: "completed",
+    correctCount: state.correctCount,
+    wrongCount: state.wrongCount,
+    completedAt: historyStorage.nowIso(),
+  };
+  queueHistoryWrite(historyStorage.saveQuizRound(currentRoundRecord));
   const effectiveDate = roundKind === "extra" ? undefined : dailySession.date;
   learningStorage.recordFirstAttempts(
     activeProfileId,
@@ -487,6 +564,61 @@ function startTestNextDay() {
   showSessionIntro();
 }
 
+async function exportDiagnostics() {
+  if (!activeProfile || !datasetMetadata) return;
+
+  const originalLabel = exportButton.textContent;
+  exportButton.disabled = true;
+  exportButton.textContent = "Preparing…";
+  exportStatusElement.textContent = "Preparing diagnostic export.";
+
+  try {
+    await Promise.allSettled([...pendingHistoryWrites]);
+    const history = await historyStorage.getProfileHistory(activeProfileId);
+    const storageStatus = historyStorage.getStatus();
+    const exportedAt = new Date();
+    const effectiveDate = dailySession?.date
+      ? dateFromKey(dailySession.date)
+      : exportedAt;
+    const payload = buildDiagnosticExport({
+      exportedAt: exportedAt.toISOString(),
+      profile: activeProfile,
+      dataset: datasetMetadata,
+      onboarding: onboardingRecord,
+      activity: activityStorage.getExport(activeProfileId, effectiveDate),
+      learning: learningStorage.getSnapshot(activeProfileId, datasetMetadata),
+      history,
+      storageStatus,
+      environment: {
+        origin: window.location.origin,
+        locale: navigator.language,
+        languages: navigator.languages ? [...navigator.languages] : [navigator.language],
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        userAgent: navigator.userAgent,
+      },
+    });
+    downloadDiagnostic(
+      document,
+      URL,
+      payload,
+      diagnosticFilename(activeProfileId, exportedAt),
+    );
+    exportButton.textContent = "Downloaded";
+    exportStatusElement.textContent = storageStatus.state === "ready"
+      ? "Diagnostic export downloaded with IndexedDB history. Attach the JSON file to an email or conversation."
+      : "Diagnostic export downloaded with a storage warning recorded inside the file.";
+  } catch (error) {
+    console.error(error);
+    exportButton.textContent = "Export failed";
+    exportStatusElement.textContent = "The diagnostic export could not be created.";
+  } finally {
+    window.setTimeout(() => {
+      exportButton.textContent = originalLabel;
+      exportButton.disabled = false;
+    }, 1800);
+  }
+}
+
 async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
@@ -515,11 +647,7 @@ async function startQuiz() {
   try {
     await loadVocabulary();
     const selected = selectQuizVocabulary(vocabulary, onboardingRecord?.placement, 10);
-    roundKind = "extra";
-    roundEntries = selected;
-    roundFirstAttempts = [];
-    quizSession = createQuizSession(buildQuiz(selected, 10));
-    renderQuestion();
+    startRound(selected, "extra");
   } catch (error) {
     showQuizLoadError(error, "The vocabulary could not be loaded.");
   }
@@ -549,6 +677,7 @@ async function startAssessment() {
 
 async function recognizeProfile(profile) {
   activeProfileId = profile.id;
+  activeProfile = profile;
   activityStorage.ensureMember(profile.id);
   hideMainPanels();
   panels.quiz.hidden = false;
@@ -573,6 +702,7 @@ startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 testNextDayButton.addEventListener("click", startTestNextDay);
+exportButton.addEventListener("click", exportDiagnostics);
 
 initializeRecognition({
   form: document.querySelector("#recognition-form"),

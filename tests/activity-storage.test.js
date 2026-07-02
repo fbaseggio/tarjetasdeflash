@@ -43,6 +43,9 @@ assert.equal(summary.daysPracticed, 1);
 assert.equal(summary.totalQuizzes, 2);
 assert.equal(summary.firstQuizErrorRate, 2 / 12);
 assert.equal(summary.overallErrorRate, 10 / 30);
+const exportedActivity = activity.getExport("franco");
+assert.equal(exportedActivity.record.allQuizzes.quizCount, 2);
+assert.equal(exportedActivity.summary.overallErrorRate, 10 / 30);
 
 currentDate = new Date(2026, 6, 2, 22);
 summary = activity.recordCompletedQuiz("franco", { correctCount: 10, wrongCount: 0 });

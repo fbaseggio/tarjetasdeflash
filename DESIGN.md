@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-Build a small, mobile-friendly Spanish vocabulary learning application for approximately four learners. The first version should be easy to host, understand, and change. It runs as a static website on GitHub Pages. The current prototype preserves the selected profile and activity summaries in the browser; later local phases add per-word history and spaced-repetition scheduling. A still later phase adds Firebase Cloud Firestore for synchronization and shared standings across devices.
+Build a small, mobile-friendly Spanish vocabulary learning application for approximately four learners. The first version should be easy to host, understand, and change. It runs as a static website on GitHub Pages. The deployed local-first release preserves the selected profile, onboarding placement, daily session plans, activity summaries, latest per-word evidence, spaced-repetition due dates, and immutable session/round/attempt history in the browser. A later local phase adds exact in-round recovery and richer reporting; a still later phase adds Firebase Cloud Firestore for synchronization and shared standings across devices.
 
 The application should make short practice sessions pleasant, preserve multi-day learning history, schedule useful reviews, and provide friendly standings. Its storage boundary should allow local browser data to be replaced or synchronized with Firestore without rewriting the quiz system.
 
@@ -26,12 +26,15 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Per-word, per-direction latest first-presentation evidence with an initial 1/3/7/14/30/60-day schedule.
 - Tier coverage reporting for distinct tested words and their latest first-presentation result.
 - A testing-only “Test the next day” control that advances the effective practice date and exercises due reviews, streaks, and daily baselines without waiting overnight.
-- Automated tests for question generation, quiz/reprise behavior, profiles, recognition, and activity summaries.
+- Versioned IndexedDB history for practice sessions, quiz rounds, and every submitted answer, including reprise attempts and exact question snapshots.
+- Active-profile diagnostic JSON export containing local learning data, IndexedDB history, application and vocabulary versions, storage status, and browser context.
+- Automated tests for question generation, quiz/reprise behavior, profiles, recognition, onboarding, activity summaries, daily planning, effective-date simulation, word evidence, and scheduling.
 
 ### Next local-learning work
 
 - Migration support for the eventual user-provided vocabulary.
-- Immutable attempt history and fuller learner-level revision beyond the latest per-word evidence.
+- Exact in-round recovery from the stored question and attempt history.
+- Fuller learner-level revision beyond the latest per-word evidence.
 - More sophisticated vocabulary selection using recency, confidence, and history.
 - Full in-round reload recovery and local standings.
 
@@ -60,7 +63,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Audio, images, typed answers, or sentence exercises.
 - Cross-device synchronization and shared standings in the first local release.
 - Offline synchronization or installable-app behavior.
-- General-purpose export/import while the current vocabulary remains test content.
+- General-purpose backup import while the current vocabulary remains test content; diagnostic export is implemented.
 - Anti-cheating controls or high-stakes scoring.
 
 ## 4. Vocabulary universe
@@ -81,7 +84,7 @@ Requirements:
 - `id` is stable and unique. Historical records refer to this ID, so changing display text must not change the ID.
 - `spanish` and `english` are the answer text displayed to learners.
 - `category` supports future filtering and better distractor selection.
-- The current generator checks that enough distinct choices can be formed and fails visibly when vocabulary cannot be loaded. Full schema and duplicate-ID validation remains to be implemented.
+- Automated dataset tests validate required text fields, unique IDs, unique Spanish display values, tier counts, retained original entries, and four-choice generation in both directions. Runtime generation also checks that enough distinct displayed choices can be formed and fails visibly when vocabulary cannot be loaded.
 - Question generation must not assume that display text is unique. Distractor choices must be deduplicated by their displayed answer text.
 
 The vocabulary file remains a static application asset in the MVP. Moving vocabulary into Firestore is unnecessary until browser-based editing or dynamic decks are desired.
@@ -97,7 +100,7 @@ The system keeps these concepts separate:
 - **Vocabulary item:** durable source content such as `manzana` / `apple`.
 - **Question:** one generated prompt, answer, direction, and set of four choices.
 - **Practice session:** one day's coherent learning flow: a check-in, new-word presentation, and due reviews.
-- **Quiz round:** an ordered group of questions, normally ten, within a practice session. The current prototype consists of standalone quiz rounds.
+- **Quiz round:** an ordered group of at most ten questions within a practice session, or an optional standalone extra-practice round.
 - **Attempt:** one submitted answer to one question.
 - **Word progress:** one profile's scheduling and performance state for one vocabulary item.
 - **Profile summary:** repairable aggregate data used to display standings efficiently.
@@ -112,17 +115,16 @@ The MVP uses four-choice multiple choice in both directions. Each ten-question i
 
 ### 6.2 Question selection
 
-The implemented selector never repeats a vocabulary item within the same quiz round. A normal post-onboarding round contains eight randomly selected words from the learner's tentative learning frontier and two Foundation audit words. A learner placed at the Foundation frontier receives ten Foundation words. This provides occasional evidence against the presumed-known Foundation tier while avoiding an introductory parade of elementary vocabulary.
+The implemented selector never repeats a vocabulary item within one quiz round. Daily selection is stage-specific:
 
-The planned history-aware selector chooses questions in this order:
+1. The check-in uses ten words. Above Foundation, exactly two slots audit provisionally known Foundation vocabulary, prioritizing distinct words not yet tested; remaining slots favor previously encountered misses and then successes.
+2. The new-word stage randomly chooses up to fifteen unseen words from the learner's tentative frontier.
+3. The review stage includes all words due on or before the effective practice date plus that day's newly presented words, split into rounds of at most ten.
+4. Optional extra-practice rounds retain the simpler eight-frontier-plus-two-Foundation selector, or ten Foundation words when Foundation repair is indicated.
 
-1. Vocabulary whose `nextDueAt` time has passed, oldest due first.
-2. Vocabulary the profile has never seen, in random order.
-3. Not-yet-due vocabulary, selected randomly only when needed to fill the quiz.
+The implemented scheduler advances correct first-presentation results through 1, 3, 7, 14, 30, and 60-day intervals. A first-presentation mistake resets the word to a one-day interval. Immediate reprise answers are recovery practice and do not lengthen the interval. If more than sixty reviews are due, new-word introduction is suspended for that session.
 
-Items in the same priority bucket may be shuffled so quizzes do not feel mechanical. Selection remains an interchangeable strategy so the simple schedule can later be replaced without changing question rendering or scoring.
-
-The first scheduling rule uses consecutive correct first-pass answers to choose an interval of 1, 3, 7, 14, then 30 days. A first-pass mistake resets the consecutive-correct count and makes the word due the following day. Immediate follow-up answers are recorded as recovery practice but do not lengthen the interval; this prevents a correct answer moments after seeing the solution from being treated as durable recall.
+Selection remains an interchangeable strategy. Later refinement should use staleness, confidence, direction-specific evidence, and oldest-due ordering within each priority bucket without changing question rendering or scoring.
 
 ### 6.3 Distractor selection
 
@@ -208,7 +210,7 @@ The first release supports four profiles stored in the browser. A profile has a 
 
 Other combinations do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
 
-Currently, each profile's aggregate activity summary and completed onboarding placement persist across visits made with the same browser and GitHub Pages origin. Persistent ordinary-quiz attempts, word schedules, continuously revised level evidence, and local standings are next-phase work. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry local history with the learner.
+Currently, each profile's activity summary, onboarding placement, daily session plans, latest first-presentation result by word and direction, review schedule, quiz rounds, and immutable attempts persist across visits made with the same browser and GitHub Pages origin. Continuously revised level evidence, exact in-round restoration, and local standings remain next-phase work. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry local history with the learner.
 
 When shared persistence is added, Firebase Anonymous Authentication will identify a browser installation while the application profile continues to identify the learner:
 
@@ -236,7 +238,7 @@ Only first attempts on previously unseen or check-in words contribute primary pl
 
 The implemented onboarding estimator asks twelve core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all eighteen assessed words. The assessment is silent, does not reprise missed questions, and does not count as quiz activity or streak credit.
 
-All untested Foundation words are provisionally presumed known, while observed misses remain contrary evidence. The normal quiz selector audits two Foundation words in rounds above that frontier. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned. Promotion near 85% and demotion below roughly 60% are calibration candidates rather than permanent rules.
+All untested Foundation words are provisionally presumed known, while observed misses remain contrary evidence. Daily check-ins above the Foundation frontier reserve two Foundation audit slots, and extra-practice rounds use the same two-word audit target. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned. Promotion near 85% and demotion below roughly 60% are calibration candidates rather than permanent rules.
 
 When vocabulary changes, the coarse level estimate remains as a prior. Confidence is rebuilt against the new dataset, while exact semantic word matches retain their full word-level history. Thus a dataset migration neither discards useful knowledge evidence nor treats every approximate match as certain.
 
@@ -244,20 +246,22 @@ When vocabulary changes, the coarse level estimate remains as a prior. Confidenc
 
 ### 9.1 Storage boundary
 
-The current quiz domain is independent from activity persistence, but a complete storage interface remains planned. Quiz and session logic will use that interface rather than calling IndexedDB or Firestore directly. It will cover profiles, practice sessions, quiz rounds, attempts, per-word progress, level evidence, summaries, and the current in-progress session. This permits local operation while preserving a path to synchronization.
+The quiz domain remains independent from persistence. The current app coordinates a `localStorage` learning store and a versioned IndexedDB history store behind small modules. A more complete shared interface remains planned for profiles, practice sessions, quiz rounds, attempts, per-word progress, level evidence, summaries, and exact in-progress round state. This preserves a path to synchronization without coupling quiz rules to IndexedDB or Firestore.
 
 ### 9.2 Initial browser storage
 
-The working prototype stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, daily session plans, per-word directional first-presentation evidence, and review due dates in `localStorage`. A reload resumes the saved stage and restarts an unfinished quiz round without recording its abandoned clicks. It does not yet preserve immutable attempt history or every choice within an in-progress round. The planned fuller local release uses IndexedDB as its source of truth for:
+The working release stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, daily session plans, per-word directional first-presentation evidence, and review due dates in `localStorage`. IndexedDB database `tarjetas-learning`, schema version 1, stores practice-session snapshots, quiz-round snapshots, and every submitted answer. Each attempt snapshots its prompt, choices, correct and selected answers, direction, stage, phase, sequence, timestamps, and preceding attempt for that word.
+
+A reload resumes the saved practice stage and restarts an unfinished quiz round without recording its abandoned clicks. Exact reconstruction from the already stored round definition and attempts remains to be implemented. The planned fuller local release also moves or projects these records into IndexedDB-backed sources of truth for:
 
 - Profiles and local summary counters.
-- Immutable quiz sessions and answer attempts.
+- Exact current-round state and recovery.
 - Per-profile, per-word scheduling state.
 - The generated state of an in-progress quiz so a reload does not reshuffle it.
 
-The browser database has an explicit schema version and uses stable profile and vocabulary IDs. Future releases must migrate existing records rather than silently replacing the database.
+The browser records use versioned key prefixes, dataset ID/version checks, and stable profile and vocabulary IDs. A future IndexedDB store will have an explicit schema version. Future releases must migrate existing records rather than silently replacing them.
 
-The current 1,500-word vocabulary is test content, so general-purpose export/import is intentionally deferred. Stable semantic vocabulary IDs and explicit dataset migration are still required before the final user-provided vocabulary arrives, because useful word history should survive overlap between the testing and final datasets.
+The current 1,500-word vocabulary is test content, so general-purpose import is intentionally deferred. Active-profile diagnostic export is implemented now. Stable semantic vocabulary IDs and explicit dataset migration are still required before the final user-provided vocabulary arrives, because useful word history should survive overlap between the testing and final datasets.
 
 ### 9.3 Later shared service
 
@@ -295,18 +299,35 @@ evidenceDatasetVersion
 
 The count fields are cached summaries for standings. Attempt and session records remain the source of truth, so summaries can be rebuilt if needed.
 
-#### `quizSessions/{sessionId}`
+#### `practiceSessions/{practiceSessionId}`
 
 ```text
 profileId
-parentSessionId        // null for a main quiz
-mode                   // "main" or "follow-up"
-promptLanguage         // "spanish" or "english"
-answerLanguage         // "english" or "spanish"
+effectiveDate          // local YYYY-MM-DD learning date
+simulated              // true for Test the next day
+status                 // "in-progress", "completed", or "abandoned"
+checkInWordIds
+newWordIds
+reviewWordIds
+currentStage
+quizRoundCount
+correctCount
+wrongCount
+startedAt
+completedAt
+```
+
+#### `quizRounds/{quizRoundId}`
+
+```text
+profileId
+practiceSessionId      // null for standalone extra practice
+stage                  // "check-in", "due-review", or "extra"
 status                 // "in-progress", "completed", or "abandoned"
 requestedQuestionCount
 actualQuestionCount
 correctCount
+wrongCount
 startedAt
 completedAt
 ```
@@ -314,7 +335,8 @@ completedAt
 #### `attempts/{attemptId}`
 
 ```text
-sessionId
+quizRoundId
+practiceSessionId
 profileId
 vocabularyId
 precedingAttemptId     // null on first presentation
@@ -353,7 +375,7 @@ This record is the input to spaced-repetition selection. Follow-up attempts incr
 ### 9.5 Writes and consistency
 
 - Create an immutable attempt record for every submitted answer.
-- Complete a quiz-round record only after all its questions are answered, and complete its parent practice session only after the intended stages finish.
+- Complete a quiz-round record only after all its questions are answered, and complete its parent practice-session record only after the intended stages finish.
 - Atomically record an attempt and update word progress and summary counters when the storage engine supports transactions.
 - Never silently delete historical attempts.
 - Store timestamps as absolute UTC instants and display them in the learner's local time zone.
@@ -363,7 +385,11 @@ If a summary update fails after an attempt is preserved, a repair routine can re
 
 ## 10. Standings and reporting
 
-The current result screen reports the active learner's streak, membership days, practice days, completed quizzes, daily first-quiz error rate, and overall error rate. A separate standings screen is planned. It will read the four small local profile summaries rather than scanning all historical attempts. These standings compare only activity stored in that browser. After Firestore synchronization is added, the same screen reads shared profile summary documents and becomes cross-device.
+The current result screen reports the active learner's streak, membership days, practice days, completed quizzes, daily first-quiz error rate, overall error rate, and vocabulary coverage by tier. Coverage shows distinct words tested and divides them by the most recent first-presentation result: right or wrong. Presumed-known but untested words do not count as tested.
+
+A separate standings screen is planned. It will read the four small local profile summaries rather than scanning all historical attempts. These standings compare only activity stored in that browser. After Firestore synchronization is added, the same screen reads shared profile summary documents and becomes cross-device.
+
+The persistent user menu provides **Export**, which downloads a formatted JSON diagnostic for only the active profile. The export has its own schema version and includes application version/release date, vocabulary ID/version/count, onboarding placement, activity data, per-word learning state, daily plans, IndexedDB practice sessions/rounds/attempts, storage health, origin, locale, timezone, and user agent. It excludes the complete vocabulary, unrelated browser data, and every other profile. The learner can attach this file to an email or a support conversation; no data is transmitted automatically.
 
 Initially show:
 
@@ -405,25 +431,41 @@ index.html
 styles.css
 assets/
   vocabulary.json
+  vocabulary-test-v1.json
+  vocabulary-test-v1.meta.json
+  VOCABULARY_TEST_ATTRIBUTION.md
 src/
   app.js
   activity-storage.js
+  assessment.js
+  app-version.js
   daily-session.js
+  diagnostic-export.js
+  indexed-history.js
   learning-storage.js
+  onboarding-storage.js
   profile-storage.js
   profiles.js
   questions.js
+  quiz-selection.js
   quiz-session.js
   recognition.js
+scripts/
+  build-test-vocabulary.py
+tests/
 DESIGN.md
 ```
 
-Planned local modules include vocabulary validation, scheduling, per-word/session storage, level estimation, and standings. The later synchronization phase adds `firebase.js`, a Firestore storage implementation, and `firestore.rules`.
+The later local phase adds an IndexedDB storage implementation, immutable attempt/session records, continuous level estimation, and standings. The synchronization phase adds `firebase.js`, a Firestore storage implementation, and `firestore.rules`.
 
 Responsibilities:
 
 - `questions.js`: implemented pure question, direction, distractor, and shuffle functions.
 - `quiz-session.js`: implemented quiz-round state, scoring, alternating reprise generation, and recovery.
+- `assessment.js` and `onboarding-storage.js`: implemented adaptive placement and dataset-scoped persistence.
+- `quiz-selection.js`: implemented the standalone frontier/Foundation selection strategy.
+- `indexed-history.js`: implemented versioned IndexedDB stores and immutable history records.
+- `diagnostic-export.js` and `app-version.js`: implemented active-profile diagnostic export and version metadata.
 - `profiles.js`, `recognition.js`, and `profile-storage.js`: implemented honor-system identity flow.
 - `activity-storage.js`: implemented `localStorage` activity summaries and daily streak calculations.
 - `daily-session.js`: implemented daily plan construction, check-in selection, new-word throttling, and review-round slicing.
@@ -431,7 +473,7 @@ Responsibilities:
 - `app.js`: implemented rendering, event wiring, and the three-stage session coordinator.
 - Planned modules: IndexedDB storage, continuously revised level estimation, and standings.
 
-The future practice-session and scheduling domain should depend on the storage interface rather than IndexedDB or Firestore calls directly. A memory implementation supports automated tests, and the later Firestore implementation can satisfy the same contract.
+The practice-session and scheduling domain is implemented without DOM dependencies and is tested against in-memory storage. The next persistence refactor should formalize a common storage interface so IndexedDB and the later Firestore implementation can satisfy the same contract without changing session behavior.
 
 ## 13. Interface principles
 
@@ -446,7 +488,7 @@ The future practice-session and scheduling domain should depend on the storage i
 
 ## 14. Deployment
 
-GitHub Pages hosts the deployed static client at `https://fbaseggio.github.io/tarjetasdeflash/`. It loads vocabulary from a relative asset path and currently stores profile selection and aggregate activity in `localStorage`; it does not require Firebase.
+GitHub Pages hosts the deployed static client at `https://fbaseggio.github.io/tarjetasdeflash/`. It loads vocabulary from relative asset paths, stores compact learning state in `localStorage`, and stores session/round/attempt history in IndexedDB; it does not require Firebase.
 
 The completed initial deployment uses:
 
@@ -457,15 +499,18 @@ The shared-persistence phase additionally requires a Firebase project on the fre
 
 The workspace is a Git repository connected to `fbaseggio/tarjetasdeflash`; pushes to `main` trigger the Pages deployment workflow.
 
+Human-readable application version and release-date metadata live in `src/app-version.js` and must be updated when an exported-data or storage behavior change needs to be distinguishable in diagnostics. IndexedDB and diagnostic export formats have independent numeric schema versions.
+
 ## 15. Testing and acceptance criteria
 
 Question-generation logic should be tested independently from the interface.
 
 Implemented prototype acceptance criteria:
 
-- The vocabulary asset loads all 100 current entries.
-- Question generation rejects an asset that cannot produce four distinct displayed choices; full schema and duplicate-ID validation remains a next-phase criterion.
+- The active vocabulary loads 1,500 entries in three 500-word tiers, preserves the original 100 IDs and translations, validates required fields and unique IDs, and carries versioned attribution metadata.
+- Question generation rejects an asset that cannot produce four distinct displayed choices.
 - A ten-question quiz contains ten distinct vocabulary IDs.
+- A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
 - A submitted answer advances immediately without outcome feedback and cannot be changed.
@@ -473,25 +518,31 @@ Implemented prototype acceptance criteria:
 - Review first reverses each missed question, then alternates direction after each miss.
 - Each direction preserves its own answer positions and strikes through and disables its preceding wrong selections.
 - A repeatedly missed question returns to the end of the review queue until answered correctly.
-- The final score always reports ten right answers and the total number of wrong submissions.
-- The active profile and aggregate activity summary survive closing and reopening the browser.
+- A completed quiz round reports one right resolution per target word and all wrong submissions; a daily result aggregates all completed rounds.
+- The active profile, onboarding placement, aggregate activity, daily plan, latest first-presentation evidence, and word schedules survive closing and reopening the browser.
 - The first completed quiz round of a local calendar day advances the streak and baseline rate once; later rounds update only all-quiz totals and error rate.
-- A profile without placement completes a silent 18-question onboarding assessment before its first ordinary quiz.
+- A profile without placement completes a silent 18-question onboarding assessment before its first daily session.
 - Onboarding stores a low-confidence known-through band, learning frontier, per-tier scores, and eighteen first-attempt word results without changing quiz or streak totals.
-- Ordinary rounds draw eight words from the learning frontier and two Foundation audit words, except Foundation-repair rounds which draw ten Foundation words.
+- A daily session contains a ten-word check-in, up to fifteen explicit new-word presentations, and all due reviews in rounds of at most ten.
+- Check-ins above Foundation reserve exactly two Foundation audit slots, prioritizing distinct untested words.
+- Newly presented words are reviewed later in the same session; more than sixty due reviews suspend new-word introduction.
+- Correct first presentations advance the 1/3/7/14/30/60-day schedule, wrong first presentations reset it to one day, and immediate reprise success does not lengthen it.
+- Spanish-to-English and English-to-Spanish evidence remain separate; the result screen reports distinct tested words and their latest first-presentation outcome by tier.
+- Optional extra-practice rounds draw eight words from the learning frontier and two Foundation audit words, except Foundation-repair rounds which draw ten Foundation words.
+- Reloading recovers the saved session stage and safely restarts an unfinished quiz round without recording partial clicks.
+- **Test the next day** advances the effective date for due reviews, daily baselines, and streak calculations and can be repeated across simulated days.
+- IndexedDB stores practice-session snapshots, quiz-round definitions, and every initial or reprise submission as an immutable attempt with exact question text and choices.
+- Failure or absence of IndexedDB does not prevent practice; storage status and the failure message appear in diagnostic exports.
+- **Export** downloads only the active profile's versioned diagnostic JSON, including application/vocabulary metadata and both browser storage layers.
 - The deployed GitHub Pages site works on current mobile and desktop browsers.
 
 Next local-learning acceptance criteria:
 
-- The larger test vocabulary validates stable semantic IDs, senses, tiers, attribution, and required fields.
-- A daily practice session contains a ten-word check-in, explicit new-word presentation, and due-review rounds.
-- Profiles, latest first-presentation evidence, estimated level evidence, daily plans, and word schedules survive closing and reopening the browser.
-- Due words are prioritized on a later day according to the documented intervals.
-- A wrong first attempt shortens its schedule, while an immediate reprise success does not imply durable mastery.
-- Spanish-to-English and English-to-Spanish knowledge evidence remain distinguishable.
+- Immutable attempts and completed quiz rounds can rebuild word progress and summary counters through a repair routine.
+- Continuous check-in evidence revises the coarse learner level and increases or decreases confidence.
 - Replacing a vocabulary dataset preserves reviewed exact semantic matches and does not attach history to ambiguous senses.
 - Local standings agree with completed practice sessions and quiz rounds in that browser.
-- A page reload recovers the saved practice stage and restarts an unfinished quiz round without recording partial results.
+- Reloading within a quiz round restores its exact generated questions, answer positions, eliminated choices, and completed answers.
 
 Shared-persistence acceptance criteria are added in Phase 2: activity recorded on one device must appear under the same selected profile on another, concurrent activity must not lose summary counts, and shared standings must agree with completed sessions.
 
@@ -509,14 +560,18 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - [x] Local aggregate activity, first-quiz-of-day measurement, and streak reporting.
 - [x] GitHub Pages deployment and automated domain-logic tests.
 
-### Phase 1B — Local learning sessions (next)
+### Phase 1B — Local learning sessions (in progress)
 
 - [x] Approximately 1,500-entry tiered CC BY-SA testing vocabulary with attribution, retained original IDs, and version metadata.
 - [x] One-time 12-core-plus-6-confirmation adaptive onboarding with persisted tentative placement.
 - [x] Activation of the larger vocabulary and frontier-weighted quiz selection with Foundation auditing.
 - [x] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
-- [ ] IndexedDB profiles, quiz rounds, attempts, learner-level evidence, and summary counters.
+- [x] IndexedDB practice-session snapshots, quiz-round definitions, and immutable attempts.
+- [x] Active-profile diagnostic JSON export with application, vocabulary, storage, and browser metadata.
+- [ ] IndexedDB-backed profiles, learner-level evidence, word progress, and summary counters.
 - [x] Per-word, per-direction latest first-presentation progress and the initial 1/3/7/14/30/60-day review schedule.
+- [x] Tier coverage reporting for distinct tested words and latest first-presentation outcomes.
+- [x] Repeatable simulated next-day sessions for scheduler and streak testing.
 - [x] Initial learner known-through band, learning frontier, and low confidence derived from onboarding first attempts.
 - [ ] Continuous level revision and confidence growth from later check-ins.
 - [ ] Vocabulary migration that preserves exact overlapping word/sense history.
@@ -537,7 +592,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - Category-aware distractors.
 - Refinement of the spaced-repetition algorithm using observed results.
 - Progress and trouble-word reports.
-- General-purpose export/import before accumulated history becomes costly to replace.
+- Validated backup import before accumulated history becomes costly to replace; diagnostic export already exists.
 
 ### Phase 4 — Optional maturity
 
@@ -554,12 +609,14 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - The exact testing-vocabulary tier boundaries and how the final user-provided vocabulary maps onto them.
 - Whether the session's soft cap is controlled primarily by prompt count, elapsed time, or learner choice.
 - Calibration of level-estimation promotion, demotion, and confidence thresholds after early testing.
+- When to hide or remove the simulated-next-day control after scheduler calibration.
 
 ## 18. References
 
 - [Instituto Cervantes Plan Curricular vocabulary inventories](https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm)
-- [`wordfreq` sources and license](https://github.com/rspeer/wordfreq)
-- [Kaikki/Wiktionary machine-readable data and licensing](https://kaikki.org/eswiktionary/index.html)
+- [`doozan/spanish_data` source compilation](https://github.com/doozan/spanish_data)
+- [FrequencyWords Spanish corpus](https://github.com/hermitdave/FrequencyWords)
+- [Wiktionary licensing](https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use)
 - [Cloud Firestore pricing](https://firebase.google.com/docs/firestore/pricing)
 - [Firebase anonymous authentication for web](https://firebase.google.com/docs/auth/web/anonymous-auth)
 - [Cloud Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)

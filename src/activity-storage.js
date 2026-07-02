@@ -111,6 +111,15 @@ export function createActivityStorage(storage, now = () => new Date()) {
     return summarize(read(profileId, today), today);
   }
 
+  function getExport(profileId, effectiveDate = now()) {
+    const today = localDateKey(effectiveDate);
+    const activity = read(profileId, today);
+    return {
+      record: activity,
+      summary: summarize(activity, today),
+    };
+  }
+
   function recordCompletedQuiz(profileId, result, effectiveDate = now()) {
     if (!Number.isInteger(result.correctCount) || !Number.isInteger(result.wrongCount)) {
       throw new Error("Completed quiz counts must be integers.");
@@ -142,5 +151,5 @@ export function createActivityStorage(storage, now = () => new Date()) {
     return Object.freeze({ ...summarize(activity, today), firstQuizToday });
   }
 
-  return Object.freeze({ ensureMember, getSummary, recordCompletedQuiz });
+  return Object.freeze({ ensureMember, getSummary, getExport, recordCompletedQuiz });
 }
