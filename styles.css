@@ -131,6 +131,7 @@ a {
 .placement-panel,
 .session-panel,
 .presentation-panel,
+.review-panel,
 .results-panel {
   align-self: center;
   padding: clamp(24px, 6vw, 48px);
@@ -441,6 +442,8 @@ h1 {
 
 .choice:focus-visible,
 .next-button:focus-visible,
+.secondary-button:focus-visible,
+.test-day-button:focus-visible,
 .identify-button:focus-visible,
 .user-menu button:focus-visible {
   outline: 3px solid rgb(98 83 217 / 28%);
@@ -514,7 +517,8 @@ h1 {
   display: none;
 }
 
-.test-day-button {
+.test-day-button,
+.secondary-button {
   width: 100%;
   min-height: 48px;
   margin-top: 10px;
@@ -526,8 +530,87 @@ h1 {
   font-weight: 800;
 }
 
-.test-day-button:hover {
+.test-day-button:hover,
+.secondary-button:hover {
   background: var(--violet-soft);
+}
+
+.review-sections {
+  display: grid;
+  gap: 22px;
+}
+
+.review-section {
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.review-section-header {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.review-section h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+}
+
+.review-section-score {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.review-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-top: 1px solid #ebe6da;
+  font-size: 0.84rem;
+}
+
+.review-mark {
+  font-weight: 900;
+}
+
+.review-mark.correct {
+  color: var(--green);
+}
+
+.review-mark.incorrect {
+  color: var(--red);
+}
+
+.review-answer {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.review-pair strong,
+.review-pair span {
+  display: block;
+}
+
+.review-pair span {
+  margin-top: 2px;
+  color: var(--muted);
 }
 
 .results-intro {
@@ -692,8 +775,13 @@ footer {
   .onboarding-panel,
   .placement-panel,
   .session-panel,
-  .presentation-panel {
+  .presentation-panel,
+  .review-panel {
     border-radius: 22px;
+  }
+
+  .review-items {
+    grid-template-columns: 1fr;
   }
 
   .results-panel {

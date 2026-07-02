@@ -18,6 +18,11 @@ import { buildQuizFromAnswers } from "./questions.js";
 import { selectQuizVocabulary } from "./quiz-selection.js";
 import { createQuizSession } from "./quiz-session.js";
 import { initializeRecognition } from "./recognition.js";
+import {
+  answerFeedback,
+  buildAssessmentReview,
+  buildHistoryReview,
+} from "./review-results.js";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -26,6 +31,7 @@ const panels = {
   presentation: document.querySelector("#presentation-panel"),
   quiz: document.querySelector("#quiz-panel"),
   results: document.querySelector("#results-panel"),
+  review: document.querySelector("#review-panel"),
 };
 const startAssessmentButton = document.querySelector("#start-assessment-button");
 const startPracticeButton = document.querySelector("#start-practice-button");
@@ -35,6 +41,7 @@ const testNextDayButton = document.querySelector("#test-next-day-button");
 const sessionEyebrowElement = document.querySelector("#session-eyebrow");
 const placementLevelElement = document.querySelector("#placement-level");
 const placementSummaryElement = document.querySelector("#placement-summary");
+const reviewAssessmentButton = document.querySelector("#review-assessment-button");
 const checkInCountElement = document.querySelector("#check-in-count");
 const newWordCountElement = document.querySelector("#new-word-count");
 const dueReviewCountElement = document.querySelector("#due-review-count");
@@ -62,6 +69,11 @@ const firstQuizErrorElement = document.querySelector("#stat-first-error");
 const overallErrorElement = document.querySelector("#stat-overall-error");
 const coverageReportElement = document.querySelector("#coverage-report");
 const coverageRowsElement = document.querySelector("#coverage-rows");
+const reviewResultsButton = document.querySelector("#review-results-button");
+const reviewTitleElement = document.querySelector("#review-title");
+const reviewSummaryElement = document.querySelector("#review-summary");
+const reviewSectionsElement = document.querySelector("#review-sections");
+const backFromReviewButton = document.querySelector("#back-from-review-button");
 const exportButton = document.querySelector("#export-diagnostics");
 const exportStatusElement = document.querySelector("#export-status");
 
@@ -91,6 +103,9 @@ let currentRoundRecord = null;
 let roundAttemptCount = 0;
 let precedingAttemptIds = new Map();
 const pendingHistoryWrites = new Set();
+let latestAssessmentResult = null;
+let reviewContext = null;
+let reviewReturn = null;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -153,6 +168,25 @@ function renderChoices(currentQuestion, knownWrongAnswers, onAnswer) {
     }
     choicesElement.append(button);
   });
+}
+
+function showAnswerOutcome(question, selectedAnswer, correct) {
+  choicesElement.querySelectorAll("button").forEach((button) => {
+    button.disabled = true;
+    if (button.dataset.answer === question.correctAnswer) {
+      button.classList.add("correct");
+    }
+    if (!correct && button.dataset.answer === selectedAnswer) {
+      button.classList.add("incorrect");
+    }
+  });
+  quizErrorElement.className = `feedback ${correct ? "success" : "error"}`;
+  quizErrorElement.textContent = answerFeedback(correct, question.correctAnswer);
+  quizErrorElement.hidden = false;
+}
+
+function feedbackDelay() {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 300 : 850;
 }
 
 function renderQuestion() {
@@ -235,25 +269,37 @@ function handleAnswer(event) {
   if (before.phase === "main") {
     roundFirstAttempts.push(attemptFromState(before, answer.correct, roundKind ?? "extra"));
   }
-  const state = quizSession.advance();
-
-  if (state.phase === "complete") {
-    completeQuizRound(state);
-  } else {
-    renderQuestion();
-  }
+  showAnswerOutcome(before.question, selectedAnswer, answer.correct);
+  window.setTimeout(() => {
+    const state = quizSession.advance();
+    if (state.phase === "complete") {
+      completeQuizRound(state);
+    } else {
+      renderQuestion();
+    }
+  }, feedbackDelay());
 }
 
 function handleAssessmentAnswer(event) {
-  const state = assessmentSession.submitAnswer(event.currentTarget.dataset.answer);
-  if (state.phase === "complete") {
-    const result = assessmentSession.getResult();
-    onboardingRecord = onboardingStorage.save(activeProfileId, datasetMetadata, result);
-    learningStorage.seedOnboarding(activeProfileId, datasetMetadata, onboardingRecord, vocabulary);
-    showPlacement(onboardingRecord.placement);
-  } else {
-    renderAssessmentQuestion();
-  }
+  const before = assessmentSession.getState();
+  const selectedAnswer = event.currentTarget.dataset.answer;
+  const correct = selectedAnswer === before.question.correctAnswer;
+  const state = assessmentSession.submitAnswer(selectedAnswer);
+  showAnswerOutcome(before.question, selectedAnswer, correct);
+  window.setTimeout(() => {
+    if (state.phase === "complete") {
+      latestAssessmentResult = assessmentSession.getResult();
+      onboardingRecord = onboardingStorage.save(
+        activeProfileId,
+        datasetMetadata,
+        latestAssessmentResult,
+      );
+      learningStorage.seedOnboarding(activeProfileId, datasetMetadata, onboardingRecord, vocabulary);
+      showPlacement(onboardingRecord.placement);
+    } else {
+      renderAssessmentQuestion();
+    }
+  }, feedbackDelay());
 }
 
 function showOnboarding() {
@@ -274,6 +320,7 @@ function showPlacement(placement) {
   } else {
     placementSummaryElement.textContent = `${tierLabels[placement.knownThrough]} vocabulary looks familiar. We’ll begin around ${frontierLabel} and keep adjusting.`;
   }
+  reviewAssessmentButton.hidden = !latestAssessmentResult;
   startPracticeButton.focus();
 }
 
@@ -499,6 +546,113 @@ function renderCoverage() {
   coverageReportElement.hidden = false;
 }
 
+function reviewItemElement(item, kind) {
+  const listItem = document.createElement("li");
+  listItem.className = `review-item ${kind === "presentations" ? "review-pair" : ""}`;
+  const mark = document.createElement("span");
+  const content = document.createElement("div");
+
+  if (kind === "presentations") {
+    mark.className = "review-mark";
+    mark.textContent = "•";
+    const spanish = document.createElement("strong");
+    const english = document.createElement("span");
+    spanish.textContent = item.spanish;
+    spanish.lang = "es";
+    english.textContent = item.english;
+    content.append(spanish, english);
+  } else {
+    mark.className = `review-mark ${item.correct ? "correct" : "incorrect"}`;
+    mark.textContent = item.correct ? "✓" : "✕";
+    mark.setAttribute("aria-label", item.correct ? "Correct" : "Incorrect");
+    const answer = document.createElement("strong");
+    const detail = document.createElement("span");
+    answer.textContent = `${item.prompt} → ${item.correctAnswer}`;
+    detail.className = "review-answer";
+    const resultText = item.correct ? "Right" : `Your answer: ${item.selectedAnswer}`;
+    const recoveryText = item.recoveryAttempts > 0
+      ? ` · ${item.recoveryAttempts} follow-up ${item.recoveryAttempts === 1 ? "try" : "tries"}`
+      : "";
+    detail.textContent = `${resultText}${recoveryText}`;
+    content.append(answer, detail);
+  }
+
+  listItem.append(mark, content);
+  return listItem;
+}
+
+function renderReviewSections(title, sections) {
+  reviewTitleElement.textContent = title;
+  reviewSectionsElement.replaceChildren();
+  const questionSections = sections.filter((section) => section.kind === "questions");
+  const correct = questionSections.reduce((sum, section) => sum + section.correctCount, 0);
+  const wrong = questionSections.reduce((sum, section) => sum + section.wrongCount, 0);
+  reviewSummaryElement.textContent = questionSections.length > 0
+    ? `${correct} right and ${wrong} wrong on first presentation, organized by section.`
+    : "Presented vocabulary, organized by section.";
+
+  if (sections.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "onboarding-note";
+    empty.textContent = "No detailed question history is available for this earlier result.";
+    reviewSectionsElement.append(empty);
+    return;
+  }
+
+  sections.forEach((section) => {
+    const container = document.createElement("section");
+    container.className = "review-section";
+    const header = document.createElement("div");
+    header.className = "review-section-header";
+    const heading = document.createElement("h2");
+    heading.textContent = section.title;
+    header.append(heading);
+    if (section.kind === "questions") {
+      const score = document.createElement("span");
+      score.className = "review-section-score";
+      score.textContent = `${section.correctCount} right · ${section.wrongCount} wrong`;
+      header.append(score);
+    }
+    const list = document.createElement("ul");
+    list.className = "review-items";
+    section.items.forEach((item) => list.append(reviewItemElement(item, section.kind)));
+    if (section.items.length === 0) {
+      const emptyItem = document.createElement("li");
+      emptyItem.className = "review-answer";
+      emptyItem.textContent = "No stored questions for this section.";
+      list.append(emptyItem);
+    }
+    container.append(header, list);
+    reviewSectionsElement.append(container);
+  });
+}
+
+async function showReviewResults() {
+  if (!reviewContext) return;
+  hideMainPanels();
+  panels.review.hidden = false;
+  reviewTitleElement.textContent = "Loading review…";
+  reviewSummaryElement.textContent = "";
+  reviewSectionsElement.replaceChildren();
+
+  let sections;
+  if (reviewContext.type === "assessment") {
+    sections = buildAssessmentReview(reviewContext.result, vocabulary);
+  } else {
+    await Promise.allSettled([...pendingHistoryWrites]);
+    const history = await historyStorage.getProfileHistory(activeProfileId);
+    sections = buildHistoryReview({
+      rounds: history.quizRounds,
+      attempts: history.attempts,
+      practiceSessionId: reviewContext.practiceSessionId,
+      roundId: reviewContext.roundId,
+      newWords: reviewContext.newWords ?? [],
+    });
+  }
+  renderReviewSections(reviewContext.title, sections);
+  backFromReviewButton.focus();
+}
+
 function showResultsBase(correctCount, wrongCount, summary) {
   hideMainPanels();
   panels.results.hidden = false;
@@ -523,8 +677,15 @@ function showSessionResults() {
       ? "Today’s check-in counted toward your streak."
       : "You had already earned today’s streak credit—and this session still counts.";
   }
-  newQuizButton.firstChild.textContent = "Start extra practice ";
+  newQuizButton.firstChild.textContent = "Start additional quiz ";
   testNextDayButton.hidden = false;
+  reviewContext = {
+    type: "session",
+    title: `Session review · ${displayDate(dailySession.date)}`,
+    practiceSessionId: `${activeProfileId}:${dailySession.date}`,
+    newWords: entryList(dailySession.newWordIds),
+  };
+  reviewReturn = showSessionResults;
   showResultsBase(
     dailySession.correctCount,
     dailySession.wrongCount,
@@ -540,7 +701,13 @@ function showQuizResults(state, activity) {
     ? "Today’s first quiz counted toward your streak."
     : "You already earned today’s streak credit—and this quiz still counts.";
   newQuizButton.firstChild.textContent = "Start another quiz ";
-  testNextDayButton.hidden = true;
+  testNextDayButton.hidden = false;
+  reviewContext = {
+    type: "extra",
+    title: "Extra quiz review",
+    roundId: currentRoundRecord.id,
+  };
+  reviewReturn = () => showQuizResults(state, activity);
   showResultsBase(state.correctCount, state.wrongCount, activity);
 }
 
@@ -703,6 +870,17 @@ startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 testNextDayButton.addEventListener("click", startTestNextDay);
 exportButton.addEventListener("click", exportDiagnostics);
+reviewAssessmentButton.addEventListener("click", () => {
+  reviewContext = {
+    type: "assessment",
+    title: "Assessment review",
+    result: latestAssessmentResult,
+  };
+  reviewReturn = () => showPlacement(onboardingRecord.placement);
+  showReviewResults();
+});
+reviewResultsButton.addEventListener("click", showReviewResults);
+backFromReviewButton.addEventListener("click", () => reviewReturn?.());
 
 initializeRecognition({
   form: document.querySelector("#recognition-form"),
@@ -715,6 +893,7 @@ initializeRecognition({
     panels.placement,
     panels.session,
     panels.presentation,
+    panels.review,
   ],
   userMenu: document.querySelector("#user-menu"),
   greeting: document.querySelector("#user-greeting"),

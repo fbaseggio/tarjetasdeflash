@@ -18,14 +18,16 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Frontier-weighted quiz selection: eight words from the learner's tentative frontier and two Foundation audit words, or ten Foundation words when Foundation repair is indicated.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
-- Silent automatic advancement: no correctness feedback appears after a submission.
+- Brief correct/incorrect feedback after every submission, followed by automatic advancement after about 850 milliseconds (300 milliseconds for reduced-motion users).
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
 - A persisted daily practice session with a ten-word check-in, fifteen explicit new-word presentations, and due-review rounds.
 - Per-word, per-direction latest first-presentation evidence with an initial 1/3/7/14/30/60-day schedule.
 - Tier coverage reporting for distinct tested words and their latest first-presentation result.
-- A testing-only “Test the next day” control that advances the effective practice date and exercises due reviews, streaks, and daily baselines without waiting overnight.
+- A concise one-page result review for onboarding, each daily-session stage, and extra quizzes.
+- End-of-practice choices for another quiz or another full simulated-day session.
+- A testing-only “Start another full session” control that advances the effective practice date and exercises due reviews, streaks, and daily baselines without waiting overnight.
 - Versioned IndexedDB history for practice sessions, quiz rounds, and every submitted answer, including reprise attempts and exact question snapshots.
 - Active-profile diagnostic JSON export containing local learning data, IndexedDB history, application and vocabulary versions, storage status, and browser context.
 - Automated tests for question generation, quiz/reprise behavior, profiles, recognition, onboarding, activity summaries, daily planning, effective-date simulation, word evidence, and scheduling.
@@ -149,11 +151,11 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 
 1. The learner selects or resumes a profile.
 2. The application prepares or resumes the learner's daily practice session.
-3. The learner completes a silent ten-word check-in, including reprise of any misses.
+3. The learner completes a ten-word check-in, including reprise of any misses; each submission receives brief feedback before automatic advancement.
 4. The application explicitly presents up to fifteen new Spanish/English pairs.
 5. Due words and the newly presented words appear in quiz rounds of at most ten words.
 6. Each round continues until every vocabulary item has been answered correctly.
-7. Only after all stages does the result screen show aggregate right and wrong counts.
+7. Only after all stages does the result screen show aggregate right and wrong counts and offer a concise stage-by-stage review.
 
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
@@ -161,7 +163,7 @@ The current question number is visible during the initial pass, followed by the 
 
 Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
 
-The result screen appears only at completion and offers optional extra practice after the daily session.
+The result screen appears only at completion and offers a concise review, optional extra practice, and another full simulated-day session.
 
 Completing a quiz also updates a per-profile practice summary in local browser storage. Calendar dates use the device's local timezone. The first completed quiz on a date is that day's baseline quiz: it adds one practiced day, advances the streak when the preceding practice date was yesterday, and contributes to the daily first-quiz error rate. Later quizzes that day do not change the streak or baseline rate, but do increase the total quiz count and all-quiz error rate.
 
@@ -175,7 +177,8 @@ Default behavior:
 
 - First repeat a missed word in the direction opposite its initial question.
 - Alternate direction after every additional wrong review answer.
-- Do not reveal whether a submitted answer was correct or incorrect.
+- Briefly show whether the submitted answer was correct; after a miss, also show the correct answer.
+- Disable all choices during the short feedback interval, then advance automatically.
 - Maintain stable choices and answer positions separately for each direction.
 - Display previously selected wrong choices with a strike-through and disable them whenever that direction returns.
 - If another wrong answer is selected, record it for that direction and return the opposite-direction variant to the end of the review queue.
@@ -187,7 +190,7 @@ Review proceeds round-robin until all missed vocabulary has been answered correc
 
 A **practice session** is the daily learning unit. It contains three stages, each rendered in short quiz rounds rather than one intimidating continuous test:
 
-1. **Check-in:** ten words completed silently with no correctness feedback. For learners above Foundation, two slots audit provisionally known Foundation words, prioritizing words not yet tested; the other slots favor previously encountered misses and then prior successes. The first check-in completed on a local calendar date supplies that day's baseline error rate and streak credit.
+1. **Check-in:** ten words with brief per-answer feedback and automatic advancement. For learners above Foundation, two slots audit provisionally known Foundation words, prioritizing words not yet tested; the other slots favor previously encountered misses and then prior successes. The first check-in completed on a local calendar date supplies that day's baseline error rate and streak credit.
 2. **New words:** normally about fifteen new entries. Each word is explicitly presented as a Spanish/English pair before later retrieval; genuinely new vocabulary must not rely on a lucky multiple-choice guess as its only exposure.
 3. **Due reviews:** all words due under the scheduler, presented in ten-question rounds. Reviews take priority over new words when a backlog develops.
 
@@ -195,7 +198,7 @@ The implemented initial target is fifteen new words per study day plus all due r
 
 The standalone quiz and reprise behavior is the interaction primitive used by the check-in and due-review stages. Newly presented words are due for retrieval in Step 3 the same day. A practice session may contain several stored quiz rounds, but streak and first-quiz-of-day reporting are awarded only once per local calendar day.
 
-For early testing, a completed session offers **Test the next day**. It creates or resumes the next uncompleted simulated calendar date, uses that date for review scheduling and activity summaries, and may be repeated to exercise several learning days immediately. These simulated sessions intentionally alter the selected profile's local test history; the control can be removed or hidden when the scheduling behavior is calibrated.
+For early testing, a completed session or extra quiz offers **Start another full session**. It creates or resumes the next uncompleted simulated calendar date, uses that date for review scheduling and activity summaries, and may be repeated to exercise several learning days immediately. These simulated sessions intentionally alter the selected profile's local test history; the control can be removed or hidden when the scheduling behavior is calibrated.
 
 ## 8. Profiles and identity
 
@@ -236,7 +239,7 @@ evidenceDatasetVersion
 
 Only first attempts on previously unseen or check-in words contribute primary placement evidence. Immediate reprise answers do not raise the estimate, because they measure recovery rather than durable knowledge. Spanish-to-English and English-to-Spanish evidence remain separate because recognition is generally easier than production, even while both use multiple choice.
 
-The implemented onboarding estimator asks twelve core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all eighteen assessed words. The assessment is silent, does not reprise missed questions, and does not count as quiz activity or streak credit.
+The implemented onboarding estimator asks twelve core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all eighteen assessed words. The assessment gives brief feedback and advances automatically, does not reprise missed questions, and does not count as quiz activity or streak credit. Its placement screen offers a tier-grouped review of all assessment answers.
 
 All untested Foundation words are provisionally presumed known, while observed misses remain contrary evidence. Daily check-ins above the Foundation frontier reserve two Foundation audit slots, and extra-practice rounds use the same two-word audit target. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned. Promotion near 85% and demotion below roughly 60% are calibration candidates rather than permanent rules.
 
@@ -304,7 +307,7 @@ The count fields are cached summaries for standings. Attempt and session records
 ```text
 profileId
 effectiveDate          // local YYYY-MM-DD learning date
-simulated              // true for Test the next day
+simulated              // true for Start another full session
 status                 // "in-progress", "completed", or "abandoned"
 checkInWordIds
 newWordIds
@@ -482,7 +485,7 @@ The practice-session and scheduling domain is implemented without DOM dependenci
 - Large choice targets with visible focus states.
 - Do not communicate correctness by color alone; use icons and text as well.
 - Keep accents and `ñ` intact throughout loading, display, and storage.
-- Announce new prompts and quiz progress for screen readers without disclosing answer outcomes.
+- Announce new prompts, quiz progress, and brief answer outcomes for screen readers.
 - Avoid animations that delay the next question; respect reduced-motion preferences.
 - Keep the visual tone cheerful and uncluttered rather than resembling a worksheet.
 
@@ -513,7 +516,7 @@ Implemented prototype acceptance criteria:
 - A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
-- A submitted answer advances immediately without outcome feedback and cannot be changed.
+- A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed.
 - No running score is displayed.
 - Review first reverses each missed question, then alternates direction after each miss.
 - Each direction preserves its own answer positions and strikes through and disables its preceding wrong selections.
@@ -521,7 +524,7 @@ Implemented prototype acceptance criteria:
 - A completed quiz round reports one right resolution per target word and all wrong submissions; a daily result aggregates all completed rounds.
 - The active profile, onboarding placement, aggregate activity, daily plan, latest first-presentation evidence, and word schedules survive closing and reopening the browser.
 - The first completed quiz round of a local calendar day advances the streak and baseline rate once; later rounds update only all-quiz totals and error rate.
-- A profile without placement completes a silent 18-question onboarding assessment before its first daily session.
+- A profile without placement completes an 18-question onboarding assessment with brief feedback before its first daily session.
 - Onboarding stores a low-confidence known-through band, learning frontier, per-tier scores, and eighteen first-attempt word results without changing quiz or streak totals.
 - A daily session contains a ten-word check-in, up to fifteen explicit new-word presentations, and all due reviews in rounds of at most ten.
 - Check-ins above Foundation reserve exactly two Foundation audit slots, prioritizing distinct untested words.
@@ -530,7 +533,9 @@ Implemented prototype acceptance criteria:
 - Spanish-to-English and English-to-Spanish evidence remain separate; the result screen reports distinct tested words and their latest first-presentation outcome by tier.
 - Optional extra-practice rounds draw eight words from the learning frontier and two Foundation audit words, except Foundation-repair rounds which draw ten Foundation words.
 - Reloading recovers the saved session stage and safely restarts an unfinished quiz round without recording partial clicks.
-- **Test the next day** advances the effective date for due reviews, daily baselines, and streak calculations and can be repeated across simulated days.
+- Completed onboarding, daily sessions, and extra quizzes offer a concise one-page review grouped by tier or session stage.
+- Extra-quiz results offer both another quiz and **Start another full session**.
+- **Start another full session** advances the effective date for due reviews, daily baselines, and streak calculations and can be repeated across simulated days.
 - IndexedDB stores practice-session snapshots, quiz-round definitions, and every initial or reprise submission as an immutable attempt with exact question text and choices.
 - Failure or absence of IndexedDB does not prevent practice; storage status and the failure message appear in diagnostic exports.
 - **Export** downloads only the active profile's versioned diagnostic JSON, including application/vocabulary metadata and both browser storage layers.
@@ -554,7 +559,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - [x] Loading of the 100-entry placeholder vocabulary.
 - [x] Random ten-question rounds balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - [x] Random distractors and answer positions.
-- [x] Automatic advancement without correctness feedback.
+- [x] Brief correctness feedback followed by automatic advancement.
 - [x] Round-robin, alternating-direction reprise with direction-specific cumulative answer elimination.
 - [x] A final-only score of ten right answers and accumulated wrong submissions.
 - [x] Local aggregate activity, first-quiz-of-day measurement, and streak reporting.
@@ -568,6 +573,8 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - [x] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
 - [x] IndexedDB practice-session snapshots, quiz-round definitions, and immutable attempts.
 - [x] Active-profile diagnostic JSON export with application, vocabulary, storage, and browser metadata.
+- [x] Concise result review for onboarding, daily-session stages, and extra quizzes.
+- [x] End-of-practice actions for another quiz or another full simulated-day session.
 - [ ] IndexedDB-backed profiles, learner-level evidence, word progress, and summary counters.
 - [x] Per-word, per-direction latest first-presentation progress and the initial 1/3/7/14/30/60-day review schedule.
 - [x] Tier coverage reporting for distinct tested words and latest first-presentation outcomes.
