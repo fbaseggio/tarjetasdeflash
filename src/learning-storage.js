@@ -120,16 +120,20 @@ export function createLearningStorage(storage, now = () => new Date()) {
     return read(profileId, dataset);
   }
 
-  function recordPresentations(profileId, dataset, entries) {
+  function recordPresentations(
+    profileId,
+    dataset,
+    entries,
+    effectiveDate = localDateKey(now()),
+  ) {
     const learning = read(profileId, dataset);
-    const today = localDateKey(now());
     const timestamp = now().toISOString();
 
     entries.forEach((entry) => {
       const word = learning.words[entry.id] ?? emptyWord(entry, timestamp);
       word.presentations += 1;
       word.encounteredAt ??= timestamp;
-      word.schedule ??= { intervalIndex: -1, dueDate: today, lastReviewedAt: null };
+      word.schedule ??= { intervalIndex: -1, dueDate: effectiveDate, lastReviewedAt: null };
       learning.words[entry.id] = word;
     });
 
@@ -137,9 +141,13 @@ export function createLearningStorage(storage, now = () => new Date()) {
     return learning;
   }
 
-  function recordFirstAttempts(profileId, dataset, attempts) {
+  function recordFirstAttempts(
+    profileId,
+    dataset,
+    attempts,
+    effectiveDate = localDateKey(now()),
+  ) {
     const learning = read(profileId, dataset);
-    const today = localDateKey(now());
     const timestamp = now().toISOString();
 
     attempts.forEach((attempt) => {
@@ -160,7 +168,7 @@ export function createLearningStorage(storage, now = () => new Date()) {
         : 0;
       word.schedule = {
         intervalIndex,
-        dueDate: addDays(today, REVIEW_INTERVALS[intervalIndex]),
+        dueDate: addDays(effectiveDate, REVIEW_INTERVALS[intervalIndex]),
         lastReviewedAt: timestamp,
       };
       learning.words[attempt.vocabularyId] = word;

@@ -65,4 +65,18 @@ const otherProfile = activity.ensureMember("milo");
 assert.equal(otherProfile.totalQuizzes, 0);
 assert.equal(otherProfile.daysPracticed, 0);
 
-console.log("Daily activity, streak, membership, and error-rate checks passed.");
+summary = activity.recordCompletedQuiz(
+  "milo",
+  { correctCount: 10, wrongCount: 0 },
+  new Date(2026, 6, 10, 12),
+);
+assert.equal(summary.currentStreak, 1);
+summary = activity.recordCompletedQuiz(
+  "milo",
+  { correctCount: 10, wrongCount: 1 },
+  new Date(2026, 6, 11, 12),
+);
+assert.equal(summary.currentStreak, 2);
+assert.equal(summary.daysPracticed, 2);
+
+console.log("Daily activity, simulated dates, streak, membership, and error-rate checks passed.");

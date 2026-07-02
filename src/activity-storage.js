@@ -106,17 +106,17 @@ export function createActivityStorage(storage, now = () => new Date()) {
     return summarize(activity, today);
   }
 
-  function getSummary(profileId) {
-    const today = localDateKey(now());
+  function getSummary(profileId, effectiveDate = now()) {
+    const today = localDateKey(effectiveDate);
     return summarize(read(profileId, today), today);
   }
 
-  function recordCompletedQuiz(profileId, result) {
+  function recordCompletedQuiz(profileId, result, effectiveDate = now()) {
     if (!Number.isInteger(result.correctCount) || !Number.isInteger(result.wrongCount)) {
       throw new Error("Completed quiz counts must be integers.");
     }
 
-    const today = localDateKey(now());
+    const today = localDateKey(effectiveDate);
     const activity = read(profileId, today);
     const firstQuizToday = !activity.practiceDates.includes(today);
 

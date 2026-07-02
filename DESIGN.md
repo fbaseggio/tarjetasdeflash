@@ -25,6 +25,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - A persisted daily practice session with a ten-word check-in, fifteen explicit new-word presentations, and due-review rounds.
 - Per-word, per-direction latest first-presentation evidence with an initial 1/3/7/14/30/60-day schedule.
 - Tier coverage reporting for distinct tested words and their latest first-presentation result.
+- A testing-only “Test the next day” control that advances the effective practice date and exercises due reviews, streaks, and daily baselines without waiting overnight.
 - Automated tests for question generation, quiz/reprise behavior, profiles, recognition, and activity summaries.
 
 ### Next local-learning work
@@ -191,6 +192,8 @@ A **practice session** is the daily learning unit. It contains three stages, eac
 The implemented initial target is fifteen new words per study day plus all due reviews. If more than sixty reviews are due, the session suspends new-word introduction. A future release will also apply the proposed soft cap of approximately ninety first-pass prompts or fifteen minutes. The exact limits remain configuration rather than domain invariants and should be adjusted after observing the four learners.
 
 The standalone quiz and reprise behavior is the interaction primitive used by the check-in and due-review stages. Newly presented words are due for retrieval in Step 3 the same day. A practice session may contain several stored quiz rounds, but streak and first-quiz-of-day reporting are awarded only once per local calendar day.
+
+For early testing, a completed session offers **Test the next day**. It creates or resumes the next uncompleted simulated calendar date, uses that date for review scheduling and activity summaries, and may be repeated to exercise several learning days immediately. These simulated sessions intentionally alter the selected profile's local test history; the control can be removed or hidden when the scheduling behavior is calibrated.
 
 ## 8. Profiles and identity
 

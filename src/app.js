@@ -21,6 +21,8 @@ const startAssessmentButton = document.querySelector("#start-assessment-button")
 const startPracticeButton = document.querySelector("#start-practice-button");
 const startSessionButton = document.querySelector("#start-session-button");
 const nextPresentationButton = document.querySelector("#next-presentation-button");
+const testNextDayButton = document.querySelector("#test-next-day-button");
+const sessionEyebrowElement = document.querySelector("#session-eyebrow");
 const placementLevelElement = document.querySelector("#placement-level");
 const placementSummaryElement = document.querySelector("#placement-summary");
 const checkInCountElement = document.querySelector("#check-in-count");
@@ -77,6 +79,25 @@ const tierLabels = Object.freeze({
   everyday: "Everyday",
   expanding: "Expanding",
 });
+
+function dateFromKey(dateKey) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return new Date(year, month - 1, day, 12);
+}
+
+function nextDateKey(dateKey) {
+  const date = dateFromKey(dateKey);
+  date.setDate(date.getDate() + 1);
+  return localDateKey(date);
+}
+
+function displayDate(dateKey) {
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(dateFromKey(dateKey));
+}
 
 function hideMainPanels() {
   Object.values(panels).forEach((panel) => { panel.hidden = true; });
@@ -218,7 +239,10 @@ function saveDailySession() {
 function showSessionIntro() {
   hideMainPanels();
   panels.session.hidden = false;
-  checkInCountElement.textContent = `${dailySession.checkInIds.length} familiar words`;
+  sessionEyebrowElement.textContent = dailySession.simulated
+    ? `Test day · ${displayDate(dailySession.date)}`
+    : "Today’s practice session";
+  checkInCountElement.textContent = `${dailySession.checkInIds.length} check-in words`;
   newWordCountElement.textContent = dailySession.newWordIds.length > 0
     ? `${dailySession.newWordIds.length} Spanish–English pairs`
     : "Paused while reviews are caught up";
@@ -295,7 +319,12 @@ function showPresentation() {
   }
   dailySession.presentedWordIds ??= [];
   if (!dailySession.presentedWordIds.includes(entry.id)) {
-    learningStorage.recordPresentations(activeProfileId, datasetMetadata, [entry]);
+    learningStorage.recordPresentations(
+      activeProfileId,
+      datasetMetadata,
+      [entry],
+      dailySession.date,
+    );
     dailySession.presentedWordIds.push(entry.id);
     saveDailySession();
   }
@@ -332,11 +361,17 @@ function startNextReviewRound() {
 }
 
 function completeQuizRound(state) {
-  learningStorage.recordFirstAttempts(activeProfileId, datasetMetadata, roundFirstAttempts);
+  const effectiveDate = roundKind === "extra" ? undefined : dailySession.date;
+  learningStorage.recordFirstAttempts(
+    activeProfileId,
+    datasetMetadata,
+    roundFirstAttempts,
+    effectiveDate,
+  );
   const activity = activityStorage.recordCompletedQuiz(activeProfileId, {
     correctCount: state.correctCount,
     wrongCount: state.wrongCount,
-  });
+  }, effectiveDate ? dateFromKey(effectiveDate) : undefined);
 
   if (roundKind === "extra") {
     showQuizResults(state, activity);
@@ -401,14 +436,22 @@ function showSessionResults() {
   resultsEyebrowElement.textContent = "Daily session complete";
   resultsTitleElement.textContent = "¡Buen trabajo!";
   resultsIntroElement.textContent = `You finished ${dailySession.quizRounds} short quiz rounds and met ${dailySession.newWordIds.length} new words.`;
-  dailyCreditElement.textContent = dailySession.streakCredited
-    ? "Today’s check-in counted toward your streak."
-    : "You had already earned today’s streak credit—and this session still counts.";
+  if (dailySession.simulated) {
+    const testDate = displayDate(dailySession.date);
+    dailyCreditElement.textContent = dailySession.streakCredited
+      ? `The ${testDate} test-day check-in counted toward your streak.`
+      : `The ${testDate} test day already had streak credit—and this session still counts.`;
+  } else {
+    dailyCreditElement.textContent = dailySession.streakCredited
+      ? "Today’s check-in counted toward your streak."
+      : "You had already earned today’s streak credit—and this session still counts.";
+  }
   newQuizButton.firstChild.textContent = "Start extra practice ";
+  testNextDayButton.hidden = false;
   showResultsBase(
     dailySession.correctCount,
     dailySession.wrongCount,
-    activityStorage.getSummary(activeProfileId),
+    activityStorage.getSummary(activeProfileId, dateFromKey(dailySession.date)),
   );
 }
 
@@ -420,7 +463,28 @@ function showQuizResults(state, activity) {
     ? "Today’s first quiz counted toward your streak."
     : "You already earned today’s streak credit—and this quiz still counts.";
   newQuizButton.firstChild.textContent = "Start another quiz ";
+  testNextDayButton.hidden = true;
   showResultsBase(state.correctCount, state.wrongCount, activity);
+}
+
+function startTestNextDay() {
+  let testDate = nextDateKey(dailySession.date);
+  let existing = learningStorage.getDailySession(activeProfileId, datasetMetadata, testDate);
+
+  while (existing?.status === "complete") {
+    testDate = nextDateKey(testDate);
+    existing = learningStorage.getDailySession(activeProfileId, datasetMetadata, testDate);
+  }
+
+  dailySession = existing ?? createDailySessionPlan(
+    vocabulary,
+    onboardingRecord.placement,
+    learningStorage.getSnapshot(activeProfileId, datasetMetadata),
+    testDate,
+  );
+  dailySession.simulated = true;
+  saveDailySession();
+  showSessionIntro();
 }
 
 async function loadVocabulary() {
@@ -508,6 +572,7 @@ startAssessmentButton.addEventListener("click", startAssessment);
 startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
+testNextDayButton.addEventListener("click", startTestNextDay);
 
 initializeRecognition({
   form: document.querySelector("#recognition-form"),

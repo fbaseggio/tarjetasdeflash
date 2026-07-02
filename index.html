@@ -126,12 +126,12 @@
       </section>
 
       <section id="session-panel" class="session-panel" aria-labelledby="session-title" hidden>
-        <div class="eyebrow">Today’s practice session</div>
+        <div id="session-eyebrow" class="eyebrow">Today’s practice session</div>
         <h1 id="session-title">Three small steps.</h1>
         <ol class="session-steps">
           <li>
             <span>1</span>
-            <div><strong>Check in</strong><small id="check-in-count">10 familiar words</small></div>
+            <div><strong>Check in</strong><small id="check-in-count">10 check-in words</small></div>
           </li>
           <li>
             <span>2</span>
@@ -221,6 +221,9 @@
         <button id="new-quiz-button" class="next-button" type="button">
           Start another quiz
           <span aria-hidden="true">→</span>
+        </button>
+        <button id="test-next-day-button" class="test-day-button" type="button" hidden>
+          Test the next day
         </button>
       </section>
 

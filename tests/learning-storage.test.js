@@ -54,6 +54,15 @@ snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-06");
 assert.equal(snapshot.words.recurso.directions["spanish-to-english"].testCount, 2);
 
+learning.recordFirstAttempts("franco", dataset, [{
+  vocabularyId: "viaje",
+  tier: "everyday",
+  direction: "spanish-to-english",
+  correct: true,
+}], "2026-07-20");
+snapshot = learning.getSnapshot("franco", dataset);
+assert.equal(snapshot.words.viaje.schedule.dueDate, "2026-07-21");
+
 currentDate = new Date(2026, 6, 4, 9);
 learning.recordFirstAttempts("franco", dataset, [{
   vocabularyId: "agua",
@@ -68,4 +77,4 @@ learning.saveDailySession("franco", dataset, { date: "2026-07-04", status: "in-p
 assert.equal(learning.getDailySession("franco", dataset, "2026-07-04").status, "in-progress");
 assert.equal(learning.getSnapshot("franco", { ...dataset, version: 2 }).words.agua, undefined);
 
-console.log("Word evidence, review scheduling, coverage, and daily-session persistence checks passed.");
+console.log("Word evidence, effective-date scheduling, coverage, and daily-session persistence checks passed.");
