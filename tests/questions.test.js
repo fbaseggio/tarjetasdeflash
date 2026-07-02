@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { buildQuestion, buildQuiz, DIRECTIONS } from "../src/questions.js";
+import { buildQuestion, buildQuiz, buildQuizFromAnswers, DIRECTIONS } from "../src/questions.js";
 
 const vocabulary = JSON.parse(fs.readFileSync(new URL("../assets/vocabulary.json", import.meta.url)));
 const answerSlots = [0, 0, 0, 0];
@@ -47,3 +47,15 @@ for (const definition of quiz) {
 }
 
 console.log("Generated a balanced bidirectional quiz without repeated vocabulary.");
+
+const shortRound = buildQuizFromAnswers(vocabulary, vocabulary.slice(0, 3), () => 0.41);
+assert.equal(shortRound.length, 3);
+assert.deepEqual(
+  new Set(shortRound.map((question) => question.vocabularyId)),
+  new Set(vocabulary.slice(0, 3).map((entry) => entry.id)),
+);
+assert.ok(shortRound.every((definition) => (
+  definition.variants[definition.initialDirection].choices.length === 4
+)));
+
+console.log("Generated a short review round with distractors from the full vocabulary.");

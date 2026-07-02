@@ -127,3 +127,43 @@ export function buildQuiz(vocabulary, requestedCount = 10, random = Math.random)
     }),
   }));
 }
+
+export function buildQuizFromAnswers(vocabulary, answers, random = Math.random) {
+  if (!Array.isArray(vocabulary) || vocabulary.length < 4) {
+    throw new Error("At least four vocabulary entries are required.");
+  }
+  if (!Array.isArray(answers) || answers.length === 0) {
+    throw new Error("At least one quiz answer is required.");
+  }
+
+  const vocabularyIds = new Set(vocabulary.map((entry) => entry.id));
+  if (answers.some((entry) => !vocabularyIds.has(entry.id))) {
+    throw new Error("Every quiz answer must belong to the vocabulary.");
+  }
+
+  const directions = shuffle(
+    Array.from({ length: answers.length }, (_, index) => (
+      index % 2 === 0 ? DIRECTIONS.SPANISH_TO_ENGLISH : DIRECTIONS.ENGLISH_TO_SPANISH
+    )),
+    random,
+  );
+
+  return shuffle(answers, random).map((answer, index) => Object.freeze({
+    vocabularyId: answer.id,
+    initialDirection: directions[index],
+    variants: Object.freeze({
+      [DIRECTIONS.SPANISH_TO_ENGLISH]: buildQuestionForAnswer(
+        vocabulary,
+        answer,
+        DIRECTIONS.SPANISH_TO_ENGLISH,
+        random,
+      ),
+      [DIRECTIONS.ENGLISH_TO_SPANISH]: buildQuestionForAnswer(
+        vocabulary,
+        answer,
+        DIRECTIONS.ENGLISH_TO_SPANISH,
+        random,
+      ),
+    }),
+  }));
+}

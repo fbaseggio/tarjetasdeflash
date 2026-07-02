@@ -120,15 +120,57 @@
           This is an early estimate, not a grade. Check-ins will revise it as we learn more.
         </p>
         <button id="start-practice-button" class="next-button" type="button">
-          Start practicing
+          See today’s session
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      <section id="session-panel" class="session-panel" aria-labelledby="session-title" hidden>
+        <div class="eyebrow">Today’s practice session</div>
+        <h1 id="session-title">Three small steps.</h1>
+        <ol class="session-steps">
+          <li>
+            <span>1</span>
+            <div><strong>Check in</strong><small id="check-in-count">10 familiar words</small></div>
+          </li>
+          <li>
+            <span>2</span>
+            <div><strong>Meet new words</strong><small id="new-word-count">15 Spanish–English pairs</small></div>
+          </li>
+          <li>
+            <span>3</span>
+            <div><strong>Review what’s due</strong><small id="due-review-count">15 words in short rounds</small></div>
+          </li>
+        </ol>
+        <p class="onboarding-note">No running score. We’ll show your progress when the session is complete.</p>
+        <button id="start-session-button" class="next-button" type="button">
+          Begin check-in
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      <section id="presentation-panel" class="presentation-panel" aria-labelledby="presentation-title" hidden>
+        <div class="quiz-meta">
+          <div class="eyebrow">Step 2 · New words</div>
+          <span id="presentation-progress" class="quiz-progress"></span>
+        </div>
+        <h1 id="presentation-title">Meet this word.</h1>
+        <div class="presentation-card">
+          <strong id="presentation-spanish" lang="es"></strong>
+          <span aria-hidden="true"></span>
+          <p id="presentation-english" lang="en"></p>
+        </div>
+        <p class="presentation-note">Take a moment with the pair. You’ll retrieve it during review.</p>
+        <button id="next-presentation-button" class="next-button" type="button">
+          Next word
           <span aria-hidden="true">→</span>
         </button>
       </section>
 
       <section id="results-panel" class="results-panel" aria-labelledby="results-title" hidden>
-        <div class="eyebrow">Quiz complete</div>
+        <div id="results-eyebrow" class="eyebrow">Quiz complete</div>
         <h1 id="results-title">¡Terminado!</h1>
-        <p class="results-intro">You kept going until every word was right.</p>
+        <p id="results-intro" class="results-intro">You kept going until every word was right.</p>
 
         <div class="final-score" aria-label="Final score">
           <div class="score-part score-right">
@@ -169,6 +211,12 @@
             <dd id="stat-overall-error">0%</dd>
           </div>
         </dl>
+
+        <div id="coverage-report" class="coverage-report" hidden>
+          <h2>Vocabulary coverage</h2>
+          <p>Distinct words tested, classified by their latest first-presentation result.</p>
+          <div id="coverage-rows"></div>
+        </div>
 
         <button id="new-quiz-button" class="next-button" type="button">
           Start another quiz

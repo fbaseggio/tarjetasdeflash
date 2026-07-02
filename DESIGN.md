@@ -22,15 +22,17 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
+- A persisted daily practice session with a ten-word check-in, fifteen explicit new-word presentations, and due-review rounds.
+- Per-word, per-direction latest first-presentation evidence with an initial 1/3/7/14/30/60-day schedule.
+- Tier coverage reporting for distinct tested words and their latest first-presentation result.
 - Automated tests for question generation, quiz/reprise behavior, profiles, recognition, and activity summaries.
 
 ### Next local-learning work
 
 - Migration support for the eventual user-provided vocabulary.
-- A daily **practice session** containing a check-in, explicit presentation of new words, and due-review rounds.
-- Persistent per-word attempts, direction-specific knowledge, estimated learner level, and spaced-repetition due dates.
-- Vocabulary-aware selection instead of entirely random selection.
-- Reload recovery, progress reporting, and local standings.
+- Immutable attempt history and fuller learner-level revision beyond the latest per-word evidence.
+- More sophisticated vocabulary selection using recency, confidence, and history.
+- Full in-round reload recovery and local standings.
 
 ### Later work
 
@@ -143,20 +145,20 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 ### 7.1 Main flow
 
 1. The learner selects or resumes a profile.
-2. The current prototype immediately generates ten unique questions.
-3. The learner answers one question at a time.
-4. Selecting an answer immediately advances without revealing whether it was correct.
-5. After the tenth initial question, missed vocabulary enters a review queue.
-6. Review continues until every vocabulary item has been answered correctly.
-7. Only then does the result screen show the final right and wrong counts.
+2. The application prepares or resumes the learner's daily practice session.
+3. The learner completes a silent ten-word check-in, including reprise of any misses.
+4. The application explicitly presents up to fifteen new Spanish/English pairs.
+5. Due words and the newly presented words appear in quiz rounds of at most ten words.
+6. Each round continues until every vocabulary item has been answered correctly.
+7. Only after all stages does the result screen show aggregate right and wrong counts.
 
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
 ### 7.2 Scoring
 
-The quiz records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. Because the session does not end until all ten items are resolved, the final result is always `10 right` and `N wrong`.
+Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
 
-The result screen appears only at completion and offers a new ten-question quiz round.
+The result screen appears only at completion and offers optional extra practice after the daily session.
 
 Completing a quiz also updates a per-profile practice summary in local browser storage. Calendar dates use the device's local timezone. The first completed quiz on a date is that day's baseline quiz: it adds one practiced day, advances the streak when the preceding practice date was yesterday, and contributes to the daily first-quiz error rate. Later quizzes that day do not change the streak or baseline rate, but do increase the total quiz count and all-quiz error rate.
 
@@ -178,17 +180,17 @@ Default behavior:
 
 Review proceeds round-robin until all missed vocabulary has been answered correctly.
 
-### 7.4 Planned daily practice session
+### 7.4 Daily practice session
 
 A **practice session** is the daily learning unit. It contains three stages, each rendered in short quiz rounds rather than one intimidating continuous test:
 
-1. **Check-in:** ten previously encountered words, completed silently with no correctness feedback. The first check-in completed on a local calendar date supplies that day's baseline error rate and streak credit.
+1. **Check-in:** ten words completed silently with no correctness feedback. For learners above Foundation, two slots audit provisionally known Foundation words, prioritizing words not yet tested; the other slots favor previously encountered misses and then prior successes. The first check-in completed on a local calendar date supplies that day's baseline error rate and streak credit.
 2. **New words:** normally about fifteen new entries. Each word is explicitly presented as a Spanish/English pair before later retrieval; genuinely new vocabulary must not rely on a lucky multiple-choice guess as its only exposure.
 3. **Due reviews:** all words due under the scheduler, presented in ten-question rounds. Reviews take priority over new words when a backlog develops.
 
-The initial target is fifteen new words per study day, all due reviews, and a soft cap of approximately ninety first-pass prompts or fifteen minutes. If more than roughly sixty reviews are due, the session reduces or suspends new-word introduction. The exact limits remain configuration rather than domain invariants and should be adjusted after observing the four learners.
+The implemented initial target is fifteen new words per study day plus all due reviews. If more than sixty reviews are due, the session suspends new-word introduction. A future release will also apply the proposed soft cap of approximately ninety first-pass prompts or fifteen minutes. The exact limits remain configuration rather than domain invariants and should be adjusted after observing the four learners.
 
-The current standalone quiz and reprise behavior becomes the interaction primitive used by each stage. A practice session may contain several stored quiz rounds, but streak and first-quiz-of-day reporting are awarded only once per local calendar day.
+The standalone quiz and reprise behavior is the interaction primitive used by the check-in and due-review stages. Newly presented words are due for retrieval in Step 3 the same day. A practice session may contain several stored quiz rounds, but streak and first-quiz-of-day reporting are awarded only once per local calendar day.
 
 ## 8. Profiles and identity
 
@@ -243,7 +245,7 @@ The current quiz domain is independent from activity persistence, but a complete
 
 ### 9.2 Initial browser storage
 
-The working prototype stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, and the eighteen assessed-word results in `localStorage`. It does not yet persist ordinary quiz sessions, later attempts, in-progress rounds, continuously updated level evidence, or word schedules. The planned fuller local release uses IndexedDB as its source of truth for:
+The working prototype stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, daily session plans, per-word directional first-presentation evidence, and review due dates in `localStorage`. A reload resumes the saved stage and restarts an unfinished quiz round without recording its abandoned clicks. It does not yet preserve immutable attempt history or every choice within an in-progress round. The planned fuller local release uses IndexedDB as its source of truth for:
 
 - Profiles and local summary counters.
 - Immutable quiz sessions and answer attempts.
@@ -403,6 +405,8 @@ assets/
 src/
   app.js
   activity-storage.js
+  daily-session.js
+  learning-storage.js
   profile-storage.js
   profiles.js
   questions.js
@@ -419,8 +423,10 @@ Responsibilities:
 - `quiz-session.js`: implemented quiz-round state, scoring, alternating reprise generation, and recovery.
 - `profiles.js`, `recognition.js`, and `profile-storage.js`: implemented honor-system identity flow.
 - `activity-storage.js`: implemented `localStorage` activity summaries and daily streak calculations.
-- `app.js`: implemented rendering and event wiring.
-- Planned modules: vocabulary validation, the practice-session coordinator, scheduler, IndexedDB storage, level estimation, and standings.
+- `daily-session.js`: implemented daily plan construction, check-in selection, new-word throttling, and review-round slicing.
+- `learning-storage.js`: implemented dataset-scoped word evidence, review scheduling, coverage, and daily-session persistence.
+- `app.js`: implemented rendering, event wiring, and the three-stage session coordinator.
+- Planned modules: IndexedDB storage, continuously revised level estimation, and standings.
 
 The future practice-session and scheduling domain should depend on the storage interface rather than IndexedDB or Firestore calls directly. A memory implementation supports automated tests, and the later Firestore implementation can satisfy the same contract.
 
@@ -476,13 +482,13 @@ Next local-learning acceptance criteria:
 
 - The larger test vocabulary validates stable semantic IDs, senses, tiers, attribution, and required fields.
 - A daily practice session contains a ten-word check-in, explicit new-word presentation, and due-review rounds.
-- Profiles, attempts, estimated level evidence, and word schedules survive closing and reopening the browser.
+- Profiles, latest first-presentation evidence, estimated level evidence, daily plans, and word schedules survive closing and reopening the browser.
 - Due words are prioritized on a later day according to the documented intervals.
 - A wrong first attempt shortens its schedule, while an immediate reprise success does not imply durable mastery.
 - Spanish-to-English and English-to-Spanish knowledge evidence remain distinguishable.
 - Replacing a vocabulary dataset preserves reviewed exact semantic matches and does not attach history to ambiguous senses.
 - Local standings agree with completed practice sessions and quiz rounds in that browser.
-- A page reload can recover or clearly abandon an in-progress practice session without silently corrupting its results.
+- A page reload recovers the saved practice stage and restarts an unfinished quiz round without recording partial results.
 
 Shared-persistence acceptance criteria are added in Phase 2: activity recorded on one device must appear under the same selected profile on another, concurrent activity must not lose summary counts, and shared standings must agree with completed sessions.
 
@@ -505,14 +511,14 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - [x] Approximately 1,500-entry tiered CC BY-SA testing vocabulary with attribution, retained original IDs, and version metadata.
 - [x] One-time 12-core-plus-6-confirmation adaptive onboarding with persisted tentative placement.
 - [x] Activation of the larger vocabulary and frontier-weighted quiz selection with Foundation auditing.
-- [ ] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
+- [x] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
 - [ ] IndexedDB profiles, quiz rounds, attempts, learner-level evidence, and summary counters.
-- [ ] Per-word, per-direction progress and the initial 1/3/7/14/30/60-day review schedule.
+- [x] Per-word, per-direction latest first-presentation progress and the initial 1/3/7/14/30/60-day review schedule.
 - [x] Initial learner known-through band, learning frontier, and low confidence derived from onboarding first attempts.
 - [ ] Continuous level revision and confidence growth from later check-ins.
 - [ ] Vocabulary migration that preserves exact overlapping word/sense history.
 - [ ] Multi-day progress views and local standings.
-- [ ] Reload recovery for an in-progress practice session.
+- [x] Stage-level reload recovery with safe restart of an unfinished quiz round.
 
 ### Phase 2 — Shared history
 

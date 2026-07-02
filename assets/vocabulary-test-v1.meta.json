@@ -41,6 +41,6 @@
     "This is a broad testing vocabulary, not an official CEFR placement instrument.",
     "Tier assignment is primarily frequency-based after preserving the original beginner entries.",
     "English glosses were shortened and selected for multiple-choice testing; they do not represent every sense.",
-    "The active application continues to use assets/vocabulary.json until a deliberate migration is implemented."
+    "The application uses this dataset for onboarding, daily sessions, reviews, and extra practice."
   ]
 }

@@ -113,6 +113,8 @@ a {
 .recognition-panel,
 .onboarding-panel,
 .placement-panel,
+.session-panel,
+.presentation-panel,
 .results-panel {
   align-self: center;
   padding: clamp(24px, 6vw, 48px);
@@ -121,6 +123,82 @@ a {
   border-radius: 28px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
+}
+
+.session-steps {
+  display: grid;
+  gap: 12px;
+  margin: 26px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session-steps li {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 15px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.session-steps li > span {
+  display: grid;
+  flex: 0 0 34px;
+  height: 34px;
+  place-items: center;
+  color: white;
+  background: var(--violet);
+  border-radius: 50%;
+  font-weight: 850;
+}
+
+.session-steps strong,
+.session-steps small {
+  display: block;
+}
+
+.session-steps small {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.presentation-card {
+  display: grid;
+  gap: 16px;
+  margin: 30px 0 18px;
+  padding: 30px 24px;
+  text-align: center;
+  background: var(--violet-soft);
+  border: 1px solid #d9d3ff;
+  border-radius: 21px;
+}
+
+.presentation-card strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.6rem, 10vw, 4.8rem);
+  line-height: 1;
+}
+
+.presentation-card span {
+  width: 44px;
+  height: 1px;
+  margin: 0 auto;
+  background: #b8afe9;
+}
+
+.presentation-card p {
+  margin: 0;
+  color: var(--violet-dark);
+  font-size: clamp(1.25rem, 5vw, 1.8rem);
+  font-weight: 750;
+}
+
+.presentation-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .onboarding-copy {
@@ -513,6 +591,48 @@ h1 {
   font-weight: 850;
 }
 
+.coverage-report {
+  margin-top: 26px;
+}
+
+.coverage-report h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+}
+
+.coverage-report > p {
+  margin: 6px 0 14px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.coverage-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) repeat(3, auto);
+  gap: 12px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.86rem;
+}
+
+.coverage-row strong {
+  color: var(--ink);
+}
+
+.coverage-row span {
+  color: var(--muted);
+}
+
+.coverage-row .coverage-correct {
+  color: var(--green);
+}
+
+.coverage-row .coverage-wrong {
+  color: var(--red);
+}
+
 footer {
   padding: 24px 0;
   color: var(--muted);
@@ -538,7 +658,9 @@ footer {
   }
 
   .onboarding-panel,
-  .placement-panel {
+  .placement-panel,
+  .session-panel,
+  .presentation-panel {
     border-radius: 22px;
   }
 
