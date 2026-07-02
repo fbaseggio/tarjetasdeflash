@@ -81,7 +81,7 @@
 
       <section id="quiz-panel" class="quiz-panel" aria-labelledby="quiz-title" hidden>
         <div class="quiz-meta">
-          <div class="eyebrow">Spanish → English</div>
+          <div id="direction-label" class="eyebrow">Spanish → English</div>
           <span id="quiz-progress" class="quiz-progress"></span>
         </div>
         <h1 id="quiz-title">What does this word mean?</h1>
@@ -91,13 +91,7 @@
         </div>
 
         <div id="choices" class="choices" aria-label="Answer choices"></div>
-
-        <p id="feedback" class="feedback" aria-live="polite"></p>
-
-        <button id="next-button" class="next-button" type="button" hidden>
-          Next question
-          <span aria-hidden="true">→</span>
-        </button>
+        <p id="quiz-error" class="feedback error" aria-live="polite" hidden></p>
       </section>
 
       <section id="results-panel" class="results-panel" aria-labelledby="results-title" hidden>

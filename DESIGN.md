@@ -8,7 +8,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## 2. Goals
 
-- Present quick Spanish vocabulary quizzes with clear feedback.
+- Present quick Spanish vocabulary quizzes with clear prompts and uninterrupted progression.
 - Support approximately four named learner profiles in one browser initially.
 - Track quiz sessions and individual answers over time.
 - Track per-word progress and schedule spaced-repetition reviews.
@@ -69,14 +69,7 @@ This separation allows the same vocabulary item to appear in different direction
 
 ### 6.1 Initial question type
 
-The MVP uses four-choice multiple choice:
-
-- Prompt: a Spanish word or phrase.
-- Choices: four English translations.
-- Exactly one choice is correct.
-- Three choices are distractors.
-
-English-to-Spanish questions use the same model with the direction reversed. They are initially used only as an optional follow-up mode.
+The MVP uses four-choice multiple choice in both directions. Each ten-question initial pass contains five Spanish-to-English and five English-to-Spanish questions, shuffled into a mixed order. Every vocabulary item has a stable four-choice variant in each direction: exactly one correct answer and three distractors.
 
 ### 6.2 Question selection
 
@@ -117,11 +110,10 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 2. The dashboard shows recent progress and a **Start quiz** action.
 3. The generator creates ten unique questions.
 4. The learner answers one question at a time.
-5. The interface immediately marks the submitted choice correct or incorrect.
-6. The learner advances after seeing the feedback.
-7. After the tenth initial question, missed vocabulary enters a review queue.
-8. Review continues until every vocabulary item has been answered correctly.
-9. Only then does the result screen show the final right and wrong counts.
+5. Selecting an answer immediately advances without revealing whether it was correct.
+6. After the tenth initial question, missed vocabulary enters a review queue.
+7. Review continues until every vocabulary item has been answered correctly.
+8. Only then does the result screen show the final right and wrong counts.
 
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
@@ -137,14 +129,15 @@ Review is a continuation of the same quiz and contains only unresolved vocabular
 
 Default behavior:
 
-- Repeat the same direction and the same four choices.
-- Do not reveal the correct answer after an incorrect submission.
-- Display every previously selected wrong choice with a strike-through and disable it.
-- Preserve the correct answer and its original slot.
-- If another wrong answer is selected, add it to that question's eliminated choices and return the question to the end of the review queue.
+- First repeat a missed word in the direction opposite its initial question.
+- Alternate direction after every additional wrong review answer.
+- Do not reveal whether a submitted answer was correct or incorrect.
+- Maintain stable choices and answer positions separately for each direction.
+- Display previously selected wrong choices with a strike-through and disable them whenever that direction returns.
+- If another wrong answer is selected, record it for that direction and return the opposite-direction variant to the end of the review queue.
 - Record each new submission as a separate attempt linked to the same question.
 
-Review proceeds round-robin until all missed vocabulary has been answered correctly. Reversing the direction (English-to-Spanish) remains a planned alternative mode and would use newly generated choices.
+Review proceeds round-robin until all missed vocabulary has been answered correctly.
 
 ## 8. Profiles and identity
 
@@ -358,7 +351,7 @@ The quiz domain should depend on the storage interface rather than IndexedDB or 
 - Large choice targets with visible focus states.
 - Do not communicate correctness by color alone; use icons and text as well.
 - Keep accents and `ñ` intact throughout loading, display, and storage.
-- Announce answer feedback for screen readers.
+- Announce new prompts and quiz progress for screen readers without disclosing answer outcomes.
 - Avoid animations that delay the next question; respect reduced-motion preferences.
 - Keep the visual tone cheerful and uncluttered rather than resembling a worksheet.
 
@@ -385,9 +378,10 @@ Local-release acceptance criteria:
 - A ten-question quiz contains ten distinct vocabulary IDs.
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
-- A submitted answer produces immediate, accessible feedback and cannot be changed.
+- A submitted answer advances immediately without outcome feedback and cannot be changed.
 - No running score is displayed.
-- Review contains only unresolved vocabulary, preserves answer positions, and strikes through and disables every preceding wrong selection.
+- Review first reverses each missed question, then alternates direction after each miss.
+- Each direction preserves its own answer positions and strikes through and disables its preceding wrong selections.
 - A repeatedly missed question returns to the end of the review queue until answered correctly.
 - The final score always reports ten right answers and the total number of wrong submissions.
 - Profiles, attempts, summaries, and word schedules survive closing and reopening the browser.
@@ -405,10 +399,10 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 - Static layout and profile selector.
 - Vocabulary loading and validation.
-- Random ten-question Spanish-to-English quizzes for new profiles.
+- Random ten-question quizzes balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Random distractors and answer positions.
-- Immediate correctness feedback without revealing the answer after a miss.
-- Round-robin review of missed vocabulary with cumulative answer elimination.
+- Automatic advancement without correctness feedback.
+- Round-robin, alternating-direction review with direction-specific cumulative answer elimination.
 - A final-only score of ten right answers and the accumulated wrong submissions.
 - IndexedDB profiles, sessions, attempts, and summary counters.
 - Per-word progress and the initial 1/3/7/14/30-day review schedule.
@@ -426,7 +420,6 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 3 — Learning improvements
 
-- English-to-Spanish follow-ups.
 - Category-aware distractors.
 - Refinement of the spaced-repetition algorithm using observed results.
 - Progress and trouble-word reports.
@@ -442,7 +435,6 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 ## 17. Open decisions
 
 - The four initial profile names and optional colors or avatars.
-- Whether reverse-direction follow-up is offered in the MVP or immediately afterward.
 - Whether a learner must finish or explicitly abandon an in-progress quiz before starting another.
 - The final standings ranking and tie-break rules after early user feedback.
 - Whether incomplete sessions count as activity but not as completed quizzes.

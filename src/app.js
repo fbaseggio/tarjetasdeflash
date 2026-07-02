@@ -7,9 +7,10 @@ const quizPanel = document.querySelector("#quiz-panel");
 const resultsPanel = document.querySelector("#results-panel");
 const promptElement = document.querySelector("#prompt");
 const choicesElement = document.querySelector("#choices");
-const feedbackElement = document.querySelector("#feedback");
+const quizTitleElement = document.querySelector("#quiz-title");
+const directionLabelElement = document.querySelector("#direction-label");
+const quizErrorElement = document.querySelector("#quiz-error");
 const progressElement = document.querySelector("#quiz-progress");
-const nextButton = document.querySelector("#next-button");
 const newQuizButton = document.querySelector("#new-quiz-button");
 const finalRightElement = document.querySelector("#final-right");
 const finalWrongElement = document.querySelector("#final-wrong");
@@ -33,13 +34,15 @@ function renderQuestion() {
   const knownWrongAnswers = new Set(state.knownWrongAnswers);
 
   renderProgress(state);
+  const isSpanishPrompt = state.direction === "spanish-to-english";
+  directionLabelElement.textContent = isSpanishPrompt ? "Spanish → English" : "English → Spanish";
+  quizTitleElement.textContent = isSpanishPrompt
+    ? "Choose the English translation."
+    : "Choose the Spanish translation.";
   promptElement.textContent = currentQuestion.prompt;
+  promptElement.lang = currentQuestion.promptLanguage;
   choicesElement.replaceChildren();
-  feedbackElement.textContent = state.phase === "review"
-    ? "Try this one again. Previous misses are crossed out."
-    : "Choose the best translation.";
-  feedbackElement.className = "feedback";
-  nextButton.hidden = true;
+  quizErrorElement.hidden = true;
 
   currentQuestion.choices.forEach((choice, index) => {
     const button = document.createElement("button");
@@ -48,6 +51,7 @@ function renderQuestion() {
     button.className = "choice";
     button.dataset.answer = choice;
     button.textContent = `${choicePrefix} ${choice}`;
+    button.lang = currentQuestion.answerLanguage;
 
     if (knownWrongAnswers.has(choice)) {
       button.disabled = true;
@@ -62,31 +66,14 @@ function renderQuestion() {
 }
 
 function handleAnswer(event) {
-  const selectedButton = event.currentTarget;
-  const result = quizSession.submitAnswer(selectedButton.dataset.answer);
+  quizSession.submitAnswer(event.currentTarget.dataset.answer);
+  const state = quizSession.advance();
 
-  for (const button of choicesElement.querySelectorAll("button")) {
-    button.disabled = true;
-  }
-
-  if (result.correct) {
-    selectedButton.classList.add("correct");
-    feedbackElement.textContent = "¡Correcto! Nice work.";
-    feedbackElement.className = "feedback success";
+  if (state.phase === "complete") {
+    showResults(state);
   } else {
-    selectedButton.classList.add("incorrect");
-    feedbackElement.textContent = "Not quite. We’ll bring this one back.";
-    feedbackElement.className = "feedback error";
+    renderQuestion();
   }
-
-  const nextLabels = {
-    main: "Next question",
-    review: "Review missed words",
-    complete: "See final score",
-  };
-  nextButton.firstChild.textContent = `${nextLabels[result.nextPhase]} `;
-  nextButton.hidden = false;
-  nextButton.focus();
 }
 
 function showResults(state) {
@@ -95,16 +82,6 @@ function showResults(state) {
   finalRightElement.textContent = state.correctCount;
   finalWrongElement.textContent = state.wrongCount;
   newQuizButton.focus();
-}
-
-function advanceQuiz() {
-  const state = quizSession.advance();
-
-  if (state.phase === "complete") {
-    showResults(state);
-  } else {
-    renderQuestion();
-  }
 }
 
 async function loadVocabulary() {
@@ -135,7 +112,7 @@ async function startQuiz() {
   resultsPanel.hidden = true;
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
-  feedbackElement.textContent = "";
+  quizErrorElement.hidden = true;
 
   try {
     await loadVocabulary();
@@ -144,12 +121,11 @@ async function startQuiz() {
   } catch (error) {
     console.error(error);
     promptElement.textContent = "¡Uy!";
-    feedbackElement.textContent = "The vocabulary could not be loaded. Please refresh and try again.";
-    feedbackElement.className = "feedback error";
+    quizErrorElement.textContent = "The vocabulary could not be loaded. Please refresh and try again.";
+    quizErrorElement.hidden = false;
   }
 }
 
-nextButton.addEventListener("click", advanceQuiz);
 newQuizButton.addEventListener("click", startQuiz);
 
 initializeRecognition({

@@ -1,22 +1,48 @@
 import assert from "node:assert/strict";
+import { DIRECTIONS } from "../src/questions.js";
 import { createQuizSession } from "../src/quiz-session.js";
+
+function makeVariant(index, direction) {
+  const isSpanishPrompt = direction === DIRECTIONS.SPANISH_TO_ENGLISH;
+  const correctAnswer = isSpanishPrompt ? `english-${index}` : `spanish-${index}`;
+  const wrongPrefix = isSpanishPrompt ? "english-wrong" : "spanish-wrong";
+
+  return {
+    vocabularyId: `word-${index}`,
+    direction,
+    promptLanguage: isSpanishPrompt ? "es" : "en",
+    answerLanguage: isSpanishPrompt ? "en" : "es",
+    prompt: isSpanishPrompt ? `spanish-${index}` : `english-${index}`,
+    correctAnswer,
+    choices: [
+      `${wrongPrefix}-a-${index}`,
+      correctAnswer,
+      `${wrongPrefix}-b-${index}`,
+      `${wrongPrefix}-c-${index}`,
+    ],
+  };
+}
 
 function makeQuestions(count = 10) {
   return Array.from({ length: count }, (_, index) => ({
     vocabularyId: `word-${index}`,
-    prompt: `palabra-${index}`,
-    correctAnswer: `answer-${index}`,
-    choices: [`wrong-a-${index}`, `answer-${index}`, `wrong-b-${index}`, `wrong-c-${index}`],
+    initialDirection: index % 2 === 0
+      ? DIRECTIONS.SPANISH_TO_ENGLISH
+      : DIRECTIONS.ENGLISH_TO_SPANISH,
+    variants: {
+      [DIRECTIONS.SPANISH_TO_ENGLISH]: makeVariant(index, DIRECTIONS.SPANISH_TO_ENGLISH),
+      [DIRECTIONS.ENGLISH_TO_SPANISH]: makeVariant(index, DIRECTIONS.ENGLISH_TO_SPANISH),
+    },
   }));
 }
 
 const perfectQuestions = makeQuestions();
 const perfectSession = createQuizSession(perfectQuestions);
 
-for (const question of perfectQuestions) {
+for (const definition of perfectQuestions) {
   const beforeAnswer = perfectSession.getState();
-  assert.equal(beforeAnswer.question.vocabularyId, question.vocabularyId);
-  const result = perfectSession.submitAnswer(question.correctAnswer);
+  assert.equal(beforeAnswer.question.vocabularyId, definition.vocabularyId);
+  const result = perfectSession.submitAnswer(beforeAnswer.question.correctAnswer);
   assert.equal(result.correct, true);
   perfectSession.advance();
 }
@@ -28,46 +54,50 @@ assert.equal(perfectScore.wrongCount, 0);
 
 const reviewQuestions = makeQuestions();
 const reviewSession = createQuizSession(reviewQuestions);
-const missedQuestion = reviewQuestions[0];
+const missedDefinition = reviewQuestions[0];
+const initialVariant = missedDefinition.variants[DIRECTIONS.SPANISH_TO_ENGLISH];
+const oppositeVariant = missedDefinition.variants[DIRECTIONS.ENGLISH_TO_SPANISH];
 
-let result = reviewSession.submitAnswer(missedQuestion.choices[0]);
+let result = reviewSession.submitAnswer(initialVariant.choices[0]);
 assert.equal(result.correct, false);
-assert.equal(result.nextPhase, "main");
 reviewSession.advance();
 
-for (const question of reviewQuestions.slice(1)) {
-  result = reviewSession.submitAnswer(question.correctAnswer);
+for (const definition of reviewQuestions.slice(1)) {
+  const state = reviewSession.getState();
+  assert.equal(state.question.vocabularyId, definition.vocabularyId);
+  reviewSession.submitAnswer(state.question.correctAnswer);
   reviewSession.advance();
 }
 
 let reviewState = reviewSession.getState();
 assert.equal(reviewState.phase, "review");
-assert.equal(reviewState.question.vocabularyId, missedQuestion.vocabularyId);
-assert.deepEqual(reviewState.knownWrongAnswers, [missedQuestion.choices[0]]);
-assert.deepEqual(reviewState.question.choices, missedQuestion.choices);
+assert.equal(reviewState.direction, DIRECTIONS.ENGLISH_TO_SPANISH);
+assert.equal(reviewState.question.prompt, oppositeVariant.prompt);
+assert.deepEqual(reviewState.knownWrongAnswers, []);
+
+reviewSession.submitAnswer(oppositeVariant.choices[0]);
+reviewSession.advance();
+reviewState = reviewSession.getState();
+assert.equal(reviewState.direction, DIRECTIONS.SPANISH_TO_ENGLISH);
+assert.deepEqual(reviewState.knownWrongAnswers, [initialVariant.choices[0]]);
 assert.throws(
-  () => reviewSession.submitAnswer(missedQuestion.choices[0]),
+  () => reviewSession.submitAnswer(initialVariant.choices[0]),
   /previously eliminated/,
 );
 
-result = reviewSession.submitAnswer(missedQuestion.choices[2]);
-assert.equal(result.correct, false);
-assert.equal(result.nextPhase, "review");
+reviewSession.submitAnswer(initialVariant.choices[2]);
 reviewSession.advance();
-
 reviewState = reviewSession.getState();
-assert.deepEqual(
-  reviewState.knownWrongAnswers,
-  [missedQuestion.choices[0], missedQuestion.choices[2]],
-);
+assert.equal(reviewState.direction, DIRECTIONS.ENGLISH_TO_SPANISH);
+assert.deepEqual(reviewState.knownWrongAnswers, [oppositeVariant.choices[0]]);
 
-result = reviewSession.submitAnswer(missedQuestion.correctAnswer);
+result = reviewSession.submitAnswer(oppositeVariant.correctAnswer);
 assert.equal(result.correct, true);
 assert.equal(result.nextPhase, "complete");
 const finalState = reviewSession.advance();
 
 assert.equal(finalState.phase, "complete");
 assert.equal(finalState.correctCount, 10);
-assert.equal(finalState.wrongCount, 2);
+assert.equal(finalState.wrongCount, 3);
 
-console.log("Quiz session scoring, review queue, and answer elimination checks passed.");
+console.log("Alternating-direction review and direction-specific elimination checks passed.");

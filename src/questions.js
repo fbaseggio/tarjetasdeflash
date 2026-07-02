@@ -1,3 +1,20 @@
+export const DIRECTIONS = Object.freeze({
+  SPANISH_TO_ENGLISH: "spanish-to-english",
+  ENGLISH_TO_SPANISH: "english-to-spanish",
+});
+
+export function oppositeDirection(direction) {
+  if (direction === DIRECTIONS.SPANISH_TO_ENGLISH) {
+    return DIRECTIONS.ENGLISH_TO_SPANISH;
+  }
+
+  if (direction === DIRECTIONS.ENGLISH_TO_SPANISH) {
+    return DIRECTIONS.SPANISH_TO_ENGLISH;
+  }
+
+  throw new Error(`Unknown question direction: ${direction}`);
+}
+
 export function shuffle(items, random = Math.random) {
   const shuffled = [...items];
 
@@ -9,21 +26,37 @@ export function shuffle(items, random = Math.random) {
   return shuffled;
 }
 
-export function buildQuestionForAnswer(vocabulary, answer, random = Math.random) {
+export function buildQuestionForAnswer(
+  vocabulary,
+  answer,
+  direction = DIRECTIONS.SPANISH_TO_ENGLISH,
+  random = Math.random,
+) {
   if (!Array.isArray(vocabulary) || vocabulary.length < 4) {
     throw new Error("At least four vocabulary entries are required.");
   }
 
-  const seenTranslations = new Set([answer.english]);
+  const isSpanishPrompt = direction === DIRECTIONS.SPANISH_TO_ENGLISH;
+
+  if (!isSpanishPrompt && direction !== DIRECTIONS.ENGLISH_TO_SPANISH) {
+    throw new Error(`Unknown question direction: ${direction}`);
+  }
+
+  const promptField = isSpanishPrompt ? "spanish" : "english";
+  const answerField = isSpanishPrompt ? "english" : "spanish";
+  const correctAnswer = answer[answerField];
+  const seenAnswers = new Set([correctAnswer]);
   const distractors = [];
 
   for (const entry of shuffle(vocabulary, random)) {
-    if (entry.id === answer.id || seenTranslations.has(entry.english)) {
+    const possibleAnswer = entry[answerField];
+
+    if (entry.id === answer.id || seenAnswers.has(possibleAnswer)) {
       continue;
     }
 
-    seenTranslations.add(entry.english);
-    distractors.push(entry.english);
+    seenAnswers.add(possibleAnswer);
+    distractors.push(possibleAnswer);
 
     if (distractors.length === 3) {
       break;
@@ -34,12 +67,15 @@ export function buildQuestionForAnswer(vocabulary, answer, random = Math.random)
     throw new Error("Four distinct answer choices could not be generated.");
   }
 
-  return {
+  return Object.freeze({
     vocabularyId: answer.id,
-    prompt: answer.spanish,
-    correctAnswer: answer.english,
-    choices: shuffle([answer.english, ...distractors], random),
-  };
+    direction,
+    promptLanguage: isSpanishPrompt ? "es" : "en",
+    answerLanguage: isSpanishPrompt ? "en" : "es",
+    prompt: answer[promptField],
+    correctAnswer,
+    choices: Object.freeze(shuffle([correctAnswer, ...distractors], random)),
+  });
 }
 
 export function buildQuestion(vocabulary, previousVocabularyId = null, random = Math.random) {
@@ -51,7 +87,7 @@ export function buildQuestion(vocabulary, previousVocabularyId = null, random = 
   const promptChoices = promptPool.length > 0 ? promptPool : vocabulary;
   const answer = promptChoices[Math.floor(random() * promptChoices.length)];
 
-  return buildQuestionForAnswer(vocabulary, answer, random);
+  return buildQuestionForAnswer(vocabulary, answer, DIRECTIONS.SPANISH_TO_ENGLISH, random);
 }
 
 export function buildQuiz(vocabulary, requestedCount = 10, random = Math.random) {
@@ -65,6 +101,29 @@ export function buildQuiz(vocabulary, requestedCount = 10, random = Math.random)
 
   const count = Math.min(requestedCount, vocabulary.length);
   const answers = shuffle(vocabulary, random).slice(0, count);
+  const directions = shuffle(
+    Array.from({ length: count }, (_, index) => (
+      index % 2 === 0 ? DIRECTIONS.SPANISH_TO_ENGLISH : DIRECTIONS.ENGLISH_TO_SPANISH
+    )),
+    random,
+  );
 
-  return answers.map((answer) => buildQuestionForAnswer(vocabulary, answer, random));
+  return answers.map((answer, index) => Object.freeze({
+    vocabularyId: answer.id,
+    initialDirection: directions[index],
+    variants: Object.freeze({
+      [DIRECTIONS.SPANISH_TO_ENGLISH]: buildQuestionForAnswer(
+        vocabulary,
+        answer,
+        DIRECTIONS.SPANISH_TO_ENGLISH,
+        random,
+      ),
+      [DIRECTIONS.ENGLISH_TO_SPANISH]: buildQuestionForAnswer(
+        vocabulary,
+        answer,
+        DIRECTIONS.ENGLISH_TO_SPANISH,
+        random,
+      ),
+    }),
+  }));
 }

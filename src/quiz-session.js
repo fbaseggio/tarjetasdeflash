@@ -1,3 +1,5 @@
+import { oppositeDirection } from "./questions.js";
+
 export function createQuizSession(questions) {
   if (!Array.isArray(questions) || questions.length === 0) {
     throw new Error("A quiz requires at least one question.");
@@ -11,20 +13,31 @@ export function createQuizSession(questions) {
 
   const totalQuestions = questions.length;
   const reviewQueue = [];
-  const wrongAnswersByQuestion = new Map();
+  const wrongAnswersByVariant = new Map();
   let phase = "main";
   let mainIndex = 0;
-  let currentQuestion = questions[0];
+  let currentDefinition = questions[0];
+  let currentDirection = currentDefinition.initialDirection;
   let submitted = false;
   let correctCount = 0;
   let wrongCount = 0;
 
-  function getWrongAnswers(questionId) {
-    if (!wrongAnswersByQuestion.has(questionId)) {
-      wrongAnswersByQuestion.set(questionId, new Set());
+  function variantKey(questionId, direction) {
+    return `${questionId}:${direction}`;
+  }
+
+  function getWrongAnswers(questionId, direction) {
+    const key = variantKey(questionId, direction);
+
+    if (!wrongAnswersByVariant.has(key)) {
+      wrongAnswersByVariant.set(key, new Set());
     }
 
-    return wrongAnswersByQuestion.get(questionId);
+    return wrongAnswersByVariant.get(key);
+  }
+
+  function currentQuestion() {
+    return currentDefinition?.variants[currentDirection] ?? null;
   }
 
   function nextPhase() {
@@ -36,17 +49,19 @@ export function createQuizSession(questions) {
   }
 
   function getState() {
+    const question = currentQuestion();
     const reviewRemaining = phase === "review" ? reviewQueue.length + 1 : reviewQueue.length;
 
     return Object.freeze({
       phase,
-      question: currentQuestion,
+      direction: currentDirection,
+      question,
       submitted,
       totalQuestions,
       mainPosition: phase === "main" ? mainIndex + 1 : null,
       reviewRemaining,
-      knownWrongAnswers: currentQuestion
-        ? Object.freeze([...getWrongAnswers(currentQuestion.vocabularyId)])
+      knownWrongAnswers: question
+        ? Object.freeze([...getWrongAnswers(currentDefinition.vocabularyId, currentDirection)])
         : Object.freeze([]),
       correctCount,
       wrongCount,
@@ -54,7 +69,9 @@ export function createQuizSession(questions) {
   }
 
   function submitAnswer(answer) {
-    if (phase === "complete" || !currentQuestion) {
+    const question = currentQuestion();
+
+    if (phase === "complete" || !question) {
       throw new Error("The quiz is already complete.");
     }
 
@@ -62,28 +79,30 @@ export function createQuizSession(questions) {
       throw new Error("This question has already been answered.");
     }
 
-    if (!currentQuestion.choices.includes(answer)) {
+    if (!question.choices.includes(answer)) {
       throw new Error("The selected answer is not one of this question's choices.");
     }
 
-    const knownWrongAnswers = getWrongAnswers(currentQuestion.vocabularyId);
+    const knownWrongAnswers = getWrongAnswers(currentDefinition.vocabularyId, currentDirection);
 
     if (knownWrongAnswers.has(answer)) {
       throw new Error("A previously eliminated answer cannot be selected again.");
     }
 
-    const correct = answer === currentQuestion.correctAnswer;
+    const correct = answer === question.correctAnswer;
 
     if (correct) {
       correctCount += 1;
     } else {
       wrongCount += 1;
       knownWrongAnswers.add(answer);
-      reviewQueue.push(currentQuestion);
+      reviewQueue.push(Object.freeze({
+        definition: currentDefinition,
+        direction: oppositeDirection(currentDirection),
+      }));
     }
 
     submitted = true;
-
     return Object.freeze({ correct, nextPhase: nextPhase() });
   }
 
@@ -94,13 +113,17 @@ export function createQuizSession(questions) {
 
     if (phase === "main" && mainIndex + 1 < totalQuestions) {
       mainIndex += 1;
-      currentQuestion = questions[mainIndex];
+      currentDefinition = questions[mainIndex];
+      currentDirection = currentDefinition.initialDirection;
     } else if (reviewQueue.length > 0) {
       phase = "review";
-      currentQuestion = reviewQueue.shift();
+      const reviewItem = reviewQueue.shift();
+      currentDefinition = reviewItem.definition;
+      currentDirection = reviewItem.direction;
     } else {
       phase = "complete";
-      currentQuestion = null;
+      currentDefinition = null;
+      currentDirection = null;
     }
 
     submitted = false;
