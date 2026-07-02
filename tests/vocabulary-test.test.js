@@ -14,7 +14,7 @@ const metadata = JSON.parse(
 
 assert.equal(testVocabulary.length, 1500);
 assert.equal(metadata.entryCount, testVocabulary.length);
-assert.equal(metadata.applicationStatus, "testing-only-not-yet-active");
+assert.equal(metadata.applicationStatus, "active-testing-vocabulary");
 assert.equal(new Set(testVocabulary.map((entry) => entry.id)).size, testVocabulary.length);
 assert.equal(
   new Set(testVocabulary.map((entry) => entry.spanish.toLocaleLowerCase("es"))).size,
