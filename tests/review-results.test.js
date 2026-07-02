@@ -61,7 +61,7 @@ assert.equal(assessment.length, 1);
 assert.equal(assessment[0].items[0].prompt, "agua");
 assert.equal(assessment[0].wrongCount, 1);
 
-assert.equal(answerFeedback(true, "water"), "Correct.");
-assert.equal(answerFeedback(false, "water"), "Not quite — the answer is water.");
+assert.equal(answerFeedback(true), "Correct.");
+assert.equal(answerFeedback(false), "Incorrect.");
 
 console.log("Assessment, session, extra-quiz review sections, and feedback messages passed.");

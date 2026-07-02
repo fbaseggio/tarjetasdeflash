@@ -177,7 +177,7 @@ Default behavior:
 
 - First repeat a missed word in the direction opposite its initial question.
 - Alternate direction after every additional wrong review answer.
-- Briefly show whether the submitted answer was correct; after a miss, also show the correct answer.
+- Briefly show whether the submitted answer was correct. A miss marks only the selected answer as incorrect and does not reveal or highlight the correct answer.
 - Disable all choices during the short feedback interval, then advance automatically.
 - Maintain stable choices and answer positions separately for each direction.
 - Display previously selected wrong choices with a strike-through and disable them whenever that direction returns.

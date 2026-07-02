@@ -173,7 +173,7 @@ function renderChoices(currentQuestion, knownWrongAnswers, onAnswer) {
 function showAnswerOutcome(question, selectedAnswer, correct) {
   choicesElement.querySelectorAll("button").forEach((button) => {
     button.disabled = true;
-    if (button.dataset.answer === question.correctAnswer) {
+    if (correct && button.dataset.answer === question.correctAnswer) {
       button.classList.add("correct");
     }
     if (!correct && button.dataset.answer === selectedAnswer) {
@@ -181,7 +181,7 @@ function showAnswerOutcome(question, selectedAnswer, correct) {
     }
   });
   quizErrorElement.className = `feedback ${correct ? "success" : "error"}`;
-  quizErrorElement.textContent = answerFeedback(correct, question.correctAnswer);
+  quizErrorElement.textContent = answerFeedback(correct);
   quizErrorElement.hidden = false;
 }
 

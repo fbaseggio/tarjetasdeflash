@@ -101,6 +101,6 @@ export function buildAssessmentReview(assessmentResult, vocabulary) {
   }).filter((section) => section.items.length > 0));
 }
 
-export function answerFeedback(correct, correctAnswer) {
-  return correct ? "Correct." : `Not quite — the answer is ${correctAnswer}.`;
+export function answerFeedback(correct) {
+  return correct ? "Correct." : "Incorrect.";
 }
