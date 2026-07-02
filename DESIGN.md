@@ -13,7 +13,9 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
 - Four playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
-- A separate, versioned 1,500-entry CC BY-SA testing vocabulary with three 500-entry bands, source attribution, retained original IDs, a reproducible build script, and validation tests. It is not yet active in the quiz.
+- An active, versioned 1,500-entry CC BY-SA testing vocabulary with three 500-entry bands, source attribution, retained original IDs, a reproducible build script, and validation tests.
+- A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
+- Frontier-weighted quiz selection: eight words from the learner's tentative frontier and two Foundation audit words, or ten Foundation words when Foundation repair is indicated.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
 - Silent automatic advancement: no correctness feedback appears after a submission.
@@ -24,7 +26,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ### Next local-learning work
 
-- Deliberate activation of the 1,500-entry testing vocabulary and migration support for the eventual user-provided vocabulary.
+- Migration support for the eventual user-provided vocabulary.
 - A daily **practice session** containing a check-in, explicit presentation of new words, and due-review rounds.
 - Persistent per-word attempts, direction-specific knowledge, estimated learner level, and spaced-repetition due dates.
 - Vocabulary-aware selection instead of entirely random selection.
@@ -55,12 +57,12 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Audio, images, typed answers, or sentence exercises.
 - Cross-device synchronization and shared standings in the first local release.
 - Offline synchronization or installable-app behavior.
-- Export/import while the current 100-word vocabulary is only test content.
+- General-purpose export/import while the current vocabulary remains test content.
 - Anti-cheating controls or high-stakes scoring.
 
 ## 4. Vocabulary universe
 
-The active vocabulary universe is currently the placeholder file [`assets/vocabulary.json`](assets/vocabulary.json), containing 100 entries. A separate 1,500-entry CC BY-SA testing set now exists at [`assets/vocabulary-test-v1.json`](assets/vocabulary-test-v1.json), with metadata and attribution alongside it. It remains inactive until per-word persistence and migration behavior are ready. Each active entry has this shape:
+The active vocabulary universe is the 1,500-entry CC BY-SA testing set at [`assets/vocabulary-test-v1.json`](assets/vocabulary-test-v1.json), with metadata and attribution alongside it. It preserves every ID and translation from the original 100-entry [`assets/vocabulary.json`](assets/vocabulary.json), which remains as migration reference material. Each original entry has this shape:
 
 ```json
 {
@@ -107,7 +109,7 @@ The MVP uses four-choice multiple choice in both directions. Each ten-question i
 
 ### 6.2 Question selection
 
-The implemented random selector never repeats a vocabulary item within the same quiz round. A normal round contains ten questions. If the selected vocabulary universe contains fewer than ten usable items, the quiz length is reduced rather than duplicating questions.
+The implemented selector never repeats a vocabulary item within the same quiz round. A normal post-onboarding round contains eight randomly selected words from the learner's tentative learning frontier and two Foundation audit words. A learner placed at the Foundation frontier receives ten Foundation words. This provides occasional evidence against the presumed-known Foundation tier while avoiding an introductory parade of elementary vocabulary.
 
 The planned history-aware selector chooses questions in this order:
 
@@ -201,7 +203,7 @@ The first release supports four profiles stored in the browser. A profile has a 
 
 Other combinations do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
 
-Currently, each profile's aggregate activity summary persists across visits made with the same browser and GitHub Pages origin. Persistent attempts, word schedules, level evidence, and local standings are next-phase work. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry local history with the learner.
+Currently, each profile's aggregate activity summary and completed onboarding placement persist across visits made with the same browser and GitHub Pages origin. Persistent ordinary-quiz attempts, word schedules, continuously revised level evidence, and local standings are next-phase work. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry local history with the learner.
 
 When shared persistence is added, Firebase Anonymous Authentication will identify a browser installation while the application profile continues to identify the learner:
 
@@ -211,7 +213,7 @@ When shared persistence is added, Firebase Anonymous Authentication will identif
 
 This is an honor-system design. Anyone who can open the site can select any profile. A later release can attach each profile to a permanent Firebase login without changing historical profile IDs.
 
-### 8.1 Estimated learner level — planned
+### 8.1 Estimated learner level — partially implemented
 
 Each profile will retain a coarse level estimate independently from any vocabulary dataset version:
 
@@ -227,7 +229,9 @@ evidenceDatasetVersion
 
 Only first attempts on previously unseen or check-in words contribute primary placement evidence. Immediate reprise answers do not raise the estimate, because they measure recovery rather than durable knowledge. Spanish-to-English and English-to-Spanish evidence remain separate because recognition is generally easier than production, even while both use multiple choice.
 
-The first simple estimator samples words around the learner's presumed tier, waits for at least 30–50 assessed words before claiming medium confidence, considers promotion near 85% first-attempt accuracy, and considers demotion below roughly 60%. These are initial calibration values, not permanent pedagogical rules.
+The implemented onboarding estimator asks twelve core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all eighteen assessed words. The assessment is silent, does not reprise missed questions, and does not count as quiz activity or streak credit.
+
+All untested Foundation words are provisionally presumed known, while observed misses remain contrary evidence. The normal quiz selector audits two Foundation words in rounds above that frontier. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned. Promotion near 85% and demotion below roughly 60% are calibration candidates rather than permanent rules.
 
 When vocabulary changes, the coarse level estimate remains as a prior. Confidence is rebuilt against the new dataset, while exact semantic word matches retain their full word-level history. Thus a dataset migration neither discards useful knowledge evidence nor treats every approximate match as certain.
 
@@ -239,7 +243,7 @@ The current quiz domain is independent from activity persistence, but a complete
 
 ### 9.2 Initial browser storage
 
-The working prototype stores active-profile selection and compact per-profile activity summaries in `localStorage`. It does not yet persist individual quiz sessions, attempts, in-progress rounds, learner-level evidence, or word schedules. The planned fuller local release uses IndexedDB as its source of truth for:
+The working prototype stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, and the eighteen assessed-word results in `localStorage`. It does not yet persist ordinary quiz sessions, later attempts, in-progress rounds, continuously updated level evidence, or word schedules. The planned fuller local release uses IndexedDB as its source of truth for:
 
 - Profiles and local summary counters.
 - Immutable quiz sessions and answer attempts.
@@ -248,7 +252,7 @@ The working prototype stores active-profile selection and compact per-profile ac
 
 The browser database has an explicit schema version and uses stable profile and vocabulary IDs. Future releases must migrate existing records rather than silently replacing the database.
 
-The current 100-word vocabulary is test content, so general-purpose export/import is intentionally deferred. Stable semantic vocabulary IDs and explicit dataset migration are still required before the vocabulary becomes substantial, because useful word history should survive overlap between the testing and final datasets.
+The current 1,500-word vocabulary is test content, so general-purpose export/import is intentionally deferred. Stable semantic vocabulary IDs and explicit dataset migration are still required before the final user-provided vocabulary arrives, because useful word history should survive overlap between the testing and final datasets.
 
 ### 9.3 Later shared service
 
@@ -463,6 +467,9 @@ Implemented prototype acceptance criteria:
 - The final score always reports ten right answers and the total number of wrong submissions.
 - The active profile and aggregate activity summary survive closing and reopening the browser.
 - The first completed quiz round of a local calendar day advances the streak and baseline rate once; later rounds update only all-quiz totals and error rate.
+- A profile without placement completes a silent 18-question onboarding assessment before its first ordinary quiz.
+- Onboarding stores a low-confidence known-through band, learning frontier, per-tier scores, and eighteen first-attempt word results without changing quiz or streak totals.
+- Ordinary rounds draw eight words from the learning frontier and two Foundation audit words, except Foundation-repair rounds which draw ten Foundation words.
 - The deployed GitHub Pages site works on current mobile and desktop browsers.
 
 Next local-learning acceptance criteria:
@@ -496,10 +503,13 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 ### Phase 1B — Local learning sessions (next)
 
 - [x] Approximately 1,500-entry tiered CC BY-SA testing vocabulary with attribution, retained original IDs, and version metadata.
+- [x] One-time 12-core-plus-6-confirmation adaptive onboarding with persisted tentative placement.
+- [x] Activation of the larger vocabulary and frontier-weighted quiz selection with Foundation auditing.
 - [ ] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
 - [ ] IndexedDB profiles, quiz rounds, attempts, learner-level evidence, and summary counters.
 - [ ] Per-word, per-direction progress and the initial 1/3/7/14/30/60-day review schedule.
-- [ ] Estimated learner tier and confidence derived from first-attempt evidence.
+- [x] Initial learner known-through band, learning frontier, and low confidence derived from onboarding first attempts.
+- [ ] Continuous level revision and confidence growth from later check-ins.
 - [ ] Vocabulary migration that preserves exact overlapping word/sense history.
 - [ ] Multi-day progress views and local standings.
 - [ ] Reload recovery for an in-progress practice session.

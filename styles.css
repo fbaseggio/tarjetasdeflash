@@ -111,6 +111,8 @@ a {
 
 .quiz-panel,
 .recognition-panel,
+.onboarding-panel,
+.placement-panel,
 .results-panel {
   align-self: center;
   padding: clamp(24px, 6vw, 48px);
@@ -119,6 +121,34 @@ a {
   border-radius: 28px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
+}
+
+.onboarding-copy {
+  margin: 18px 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.onboarding-note {
+  margin: 0 0 24px;
+  padding: 14px 16px;
+  color: var(--violet-dark);
+  background: var(--violet-soft);
+  border-radius: 13px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.placement-level {
+  margin: 22px 0 8px;
+  color: var(--violet-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.8rem, 10vw, 5.2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.045em;
 }
 
 .quiz-meta {
@@ -504,6 +534,11 @@ footer {
   }
 
   .recognition-panel {
+    border-radius: 22px;
+  }
+
+  .onboarding-panel,
+  .placement-panel {
     border-radius: 22px;
   }
 

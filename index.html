@@ -79,6 +79,23 @@
         </form>
       </section>
 
+      <section id="onboarding-panel" class="onboarding-panel" aria-labelledby="onboarding-title" hidden>
+        <div class="eyebrow">A quick starting point</div>
+        <h1 id="onboarding-title">Let’s find where to begin.</h1>
+        <p class="onboarding-copy">
+          You’ll answer 18 silent questions from across the vocabulary. There’s no grade and no
+          running feedback—we’ll simply choose a tentative starting band and keep adjusting as you
+          practice.
+        </p>
+        <p class="onboarding-note">
+          We’ll presume the Foundation words are familiar unless your answers tell us otherwise.
+        </p>
+        <button id="start-assessment-button" class="next-button" type="button">
+          Find my starting point
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
       <section id="quiz-panel" class="quiz-panel" aria-labelledby="quiz-title" hidden>
         <div class="quiz-meta">
           <div id="direction-label" class="eyebrow">Spanish → English</div>
@@ -92,6 +109,20 @@
 
         <div id="choices" class="choices" aria-label="Answer choices"></div>
         <p id="quiz-error" class="feedback error" aria-live="polite" hidden></p>
+      </section>
+
+      <section id="placement-panel" class="placement-panel" aria-labelledby="placement-title" hidden>
+        <div class="eyebrow">Tentative starting point</div>
+        <h1 id="placement-title">We’ll start around</h1>
+        <div id="placement-level" class="placement-level">Everyday</div>
+        <p id="placement-summary" class="onboarding-copy"></p>
+        <p class="onboarding-note">
+          This is an early estimate, not a grade. Check-ins will revise it as we learn more.
+        </p>
+        <button id="start-practice-button" class="next-button" type="button">
+          Start practicing
+          <span aria-hidden="true">→</span>
+        </button>
       </section>
 
       <section id="results-panel" class="results-panel" aria-labelledby="results-title" hidden>
