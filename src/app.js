@@ -1,3 +1,4 @@
+import { createActivityStorage } from "./activity-storage.js";
 import { createProfileStorage } from "./profile-storage.js";
 import { buildQuiz } from "./questions.js";
 import { createQuizSession } from "./quiz-session.js";
@@ -14,10 +15,24 @@ const progressElement = document.querySelector("#quiz-progress");
 const newQuizButton = document.querySelector("#new-quiz-button");
 const finalRightElement = document.querySelector("#final-right");
 const finalWrongElement = document.querySelector("#final-wrong");
+const dailyCreditElement = document.querySelector("#daily-credit");
+const streakElement = document.querySelector("#stat-streak");
+const membershipDaysElement = document.querySelector("#stat-membership-days");
+const practiceDaysElement = document.querySelector("#stat-practice-days");
+const totalQuizzesElement = document.querySelector("#stat-total-quizzes");
+const firstQuizErrorElement = document.querySelector("#stat-first-error");
+const overallErrorElement = document.querySelector("#stat-overall-error");
+
+const activityStorage = createActivityStorage(window.localStorage);
+const percentFormatter = new Intl.NumberFormat(undefined, {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
 
 let vocabulary = [];
 let vocabularyPromise = null;
 let quizSession = null;
+let activeProfileId = null;
 
 function renderProgress(state) {
   if (state.phase === "main") {
@@ -77,10 +92,24 @@ function handleAnswer(event) {
 }
 
 function showResults(state) {
+  const activity = activityStorage.recordCompletedQuiz(activeProfileId, {
+    correctCount: state.correctCount,
+    wrongCount: state.wrongCount,
+  });
+
   quizPanel.hidden = true;
   resultsPanel.hidden = false;
   finalRightElement.textContent = state.correctCount;
   finalWrongElement.textContent = state.wrongCount;
+  dailyCreditElement.textContent = activity.firstQuizToday
+    ? "Today’s first quiz counted toward your streak."
+    : "You already earned today’s streak credit—and this quiz still counts.";
+  streakElement.textContent = activity.currentStreak;
+  membershipDaysElement.textContent = activity.membershipDays;
+  practiceDaysElement.textContent = activity.daysPracticed;
+  totalQuizzesElement.textContent = activity.totalQuizzes;
+  firstQuizErrorElement.textContent = percentFormatter.format(activity.firstQuizErrorRate);
+  overallErrorElement.textContent = percentFormatter.format(activity.overallErrorRate);
   newQuizButton.focus();
 }
 
@@ -138,5 +167,9 @@ initializeRecognition({
   greeting: document.querySelector("#user-greeting"),
   changeUserButton: document.querySelector("#change-user"),
   storage: createProfileStorage(window.localStorage),
-  onRecognized: startQuiz,
+  onRecognized(profile) {
+    activeProfileId = profile.id;
+    activityStorage.ensureMember(profile.id);
+    startQuiz();
+  },
 });

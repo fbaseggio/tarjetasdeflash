@@ -123,6 +123,10 @@ The quiz records every submitted answer. Correctly resolving a vocabulary item c
 
 The result screen appears only at completion and offers a new ten-question quiz.
 
+Completing a quiz also updates a per-profile practice summary in local browser storage. Calendar dates use the device's local timezone. The first completed quiz on a date is that day's baseline quiz: it adds one practiced day, advances the streak when the preceding practice date was yesterday, and contributes to the daily first-quiz error rate. Later quizzes that day do not change the streak or baseline rate, but do increase the total quiz count and all-quiz error rate.
+
+Both error rates are calculated as wrong submissions divided by all submissions (`wrong / (right + wrong)`). Membership days count calendar days inclusively from the date the profile was first used on this browser. The result screen reports current streak, membership days, practiced days, total quizzes, daily first-quiz error rate, and all-quiz error rate.
+
 ### 7.3 Follow-up quizzes
 
 Review is a continuation of the same quiz and contains only unresolved vocabulary from the initial pass.
@@ -170,7 +174,7 @@ Quiz logic uses a storage interface rather than calling IndexedDB or Firestore d
 
 ### 9.2 Initial browser storage
 
-IndexedDB is the source of truth for the first release. It stores:
+The working prototype stores active-profile selection and compact per-profile activity summaries in `localStorage`. The planned fuller first release uses IndexedDB as its source of truth for:
 
 - Profiles and local summary counters.
 - Immutable quiz sessions and answer attempts.

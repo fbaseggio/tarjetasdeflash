@@ -442,6 +442,47 @@ h1 {
   background: #cfc9ee;
 }
 
+.daily-credit {
+  margin: -10px 0 18px;
+  color: var(--violet-dark);
+  font-size: 0.9rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.practice-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.practice-stats div {
+  min-width: 0;
+  padding: 14px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  text-align: center;
+}
+
+.practice-stats dt {
+  min-height: 2.5em;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.practice-stats dd {
+  margin: 7px 0 0;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 850;
+}
+
 footer {
   padding: 24px 0;
   color: var(--muted);
@@ -500,6 +541,10 @@ footer {
   .word-card {
     min-height: 126px;
     margin: 24px 0;
+  }
+
+  .practice-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
