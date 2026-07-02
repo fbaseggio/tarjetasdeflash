@@ -15,11 +15,75 @@
           <span class="brand-mark" aria-hidden="true">¡!</span>
           <span>Tarjetas de Flash</span>
         </a>
-        <span class="prototype-badge">First look</span>
+        <div class="header-actions">
+          <span class="prototype-badge">First look</span>
+          <div id="user-menu" class="user-menu" hidden>
+            <strong id="user-greeting"></strong>
+            <button id="change-user" type="button">Change user</button>
+          </div>
+        </div>
       </header>
 
-      <section class="quiz-panel" aria-labelledby="quiz-title">
-        <div class="eyebrow">Spanish → English</div>
+      <section id="recognition-panel" class="recognition-panel" aria-labelledby="recognition-title">
+        <div class="eyebrow">A very serious identity check</div>
+        <h1 id="recognition-title">First, tell us your favorites.</h1>
+        <p class="recognition-intro">We’ll remember you the next time you study on this device.</p>
+
+        <form id="recognition-form" class="recognition-form">
+          <fieldset>
+            <legend>1. What is your favorite animal?</legend>
+            <div class="identity-options">
+              <label class="identity-option">
+                <input type="radio" name="animal" value="elephant" required>
+                <span lang="es">Elefante</span>
+              </label>
+              <label class="identity-option">
+                <input type="radio" name="animal" value="panda">
+                <span lang="es">Panda</span>
+              </label>
+              <label class="identity-option">
+                <input type="radio" name="animal" value="penguin">
+                <span lang="es">Pingüino</span>
+              </label>
+              <label class="identity-option">
+                <input type="radio" name="animal" value="lion">
+                <span lang="es">León</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>2. What is your favorite color?</legend>
+            <div class="identity-options color-options">
+              <label class="identity-option color-blue">
+                <input type="radio" name="color" value="blue" required>
+                <span lang="es">Azul</span>
+              </label>
+              <label class="identity-option color-purple">
+                <input type="radio" name="color" value="purple">
+                <span lang="es">Morado</span>
+              </label>
+              <label class="identity-option color-red">
+                <input type="radio" name="color" value="red">
+                <span lang="es">Rojo</span>
+              </label>
+              <label class="identity-option color-green">
+                <input type="radio" name="color" value="green">
+                <span lang="es">Verde</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <p id="recognition-feedback" class="recognition-feedback" aria-live="polite"></p>
+          <button class="identify-button" type="submit">That’s me</button>
+        </form>
+      </section>
+
+      <section id="quiz-panel" class="quiz-panel" aria-labelledby="quiz-title" hidden>
+        <div class="quiz-meta">
+          <div class="eyebrow">Spanish → English</div>
+          <span id="quiz-progress" class="quiz-progress"></span>
+        </div>
         <h1 id="quiz-title">What does this word mean?</h1>
 
         <div class="word-card">
@@ -32,6 +96,29 @@
 
         <button id="next-button" class="next-button" type="button" hidden>
           Next question
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      <section id="results-panel" class="results-panel" aria-labelledby="results-title" hidden>
+        <div class="eyebrow">Quiz complete</div>
+        <h1 id="results-title">¡Terminado!</h1>
+        <p class="results-intro">You kept going until every word was right.</p>
+
+        <div class="final-score" aria-label="Final score">
+          <div class="score-part score-right">
+            <strong id="final-right">10</strong>
+            <span>right</span>
+          </div>
+          <div class="score-divider" aria-hidden="true"></div>
+          <div class="score-part score-wrong">
+            <strong id="final-wrong">0</strong>
+            <span>wrong</span>
+          </div>
+        </div>
+
+        <button id="new-quiz-button" class="next-button" type="button">
+          Start another quiz
           <span aria-hidden="true">→</span>
         </button>
       </section>

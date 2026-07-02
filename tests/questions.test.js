@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { buildQuestion } from "../src/questions.js";
+import { buildQuestion, buildQuiz } from "../src/questions.js";
 
 const vocabulary = JSON.parse(fs.readFileSync(new URL("../assets/vocabulary.json", import.meta.url)));
 const answerSlots = [0, 0, 0, 0];
@@ -23,3 +23,15 @@ for (const slotCount of answerSlots) {
 }
 
 console.log(`Generated 10,000 valid questions; answer slots: ${answerSlots.join(", ")}`);
+
+const quiz = buildQuiz(vocabulary, 10);
+assert.equal(quiz.length, 10);
+assert.equal(new Set(quiz.map((question) => question.vocabularyId)).size, 10);
+
+for (const question of quiz) {
+  assert.equal(question.choices.length, 4);
+  assert.equal(new Set(question.choices).size, 4);
+  assert.ok(question.choices.includes(question.correctAnswer));
+}
+
+console.log("Generated a valid ten-question quiz without repeated vocabulary.");

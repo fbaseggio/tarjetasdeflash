@@ -9,14 +9,10 @@ export function shuffle(items, random = Math.random) {
   return shuffled;
 }
 
-export function buildQuestion(vocabulary, previousVocabularyId = null, random = Math.random) {
+export function buildQuestionForAnswer(vocabulary, answer, random = Math.random) {
   if (!Array.isArray(vocabulary) || vocabulary.length < 4) {
     throw new Error("At least four vocabulary entries are required.");
   }
-
-  const promptPool = vocabulary.filter((entry) => entry.id !== previousVocabularyId);
-  const promptChoices = promptPool.length > 0 ? promptPool : vocabulary;
-  const answer = promptChoices[Math.floor(random() * promptChoices.length)];
 
   const seenTranslations = new Set([answer.english]);
   const distractors = [];
@@ -44,4 +40,31 @@ export function buildQuestion(vocabulary, previousVocabularyId = null, random = 
     correctAnswer: answer.english,
     choices: shuffle([answer.english, ...distractors], random),
   };
+}
+
+export function buildQuestion(vocabulary, previousVocabularyId = null, random = Math.random) {
+  if (!Array.isArray(vocabulary) || vocabulary.length < 4) {
+    throw new Error("At least four vocabulary entries are required.");
+  }
+
+  const promptPool = vocabulary.filter((entry) => entry.id !== previousVocabularyId);
+  const promptChoices = promptPool.length > 0 ? promptPool : vocabulary;
+  const answer = promptChoices[Math.floor(random() * promptChoices.length)];
+
+  return buildQuestionForAnswer(vocabulary, answer, random);
+}
+
+export function buildQuiz(vocabulary, requestedCount = 10, random = Math.random) {
+  if (!Number.isInteger(requestedCount) || requestedCount < 1) {
+    throw new Error("Quiz size must be a positive integer.");
+  }
+
+  if (!Array.isArray(vocabulary) || vocabulary.length < 4) {
+    throw new Error("At least four vocabulary entries are required.");
+  }
+
+  const count = Math.min(requestedCount, vocabulary.length);
+  const answers = shuffle(vocabulary, random).slice(0, count);
+
+  return answers.map((answer) => buildQuestionForAnswer(vocabulary, answer, random));
 }

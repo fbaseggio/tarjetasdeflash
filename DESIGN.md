@@ -119,37 +119,45 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 4. The learner answers one question at a time.
 5. The interface immediately marks the submitted choice correct or incorrect.
 6. The learner advances after seeing the feedback.
-7. The result screen shows score, accuracy, and missed vocabulary.
-8. If there were mistakes, the learner can start a follow-up quiz.
+7. After the tenth initial question, missed vocabulary enters a review queue.
+8. Review continues until every vocabulary item has been answered correctly.
+9. Only then does the result screen show the final right and wrong counts.
 
-The current question number and score are always visible. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
+The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
 ### 7.2 Scoring
 
-The main quiz score is the number of correct first submissions out of the number of questions generated. Follow-up answers are recorded separately and do not alter the original quiz score.
+The quiz records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. Because the session does not end until all ten items are resolved, the final result is always `10 right` and `N wrong`.
 
-The result screen should distinguish:
-
-- First-pass score, such as `7 / 10`.
-- Follow-up progress, such as `3 missed words reviewed; 2 recovered`.
-- Eventual completion, when every missed word has been answered correctly.
+The result screen appears only at completion and offers a new ten-question quiz.
 
 ### 7.3 Follow-up quizzes
 
-The MVP follow-up quiz contains only vocabulary missed in the immediately preceding round.
+Review is a continuation of the same quiz and contains only unresolved vocabulary from the initial pass.
 
 Default behavior:
 
 - Repeat the same direction and the same four choices.
-- Mark the learner's previous incorrect choice as wrong before another answer is submitted.
+- Do not reveal the correct answer after an incorrect submission.
+- Display every previously selected wrong choice with a strike-through and disable it.
 - Preserve the correct answer and its original slot.
-- Record a new attempt linked to the preceding attempt.
+- If another wrong answer is selected, add it to that question's eliminated choices and return the question to the end of the review queue.
+- Record each new submission as a separate attempt linked to the same question.
 
-The learner may continue follow-up rounds until all missed vocabulary has been answered correctly. Reversing the direction (English-to-Spanish) is a planned alternative mode and uses newly generated choices.
+Review proceeds round-robin until all missed vocabulary has been answered correctly. Reversing the direction (English-to-Spanish) remains a planned alternative mode and would use newly generated choices.
 
 ## 8. Profiles and identity
 
-The first release supports approximately four profiles stored in the browser. A profile has a stable ID, display name, optional color or avatar marker, and timestamps. The learner selects a profile before starting a quiz, and the most recently selected profile is remembered for convenience.
+The first release supports four profiles stored in the browser. A profile has a stable ID, display name, optional color or avatar marker, and timestamps. On a device without a remembered profile, the learner answers two playful recognition questions using Spanish choices:
+
+| Favorite animal | Favorite color | Profile ID | Display name |
+|---|---|---|---|
+| Elefante | Azul | `franco` | Franco |
+| Panda | Morado | `rebecca` | Rebecca |
+| Pingüino | Rojo | `milo` | Milo |
+| León | Verde | `gideon` | Gideon |
+
+Other combinations do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
 
 Each profile's sessions, attempts, and word schedule persist across visits made with the same browser and GitHub Pages origin. Profiles sharing that browser can also have local standings. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry this history with them.
 
@@ -378,8 +386,10 @@ Local-release acceptance criteria:
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
 - A submitted answer produces immediate, accessible feedback and cannot be changed.
-- First-pass scoring is correct.
-- A follow-up quiz contains only missed vocabulary and marks the preceding wrong selection.
+- No running score is displayed.
+- Review contains only unresolved vocabulary, preserves answer positions, and strikes through and disables every preceding wrong selection.
+- A repeatedly missed question returns to the end of the review queue until answered correctly.
+- The final score always reports ten right answers and the total number of wrong submissions.
 - Profiles, attempts, summaries, and word schedules survive closing and reopening the browser.
 - Due words are prioritized on a later day according to the documented intervals.
 - A wrong first-pass answer resets its schedule, while an immediate follow-up success does not lengthen its interval.
@@ -397,8 +407,9 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - Vocabulary loading and validation.
 - Random ten-question Spanish-to-English quizzes for new profiles.
 - Random distractors and answer positions.
-- Immediate feedback, scoring, and results.
-- Follow-up rounds for missed vocabulary.
+- Immediate correctness feedback without revealing the answer after a miss.
+- Round-robin review of missed vocabulary with cumulative answer elimination.
+- A final-only score of ten right answers and the accumulated wrong submissions.
 - IndexedDB profiles, sessions, attempts, and summary counters.
 - Per-word progress and the initial 1/3/7/14/30-day review schedule.
 - Multi-day progress views and local standings.
