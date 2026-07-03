@@ -25,11 +25,20 @@ export function selectQuizVocabulary(
 
   if (auditCount > 0) {
     const selectedIds = new Set(selected.map((entry) => entry.id));
-    const auditPool = shuffle(
-      vocabulary.filter((entry) => entry.tier === "foundation" && !selectedIds.has(entry.id)),
-      random,
-    );
-    selected.push(...auditPool.slice(0, auditCount));
+    const auditTiers = frontier === "expanding"
+      ? ["foundation", "everyday"]
+      : Array.from({ length: auditCount }, () => "foundation");
+    auditTiers.forEach((tier) => {
+      const auditPool = shuffle(
+        vocabulary.filter((entry) => entry.tier === tier && !selectedIds.has(entry.id)),
+        random,
+      );
+      const entry = auditPool[0];
+      if (entry) {
+        selected.push(entry);
+        selectedIds.add(entry.id);
+      }
+    });
   }
 
   if (selected.length !== requestedCount) {

@@ -1,21 +1,23 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.7.1";
+import { createActivityStorage } from "./activity-storage.js?v=0.8.0";
+import { APP_VERSION } from "./app-version.js?v=0.8.0";
 import { createAssessmentSession } from "./assessment.js";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.8.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js";
+} from "./diagnostic-export.js?v=0.8.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.7.1";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.7.1";
+} from "./indexed-history.js?v=0.8.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.8.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.8.0";
 import { createOnboardingStorage } from "./onboarding-storage.js";
 import { createProfileStorage } from "./profile-storage.js";
 import { buildQuizFromAnswers } from "./questions.js";
-import { selectQuizVocabulary } from "./quiz-selection.js";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.8.0";
 import { createQuizSession } from "./quiz-session.js";
 import { initializeRecognition } from "./recognition.js";
 import {
@@ -35,6 +37,7 @@ const panels = {
   results: document.querySelector("#results-panel"),
   review: document.querySelector("#review-panel"),
 };
+const brandTitleElement = document.querySelector("#brand-title");
 const startAssessmentButton = document.querySelector("#start-assessment-button");
 const startPracticeButton = document.querySelector("#start-practice-button");
 const startSessionButton = document.querySelector("#start-session-button");
@@ -226,6 +229,9 @@ function attemptFromState(state, correct, source) {
   return {
     vocabularyId: entry.id,
     tier: entry.tier,
+    spanish: entry.spanish,
+    english: entry.english,
+    partOfSpeech: entry.partOfSpeech,
     direction: state.direction,
     correct,
     source,
@@ -362,6 +368,13 @@ function prepareDailySession() {
   const actualNow = new Date();
   const today = localDateKey(actualNow);
   learningStorage.normalizeCalendar(activeProfileId, datasetMetadata, today);
+  learningStorage.normalizeMastery(
+    activeProfileId,
+    datasetMetadata,
+    vocabulary,
+    onboardingRecord.placement,
+    today,
+  );
   activityStorage.normalizeCalendar(activeProfileId, actualNow);
   dailySession = learningStorage.getDailySession(activeProfileId, datasetMetadata, today);
   if (!dailySession) {
@@ -421,7 +434,12 @@ function startRound(entries, kind) {
 function startCheckIn() {
   dailySession.stage = "check-in";
   saveDailySession();
-  startRound(entryList(dailySession.checkInIds), "check-in");
+  const entries = entryList(dailySession.checkInIds);
+  if (entries.length === 0) {
+    beginNewWords();
+    return;
+  }
+  startRound(entries, "check-in");
 }
 
 function beginNewWords() {
@@ -500,6 +518,7 @@ function completeQuizRound(state) {
     datasetMetadata,
     roundFirstAttempts,
     effectiveDate,
+    onboardingRecord?.placement,
   );
   const activity = activityStorage.recordCompletedQuiz(activeProfileId, {
     correctCount: state.correctCount,
@@ -517,6 +536,11 @@ function completeQuizRound(state) {
   dailySession.streakCredited ||= activity.firstQuizToday;
 
   if (roundKind === "check-in") {
+    roundFirstAttempts.filter((attempt) => !attempt.correct).forEach((attempt) => {
+      if (!dailySession.reviewIds.includes(attempt.vocabularyId)) {
+        dailySession.reviewIds.push(attempt.vocabularyId);
+      }
+    });
     beginNewWords();
   } else {
     dailySession.reviewCursor += roundEntries.length;
@@ -808,6 +832,11 @@ async function exportDiagnostics() {
       onboarding: onboardingRecord,
       activity: activityStorage.getExport(activeProfileId, effectiveDate),
       learning: learningStorage.getSnapshot(activeProfileId, datasetMetadata),
+      mastery: learningStorage.getMasteryProjection(
+        activeProfileId,
+        datasetMetadata,
+        vocabulary,
+      ),
       history,
       storageStatus,
       environment: {
@@ -867,7 +896,13 @@ async function startQuiz() {
   quizErrorElement.hidden = true;
   try {
     await loadVocabulary();
-    const selected = selectQuizVocabulary(vocabulary, onboardingRecord?.placement, 10);
+    const today = localDateKey(new Date());
+    const learning = learningStorage.getSnapshot(activeProfileId, datasetMetadata);
+    const eligible = vocabulary.filter((entry) => {
+      const word = learning.words[entry.id];
+      return eligibleForOrdinaryQuestion(word, today);
+    });
+    const selected = selectQuizVocabulary(eligible, onboardingRecord?.placement, 10);
     startRound(selected, "extra");
   } catch (error) {
     showQuizLoadError(error, "The vocabulary could not be loaded.");
@@ -916,6 +951,8 @@ async function recognizeProfile(profile) {
     showQuizLoadError(error, "The vocabulary could not be loaded.");
   }
 }
+
+brandTitleElement.textContent = `Tarjetas de Flash (${APP_VERSION})`;
 
 newQuizButton.addEventListener("click", startQuiz);
 startAssessmentButton.addEventListener("click", startAssessment);

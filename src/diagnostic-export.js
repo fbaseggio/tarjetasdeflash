@@ -1,4 +1,4 @@
-import { APP_RELEASE_DATE, APP_VERSION, DIAGNOSTIC_EXPORT_VERSION } from "./app-version.js";
+import { APP_RELEASE_DATE, APP_VERSION, DIAGNOSTIC_EXPORT_VERSION } from "./app-version.js?v=0.8.0";
 
 export function buildDiagnosticExport({
   exportedAt,
@@ -7,6 +7,7 @@ export function buildDiagnosticExport({
   onboarding,
   activity,
   learning,
+  mastery,
   history,
   storageStatus,
   environment,
@@ -33,6 +34,7 @@ export function buildDiagnosticExport({
     onboarding,
     activity,
     learning,
+    mastery,
     history,
     diagnostics: {
       storage: storageStatus,

@@ -15,15 +15,15 @@ The application should make short practice sessions pleasant, preserve multi-day
 - A 100-entry placeholder vocabulary asset.
 - An active, versioned 1,500-entry CC BY-SA testing vocabulary with three 500-entry bands, source attribution, retained original IDs, a reproducible build script, and validation tests.
 - A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
-- Frontier-weighted quiz selection: eight words from the learner's tentative frontier and two Foundation audit words, or ten Foundation words when Foundation repair is indicated.
+- Due-only frontier practice plus sparse below-frontier audits: expanding learners receive one Foundation and one Everyday audit slot when available; Everyday learners receive two Foundation audit slots.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
 - Brief correct/incorrect feedback after every submission, followed by automatic advancement after about 850 milliseconds (300 milliseconds for reduced-motion users).
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
-- A persisted daily practice session with a ten-word check-in, fifteen explicit new-word presentations, and due-review rounds.
-- Per-word, per-direction latest first-presentation evidence with an initial 1/3/7/14/30/60-day schedule.
+- A persisted daily practice session with an up-to-ten-word due/audit check-in, fifteen explicit new-word presentations, and due-review rounds.
+- Per-word, per-direction latest first-presentation evidence with frontier, audit, and repair mastery tracks.
 - Tier coverage reporting for distinct tested words and their latest first-presentation result.
 - A concise, single-column result review for onboarding, each daily-session stage, and extra quizzes, including each word's scheduled review gap as a demonstrated-mastery signal.
 - A deduplicated whole-day vocabulary review available from the section-results screen.
@@ -32,6 +32,8 @@ The application should make short practice sessions pleasant, preserve multi-day
 - A one-time calendar repair collapses legacy simulated future sessions onto the actual local date and corrects review dates that were inflated by the old testing shortcut.
 - Versioned IndexedDB history for practice sessions, quiz rounds, and every submitted answer, including reprise attempts and exact question snapshots.
 - Active-profile diagnostic JSON export containing local learning data, IndexedDB history, application and vocabulary versions, storage status, and browser context.
+- A versioned portable per-concept mastery projection in diagnostic exports for later vocabulary and quiz-format migrations.
+- The application version displayed in the site header.
 - Automated tests for question generation, quiz/reprise behavior, profiles, recognition, onboarding, activity summaries, same-day repeated sessions, legacy calendar repair, word evidence, and scheduling.
 
 ### Next local-learning work
@@ -121,12 +123,16 @@ The MVP uses four-choice multiple choice in both directions. Each ten-question i
 
 The implemented selector never repeats a vocabulary item within one quiz round. Daily selection is stage-specific:
 
-1. The check-in uses ten words. Above Foundation, exactly two slots audit provisionally known Foundation vocabulary, prioritizing distinct words not yet tested; remaining slots favor previously encountered misses and then successes.
+1. The check-in uses up to ten eligible words. Below-frontier audit slots prioritize untested or due words; remaining slots use due frontier words, prioritizing recent misses. Expanding learners audit one Foundation and one Everyday word when available; Everyday learners audit two Foundation words.
 2. The new-word stage randomly chooses up to fifteen unseen words from the learner's tentative frontier.
-3. The review stage includes all words due on or before the effective practice date plus that day's newly presented words, split into rounds of at most ten.
-4. Optional extra-practice rounds retain the simpler eight-frontier-plus-two-Foundation selector, or ten Foundation words when Foundation repair is indicated.
+3. The review stage includes due frontier and repair words plus that day's newly presented words, split into rounds of at most ten. Successfully audited below-frontier words do not enter ordinary reviews.
+4. Optional extra-practice rounds use eight eligible frontier words plus tier-appropriate audit words and exclude every word already questioned that calendar day.
 
-The implemented scheduler advances correct first-presentation results through 1, 3, 7, 14, 30, and 60-day intervals. A first-presentation mistake resets the word to a one-day interval. Immediate reprise answers are recovery practice and do not lengthen the interval. If more than sixty reviews are due, new-word introduction is suspended for that session.
+The frontier scheduler starts clean initial retrieval at three days and then advances through 7, 14, 30, and 60 days. A first-presentation mistake resets the word to one day. A same-day success records evidence without lengthening the gap. Immediate reprise answers remain recovery practice and do not lengthen the interval. If more than sixty reviews are due, new-word introduction is suspended for that session.
+
+Below-frontier words use a separate audit track. A clean Foundation audit goes directly to a 60-day gap; a clean Everyday audit for an Expanding learner goes to 30 days. A miss revokes presumed mastery and enters repair at one day. Two later clean, spaced repair reviews restore the word to its tier's audit gap; a same-day corrective review does not count toward those two spaced successes.
+
+Every first-pass question retires its word from ordinary selection for that local calendar day. A check-in or assessment miss may receive one later corrective due-review that day; once that review occurs, the word is retired. Immediate reprises are exempt because they complete the current question rather than create a new first-pass presentation.
 
 Selection remains an interchangeable strategy. Later refinement should use staleness, confidence, direction-specific evidence, and oldest-due ordering within each priority bucket without changing question rendering or scoring.
 
@@ -153,7 +159,7 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 
 1. The learner selects or resumes a profile.
 2. The application prepares or resumes the learner's daily practice session.
-3. The learner completes a ten-word check-in, including reprise of any misses; each submission receives brief feedback before automatic advancement.
+3. The learner completes an up-to-ten-word due/audit check-in, including reprise of any misses; each submission receives brief feedback before automatic advancement.
 4. The application explicitly presents up to fifteen new Spanish/English pairs.
 5. Due words and the newly presented words appear in quiz rounds of at most ten words.
 6. Each round continues until every vocabulary item has been answered correctly.
@@ -192,7 +198,7 @@ Review proceeds round-robin until all missed vocabulary has been answered correc
 
 A **practice session** is the daily learning unit. It contains three stages, each rendered in short quiz rounds rather than one intimidating continuous test:
 
-1. **Check-in:** ten words with brief per-answer feedback and automatic advancement. For learners above Foundation, two slots audit provisionally known Foundation words, prioritizing words not yet tested; the other slots favor previously encountered misses and then prior successes. The first check-in completed on a local calendar date supplies that day's baseline error rate and streak credit.
+1. **Check-in:** up to ten eligible words with brief per-answer feedback and automatic advancement. Two slots audit due or untested below-frontier vocabulary; remaining slots use due frontier words, prioritizing misses. No word may appear in more than one check-in on a calendar day. The first completed quiz on a local calendar date supplies that day's baseline error rate and streak credit.
 2. **New words:** normally about fifteen new entries. Each word is explicitly presented as a Spanish/English pair before later retrieval; genuinely new vocabulary must not rely on a lucky multiple-choice guess as its only exposure.
 3. **Due reviews:** all words due under the scheduler, presented in ten-question rounds. Reviews take priority over new words when a backlog develops.
 
@@ -243,7 +249,7 @@ Only first attempts on previously unseen or check-in words contribute primary pl
 
 The implemented onboarding estimator asks twelve core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all eighteen assessed words. The assessment gives brief feedback and advances automatically, does not reprise missed questions, and does not count as quiz activity or streak credit. Its placement screen offers a tier-grouped review of all assessment answers.
 
-All untested Foundation words are provisionally presumed known, while observed misses remain contrary evidence. Daily check-ins above the Foundation frontier reserve two Foundation audit slots, and extra-practice rounds use the same two-word audit target. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned. Promotion near 85% and demotion below roughly 60% are calibration candidates rather than permanent rules.
+All below-frontier words are provisionally presumed known, while observed misses revoke that presumption word by word. Foundation confirmations enter a 60-day audit pool; Everyday confirmations for Expanding learners enter a 30-day pool. Audit misses enter active repair until two clean spaced reviews restore presumed mastery. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned.
 
 When vocabulary changes, the coarse level estimate remains as a prior. Confidence is rebuilt against the new dataset, while exact semantic word matches retain their full word-level history. Thus a dataset migration neither discards useful knowledge evidence nor treats every approximate match as certain.
 
@@ -264,7 +270,7 @@ A reload resumes the saved practice stage and restarts an unfinished quiz round 
 - Per-profile, per-word scheduling state.
 - The generated state of an in-progress quiz so a reload does not reshuffle it.
 
-The browser records use versioned key prefixes, dataset ID/version checks, and stable profile and vocabulary IDs. A future IndexedDB store will have an explicit schema version. Future releases must migrate existing records rather than silently replacing them.
+The browser records use versioned key prefixes, dataset ID/version checks, and stable profile and vocabulary IDs. Diagnostic exports also contain a versioned per-concept mastery projection keyed by normalized Spanish lemma, part of speech, and meaning. Future releases must migrate existing records rather than silently replacing them.
 
 The current 1,500-word vocabulary is test content, so general-purpose import is intentionally deferred. Active-profile diagnostic export is implemented now. Stable semantic vocabulary IDs and explicit dataset migration are still required before the final user-provided vocabulary arrives, because useful word history should survive overlap between the testing and final datasets.
 
@@ -475,7 +481,8 @@ Responsibilities:
 - `profiles.js`, `recognition.js`, and `profile-storage.js`: implemented honor-system identity flow.
 - `activity-storage.js`: implemented `localStorage` activity summaries and daily streak calculations.
 - `daily-session.js`: implemented daily plan construction, check-in selection, new-word throttling, and review-round slicing.
-- `learning-storage.js`: implemented dataset-scoped word evidence, review scheduling, coverage, and daily-session persistence.
+- `mastery-policy.js`: implemented frontier, audit, repair, same-day retirement, and portable concept projection rules.
+- `learning-storage.js`: implemented dataset-scoped word evidence, mastery state, review scheduling, coverage, and daily-session persistence.
 - `app.js`: implemented rendering, event wiring, and the three-stage session coordinator.
 - Planned modules: IndexedDB storage, continuously revised level estimation, and standings.
 
@@ -529,12 +536,14 @@ Implemented prototype acceptance criteria:
 - The first completed quiz round of a local calendar day advances the streak and baseline rate once; later rounds update only all-quiz totals and error rate.
 - A profile without placement completes an 18-question onboarding assessment with brief feedback before its first daily session.
 - Onboarding stores a low-confidence known-through band, learning frontier, per-tier scores, and eighteen first-attempt word results without changing quiz or streak totals.
-- A daily session contains a ten-word check-in, up to fifteen explicit new-word presentations, and all due reviews in rounds of at most ten.
-- Check-ins above Foundation reserve exactly two Foundation audit slots, prioritizing distinct untested words.
+- A daily session contains an up-to-ten-word due/audit check-in, up to fifteen explicit new-word presentations, and all due frontier/repair reviews in rounds of at most ten.
+- Expanding learners audit one Foundation and one Everyday word when eligible; Everyday learners audit two Foundation words.
 - Newly presented words are reviewed later in the same session; more than sixty due reviews suspend new-word introduction.
-- Correct first presentations advance the 1/3/7/14/30/60-day schedule, wrong first presentations reset it to one day, and immediate reprise success does not lengthen it.
+- Clean frontier retrieval begins at three days and advances through 7/14/30/60; misses reset to one day, and same-day or immediate-reprise success does not lengthen the gap.
+- Clean Foundation audits go to 60 days, clean Everyday audits for Expanding learners go to 30 days, and misses require two clean spaced repairs before returning to audit status.
+- A word is retired from ordinary selection after its first question that day; a miss may receive one later corrective due-review before retirement.
 - Spanish-to-English and English-to-Spanish evidence remain separate; the result screen reports distinct tested words and their latest first-presentation outcome by tier.
-- Optional extra-practice rounds draw eight words from the learning frontier and two Foundation audit words, except Foundation-repair rounds which draw ten Foundation words.
+- Optional extra-practice rounds draw only unseen or due words and exclude all words already questioned that day.
 - Reloading recovers the saved session stage and safely restarts an unfinished quiz round without recording partial clicks.
 - Completed onboarding, daily sessions, and extra quizzes offer a concise one-page review grouped by tier or session stage.
 - Extra-quiz results offer both another quiz and **Start another full session today**.
@@ -579,12 +588,14 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - [x] Concise result review for onboarding, daily-session stages, and extra quizzes.
 - [x] End-of-practice actions for another quiz or another full same-day session.
 - [ ] IndexedDB-backed profiles, learner-level evidence, word progress, and summary counters.
-- [x] Per-word, per-direction latest first-presentation progress and the initial 1/3/7/14/30/60-day review schedule.
+- [x] Per-word, per-direction latest first-presentation progress and frontier 3/7/14/30/60-day scheduling with one-day miss recovery.
+- [x] Separate frontier, below-frontier audit, and repair mastery tracks with day-wide retirement.
+- [x] Versioned portable per-concept mastery projection included in diagnostics.
 - [x] Tier coverage reporting for distinct tested words and latest first-presentation outcomes.
 - [x] Repeatable same-day sessions with distinct history identities and one daily streak baseline.
 - [x] Initial learner known-through band, learning frontier, and low confidence derived from onboarding first attempts.
 - [ ] Continuous level revision and confidence growth from later check-ins.
-- [ ] Vocabulary migration that preserves exact overlapping word/sense history.
+- [ ] Vocabulary import/migration that consumes the portable projection and preserves exact overlapping word/sense history.
 - [ ] Multi-day progress views and local standings.
 - [x] Stage-level reload recovery with safe restart of an unfinished quiz round.
 

@@ -7,59 +7,68 @@ function latestResult(word) {
     .sort((left, right) => right.testedAt.localeCompare(left.testedAt))[0] ?? null;
 }
 
-function prioritizedEntries(vocabulary, words, predicate, random) {
-  const candidates = vocabulary.filter(predicate).map((entry) => ({
-    entry,
-    latest: latestResult(words[entry.id] ?? {}),
-  }));
-  const untested = shuffle(candidates.filter(({ latest }) => !latest), random);
-  const wrong = shuffle(candidates.filter(({ latest }) => latest && !latest.correct), random);
-  const correct = shuffle(candidates.filter(({ latest }) => latest?.correct), random);
-  return [...untested, ...wrong, ...correct].map(({ entry }) => entry);
+function alreadyAskedToday(word, date) {
+  return word?.lastFirstAttemptDate === date;
 }
 
-function checkInCandidates(vocabulary, words, placement, random) {
-  const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
-  const encountered = Object.entries(words)
-    .map(([id, word]) => ({ entry: entries.get(id), latest: latestResult(word) }))
-    .filter(({ entry, latest }) => entry && latest);
+function dueForOrdinaryReview(word, date) {
+  return word?.schedule?.dueDate <= date
+    && word.masteryTrack !== "audit"
+    && !alreadyAskedToday(word, date);
+}
+
+function dueForSameDayRepair(word, date) {
+  return word?.repairDueDate === date && word.retiredDate !== date;
+}
+
+function auditCandidates(vocabulary, words, placement, date, random) {
+  const frontier = placement?.learningFrontier ?? "foundation";
+  const lowerTiers = TIER_ORDER.filter((tier) => (
+    TIER_ORDER.indexOf(tier) < TIER_ORDER.indexOf(frontier)
+  ));
+  if (lowerTiers.length === 0) return [];
+
+  const byTier = Object.fromEntries(lowerTiers.map((tier) => [tier, shuffle(
+    vocabulary.filter((entry) => {
+      if (entry.tier !== tier) return false;
+      const word = words[entry.id];
+      if (alreadyAskedToday(word, date) || word?.masteryStatus === "repair") return false;
+      return !word || !latestResult(word) || word.schedule?.dueDate <= date;
+    }),
+    random,
+  )]));
 
   const selected = [];
+  if (frontier === "expanding") {
+    if (byTier.foundation?.length) selected.push(byTier.foundation.shift());
+    if (byTier.everyday?.length) selected.push(byTier.everyday.shift());
+  } else {
+    selected.push(...(byTier.foundation ?? []).splice(0, 2));
+  }
+
+  const remaining = lowerTiers.flatMap((tier) => byTier[tier]);
+  selected.push(...remaining.slice(0, 2 - selected.length));
+  return selected;
+}
+
+function checkInCandidates(vocabulary, words, placement, date, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
-  const auditCount = frontier === "foundation" ? 0 : 2;
-  selected.push(...prioritizedEntries(
-    vocabulary,
-    words,
-    (entry) => entry.tier === "foundation",
-    random,
-  ).slice(0, auditCount));
-
-  if (selected.length < 10) {
-    const selectedIds = new Set(selected.map((entry) => entry.id));
-    const wrong = shuffle(encountered.filter(({ entry, latest }) => (
-      !selectedIds.has(entry.id)
-      && (frontier === "foundation" || entry.tier !== "foundation")
-      && !latest.correct
-    )), random);
-    const correct = shuffle(encountered.filter(({ entry, latest }) => (
-      !selectedIds.has(entry.id)
-      && (frontier === "foundation" || entry.tier !== "foundation")
-      && latest.correct
-    )), random);
-    selected.push(...[...wrong, ...correct]
-      .slice(0, 10 - selected.length)
-      .map(({ entry }) => entry));
-  }
-
-  if (selected.length < 10) {
-    const selectedIds = new Set(selected.map((entry) => entry.id));
-    const knownTierIndex = Math.max(0, TIER_ORDER.indexOf(placement?.knownThrough));
-    const fallback = shuffle(vocabulary.filter((entry) => (
-      TIER_ORDER.indexOf(entry.tier) <= knownTierIndex && !selectedIds.has(entry.id)
-    )), random);
-    selected.push(...fallback.slice(0, 10 - selected.length));
-  }
-
+  const selected = auditCandidates(vocabulary, words, placement, date, random);
+  const selectedIds = new Set(selected.map((entry) => entry.id));
+  const dueFrontier = vocabulary
+    .filter((entry) => {
+      const word = words[entry.id];
+      return entry.tier === frontier
+        && word
+        && !selectedIds.has(entry.id)
+        && dueForOrdinaryReview(word, date);
+    })
+    .map((entry) => ({ entry, latest: latestResult(words[entry.id]) }));
+  const wrong = shuffle(dueFrontier.filter(({ latest }) => latest && !latest.correct), random);
+  const correct = shuffle(dueFrontier.filter(({ latest }) => latest?.correct), random);
+  selected.push(...[...wrong, ...correct]
+    .slice(0, 10 - selected.length)
+    .map(({ entry }) => entry));
   return selected;
 }
 
@@ -70,18 +79,19 @@ export function createDailySessionPlan(
   date,
   random = Math.random,
 ) {
-  const checkIn = checkInCandidates(vocabulary, learning.words, placement, random);
+  const words = learning.words ?? {};
+  const checkIn = checkInCandidates(vocabulary, words, placement, date, random);
   const checkInIds = new Set(checkIn.map((entry) => entry.id));
-  const allDue = vocabulary.filter((entry) => {
-    const dueDate = learning.words[entry.id]?.schedule?.dueDate;
-    return dueDate && dueDate <= date;
+  const due = vocabulary.filter((entry) => {
+    const word = words[entry.id];
+    if (!word || checkInIds.has(entry.id)) return false;
+    return dueForSameDayRepair(word, date) || dueForOrdinaryReview(word, date);
   });
-  const due = allDue.filter((entry) => !checkInIds.has(entry.id));
-  const newWordCount = allDue.length > 60 ? 0 : 15;
+  const newWordCount = due.length > 60 ? 0 : 15;
   const frontier = placement?.learningFrontier ?? "foundation";
   const newWords = shuffle(vocabulary.filter((entry) => (
     entry.tier === frontier
-    && !learning.words[entry.id]
+    && !words[entry.id]
     && !checkInIds.has(entry.id)
   )), random).slice(0, newWordCount);
   const reviewIds = [...new Set([...due, ...newWords].map((entry) => entry.id))];

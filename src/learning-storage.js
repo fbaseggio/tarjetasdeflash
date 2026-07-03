@@ -1,6 +1,16 @@
+import {
+  auditGapDays,
+  buildMasteryProjection,
+  conceptKey,
+  intervalIndexForDays,
+  isBelowFrontier,
+  masteryAfterAttempt,
+  REVIEW_INTERVALS,
+} from "./mastery-policy.js";
+
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v1.";
 const CALENDAR_MODEL_VERSION = 2;
-const REVIEW_INTERVALS = Object.freeze([1, 3, 7, 14, 30, 60]);
+const MASTERY_MODEL_VERSION = 1;
 const DIRECTIONS = Object.freeze(["spanish-to-english", "english-to-spanish"]);
 
 export function localDateKey(date) {
@@ -21,6 +31,7 @@ function emptyLearning(dataset) {
     datasetId: dataset.id,
     datasetVersion: dataset.version,
     calendarModelVersion: CALENDAR_MODEL_VERSION,
+    masteryModelVersion: MASTERY_MODEL_VERSION,
     words: {},
     dailySessions: {},
   };
@@ -29,6 +40,7 @@ function emptyLearning(dataset) {
 function emptyWord(entry, encounteredAt) {
   return {
     tier: entry.tier,
+    conceptKey: entry.spanish ? conceptKey(entry) : null,
     encounteredAt,
     presentations: 0,
     directions: {},
@@ -103,6 +115,7 @@ export function createLearningStorage(storage, now = () => new Date()) {
     const learning = read(profileId, dataset);
     const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
     const testedAt = onboardingRecord.completedAt;
+    const effectiveDate = localDateKey(new Date(testedAt));
 
     Object.entries(onboardingRecord.assessedWords ?? {}).forEach(([vocabularyId, assessed]) => {
       const entry = entries.get(vocabularyId);
@@ -113,8 +126,23 @@ export function createLearningStorage(storage, now = () => new Date()) {
       word.directions[assessed.direction] = {
         correct: Boolean(assessed.correct),
         testedAt,
+        testedDate: effectiveDate,
         testCount: 1,
         source: "onboarding",
+      };
+      const policy = masteryAfterAttempt(word, {
+        ...entry,
+        vocabularyId,
+        direction: assessed.direction,
+        correct: Boolean(assessed.correct),
+        source: "onboarding",
+      }, effectiveDate, onboardingRecord.placement);
+      Object.assign(word, policy);
+      word.schedule = {
+        intervalIndex: policy.intervalIndex,
+        intervalDays: policy.intervalDays,
+        dueDate: addDays(effectiveDate, policy.intervalDays),
+        lastReviewedAt: testedAt,
       };
       learning.words[vocabularyId] = word;
     });
@@ -158,30 +186,29 @@ export function createLearningStorage(storage, now = () => new Date()) {
     dataset,
     attempts,
     effectiveDate = localDateKey(now()),
+    placement = null,
   ) {
     const learning = read(profileId, dataset);
     const timestamp = now().toISOString();
 
     attempts.forEach((attempt) => {
       const word = learning.words[attempt.vocabularyId] ?? emptyWord(attempt, timestamp);
+      word.conceptKey ??= attempt.spanish ? conceptKey(attempt) : null;
       const previous = word.directions[attempt.direction];
       word.directions[attempt.direction] = {
         correct: Boolean(attempt.correct),
         testedAt: timestamp,
+        testedDate: effectiveDate,
         testCount: (previous?.testCount ?? 0) + 1,
         source: attempt.source ?? "session",
       };
 
-      const priorIndex = Number.isInteger(word.schedule?.intervalIndex)
-        ? word.schedule.intervalIndex
-        : -1;
-      const intervalIndex = attempt.correct
-        ? Math.min(priorIndex + 1, REVIEW_INTERVALS.length - 1)
-        : 0;
+      const policy = masteryAfterAttempt(word, attempt, effectiveDate, placement);
+      Object.assign(word, policy);
       word.schedule = {
-        intervalIndex,
-        intervalDays: REVIEW_INTERVALS[intervalIndex],
-        dueDate: addDays(effectiveDate, REVIEW_INTERVALS[intervalIndex]),
+        intervalIndex: policy.intervalIndex,
+        intervalDays: policy.intervalDays,
+        dueDate: addDays(effectiveDate, policy.intervalDays),
         lastReviewedAt: timestamp,
       };
       learning.words[attempt.vocabularyId] = word;
@@ -193,6 +220,73 @@ export function createLearningStorage(storage, now = () => new Date()) {
 
   function getCoverage(profileId, dataset) {
     return summarize(read(profileId, dataset).words);
+  }
+
+  function normalizeMastery(profileId, dataset, vocabulary, placement, today = localDateKey(now())) {
+    const learning = read(profileId, dataset);
+    if (learning.masteryModelVersion === MASTERY_MODEL_VERSION) return false;
+    const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
+
+    Object.entries(learning.words).forEach(([vocabularyId, word]) => {
+      const entry = entries.get(vocabularyId);
+      if (!entry) return;
+      word.conceptKey ??= conceptKey(entry);
+      const latest = latestWordResult(word);
+      if (latest) {
+        word.lastFirstAttemptDate ??= latest.testedDate
+          ?? localDateKey(new Date(latest.testedAt));
+        word.lastFirstAttemptCorrect ??= Boolean(latest.correct);
+        word.lastFirstAttemptSource ??= latest.source ?? "legacy";
+      }
+      const below = isBelowFrontier(entry.tier, placement);
+      if (below && latest?.correct) {
+        const gap = auditGapDays(entry.tier);
+        word.masteryTrack = "audit";
+        word.masteryStatus = "presumed-mastered";
+        word.repairCleanStreak = 0;
+        if (gap) {
+          word.schedule = {
+            intervalIndex: intervalIndexForDays(gap),
+            intervalDays: gap,
+            dueDate: addDays(word.lastFirstAttemptDate, gap),
+            lastReviewedAt: word.schedule?.lastReviewedAt ?? latest.testedAt,
+          };
+        }
+      } else if (latest && !latest.correct) {
+        word.masteryTrack = "repair";
+        word.masteryStatus = "repair";
+        word.repairCleanStreak = 0;
+        word.schedule = {
+          intervalIndex: 0,
+          intervalDays: 1,
+          dueDate: addDays(word.lastFirstAttemptDate, 1),
+          lastReviewedAt: word.schedule?.lastReviewedAt ?? latest.testedAt,
+        };
+      } else {
+        word.masteryTrack ??= below ? "audit" : "frontier";
+        word.masteryStatus ??= below ? "presumed-mastered" : "learning";
+        if (!below && latest?.correct && (word.schedule?.intervalDays ?? 0) < 3) {
+          word.schedule = {
+            intervalIndex: intervalIndexForDays(3),
+            intervalDays: 3,
+            dueDate: addDays(word.lastFirstAttemptDate, 3),
+            lastReviewedAt: word.schedule?.lastReviewedAt ?? latest.testedAt,
+          };
+        }
+      }
+      if (word.lastFirstAttemptDate === today) {
+        word.retiredDate = latest?.correct ? today : null;
+        word.repairDueDate = latest?.correct ? null : today;
+      }
+    });
+
+    learning.masteryModelVersion = MASTERY_MODEL_VERSION;
+    write(profileId, learning);
+    return true;
+  }
+
+  function getMasteryProjection(profileId, dataset, vocabulary) {
+    return buildMasteryProjection(vocabulary, read(profileId, dataset).words, dataset);
   }
 
   function getDailySession(profileId, dataset, dateKey = localDateKey(now())) {
@@ -285,6 +379,8 @@ export function createLearningStorage(storage, now = () => new Date()) {
     recordPresentations,
     recordFirstAttempts,
     getCoverage,
+    normalizeMastery,
+    getMasteryProjection,
     getDailySession,
     getDailySessionsForDate,
     nextDailySessionKey,

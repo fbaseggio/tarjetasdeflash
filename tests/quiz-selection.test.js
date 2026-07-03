@@ -31,6 +31,7 @@ const expandingQuiz = selectQuizVocabulary(
   () => 0.41,
 );
 assert.equal(expandingQuiz.filter((entry) => entry.tier === "expanding").length, 8);
-assert.equal(expandingQuiz.filter((entry) => entry.tier === "foundation").length, 2);
+assert.equal(expandingQuiz.filter((entry) => entry.tier === "foundation").length, 1);
+assert.equal(expandingQuiz.filter((entry) => entry.tier === "everyday").length, 1);
 
 console.log("Frontier-weighted quiz selection checks passed.");
