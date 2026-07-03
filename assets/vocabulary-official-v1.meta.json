@@ -16,31 +16,64 @@
     {
       "id": "foundation",
       "entryCount": 326,
-      "chapters": [0, 1, 2]
+      "chapters": [
+        0,
+        1,
+        2
+      ]
     },
     {
       "id": "everyday",
       "entryCount": 410,
-      "chapters": [3, 4, 5, 6]
+      "chapters": [
+        3,
+        4,
+        5,
+        6
+      ]
     },
     {
       "id": "expanding",
       "entryCount": 262,
-      "chapters": [7, 8, 9]
+      "chapters": [
+        7,
+        8,
+        9
+      ]
     }
   ],
   "transformation": {
     "duplicateRowsMerged": 80,
     "missingTranslationsSupplied": 1,
-    "unknownPartOfSpeechCount": 362,
+    "unknownPartOfSpeechCount": 0,
     "entriesWithStructuredGrammar": 251,
-    "personalAnnotationsExcluded": true
+    "personalAnnotationsExcluded": true,
+    "inferredPartOfSpeechCount": 362,
+    "reclassifiedQuestionOrPhraseCount": 73,
+    "semanticTagging": {
+      "taxonomy": "Cervantes-inspired project taxonomy v1",
+      "taggedEntryCount": 898,
+      "untaggedEntryCount": 100,
+      "broadTagCount": 21,
+      "narrowTagCount": 64
+    },
+    "distractorTraits": {
+      "verboCount": 129,
+      "verboFalsoCount": 6
+    },
+    "lexicalFamilies": {
+      "familyCount": 24,
+      "taggedEntryCount": 53
+    }
   },
   "notes": [
     "Chapter is the fine-grained curriculum order; the three application tiers are derived chapter bands.",
     "Learner-facing Spanish is separated from the canonical lemma and source forms.",
     "Stem changes, required prepositions, reflexivity, irregular forms, and related notes are retained as structured grammar metadata.",
     "Repeated Spanish prompts are merged for fair multiple-choice questions; distinct source glosses are retained in the senses array.",
-    "The former 1,500-entry testing vocabulary remains in the repository as possible future supplementary material but is no longer active."
+    "The former 1,500-entry testing vocabulary remains in the repository as possible future supplementary material but is no longer active.",
+    "Previously blank parts of speech were inferred from articles, infinitive forms, learner-facing glosses, and explicit review of introductory expressions.",
+    "Learner-facing interrogatives use the question category; other former expressions use phrase so question distractors can be weighted independently.",
+    "First-pass semantic tags adapt the Instituto Cervantes Nociones específicas organization to this curriculum; tags are project-authored and remain subject to editorial review."
   ]
 }

@@ -1,4 +1,4 @@
-import { oppositeDirection } from "./questions.js?v=0.10.1";
+import { oppositeDirection } from "./questions.js?v=0.13.0";
 
 export function createQuizSession(questions) {
   if (!Array.isArray(questions) || questions.length === 0) {
@@ -18,6 +18,7 @@ export function createQuizSession(questions) {
   let mainIndex = 0;
   let currentDefinition = questions[0];
   let currentDirection = currentDefinition.initialDirection;
+  let currentReviewItem = null;
   let submitted = false;
   let correctCount = 0;
   let wrongCount = 0;
@@ -90,20 +91,28 @@ export function createQuizSession(questions) {
     }
 
     const correct = answer === question.correctAnswer;
+    const repriseReminder = correct && phase === "review" && currentReviewItem?.firstOpposite
+      ? Object.freeze({ ...currentReviewItem.originalMiss })
+      : null;
 
     if (correct) {
       correctCount += 1;
     } else {
       wrongCount += 1;
       knownWrongAnswers.add(answer);
+      const originalMiss = phase === "main"
+        ? Object.freeze({ prompt: question.prompt, selectedAnswer: answer })
+        : currentReviewItem?.originalMiss ?? null;
       reviewQueue.push(Object.freeze({
         definition: currentDefinition,
         direction: oppositeDirection(currentDirection),
+        firstOpposite: phase === "main",
+        originalMiss,
       }));
     }
 
     submitted = true;
-    return Object.freeze({ correct, nextPhase: nextPhase() });
+    return Object.freeze({ correct, nextPhase: nextPhase(), repriseReminder });
   }
 
   function advance() {
@@ -115,15 +124,18 @@ export function createQuizSession(questions) {
       mainIndex += 1;
       currentDefinition = questions[mainIndex];
       currentDirection = currentDefinition.initialDirection;
+      currentReviewItem = null;
     } else if (reviewQueue.length > 0) {
       phase = "review";
       const reviewItem = reviewQueue.shift();
+      currentReviewItem = reviewItem;
       currentDefinition = reviewItem.definition;
       currentDirection = reviewItem.direction;
     } else {
       phase = "complete";
       currentDefinition = null;
       currentDirection = null;
+      currentReviewItem = null;
     }
 
     submitted = false;

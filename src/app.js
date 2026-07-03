@@ -1,40 +1,40 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.10.1";
-import { APP_VERSION } from "./app-version.js?v=0.10.1";
-import { createAssessmentSession } from "./assessment.js?v=0.10.1";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.10.1";
+import { createActivityStorage } from "./activity-storage.js?v=0.13.0";
+import { APP_VERSION } from "./app-version.js?v=0.13.0";
+import { createAssessmentSession } from "./assessment.js?v=0.13.0";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.13.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.10.1";
+} from "./diagnostic-export.js?v=0.13.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.10.1";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.10.1";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.10.1";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.10.1";
-import { createProfileStorage } from "./profile-storage.js?v=0.10.1";
-import { buildQuizFromAnswers } from "./questions.js?v=0.10.1";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.10.1";
-import { createQuizSession } from "./quiz-session.js?v=0.10.1";
-import { initializeRecognition } from "./recognition.js?v=0.10.1";
+} from "./indexed-history.js?v=0.13.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.13.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.13.0";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.13.0";
+import { createProfileStorage } from "./profile-storage.js?v=0.13.0";
+import { buildQuizFromAnswers } from "./questions.js?v=0.13.0";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.13.0";
+import { createQuizSession } from "./quiz-session.js?v=0.13.0";
+import { initializeRecognition } from "./recognition.js?v=0.13.0";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.10.1";
+} from "./review-results.js?v=0.13.0";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   isFirstSessionOfDay,
   shareSessionResults,
-} from "./share-results.js?v=0.10.1";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.10.1";
+} from "./share-results.js?v=0.13.0";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.13.0";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -188,7 +188,7 @@ function renderChoices(currentQuestion, knownWrongAnswers, onAnswer) {
   });
 }
 
-function showAnswerOutcome(question, selectedAnswer, correct) {
+function showAnswerOutcome(question, selectedAnswer, correct, repriseReminder = null) {
   choicesElement.querySelectorAll("button").forEach((button) => {
     button.disabled = true;
     if (correct && button.dataset.answer === question.correctAnswer) {
@@ -199,11 +199,17 @@ function showAnswerOutcome(question, selectedAnswer, correct) {
     }
   });
   quizErrorElement.className = `feedback ${correct ? "success" : "error"}`;
-  quizErrorElement.textContent = answerFeedback(correct);
+  const reminderText = repriseReminder
+    ? ` Last time you answered “${repriseReminder.selectedAnswer}” for “${repriseReminder.prompt}”.`
+    : "";
+  quizErrorElement.textContent = `${answerFeedback(correct)}${reminderText}`;
   quizErrorElement.hidden = false;
 }
 
-function feedbackDelay() {
+function feedbackDelay(hasRepriseReminder = false) {
+  if (hasRepriseReminder) {
+    return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 800 : 1700;
+  }
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 300 : 850;
 }
 
@@ -257,6 +263,9 @@ function recordImmutableAttempt(state, selectedAnswer, correct) {
   const attemptId = historyStorage.createId("attempt");
   const vocabularyId = state.question.vocabularyId;
   roundAttemptCount += 1;
+  const selectedDistractor = state.question.distractors?.find(
+    (distractor) => distractor.answer === selectedAnswer,
+  );
   const record = {
     id: attemptId,
     quizRoundId: currentRoundRecord.id,
@@ -272,7 +281,9 @@ function recordImmutableAttempt(state, selectedAnswer, correct) {
     promptText: state.question.prompt,
     choices: [...state.question.choices],
     correctAnswer: state.question.correctAnswer,
+    distractors: state.question.distractors?.map((distractor) => ({ ...distractor })) ?? [],
     selectedAnswer,
+    selectedVocabularyId: correct ? vocabularyId : selectedDistractor?.vocabularyId ?? null,
     correct,
     attemptIndex: roundAttemptCount,
     mainQuestionIndex: state.mainPosition,
@@ -290,7 +301,12 @@ function handleAnswer(event) {
   if (before.phase === "main") {
     roundFirstAttempts.push(attemptFromState(before, answer.correct, roundKind ?? "extra"));
   }
-  showAnswerOutcome(before.question, selectedAnswer, answer.correct);
+  showAnswerOutcome(
+    before.question,
+    selectedAnswer,
+    answer.correct,
+    answer.repriseReminder,
+  );
   window.setTimeout(() => {
     const state = quizSession.advance();
     if (state.phase === "complete") {
@@ -298,7 +314,7 @@ function handleAnswer(event) {
     } else {
       renderQuestion();
     }
-  }, feedbackDelay());
+  }, feedbackDelay(Boolean(answer.repriseReminder)));
 }
 
 function handleAssessmentAnswer(event) {
@@ -945,8 +961,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.10.1"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.10.1"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.13.0"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.13.0"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");

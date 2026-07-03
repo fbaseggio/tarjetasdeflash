@@ -94,10 +94,24 @@ assert.deepEqual(reviewState.knownWrongAnswers, [oppositeVariant.choices[0]]);
 result = reviewSession.submitAnswer(oppositeVariant.correctAnswer);
 assert.equal(result.correct, true);
 assert.equal(result.nextPhase, "complete");
+assert.equal(result.repriseReminder, null);
 const finalState = reviewSession.advance();
 
 assert.equal(finalState.phase, "complete");
 assert.equal(finalState.correctCount, 10);
 assert.equal(finalState.wrongCount, 3);
 
-console.log("Alternating-direction review and direction-specific elimination checks passed.");
+const reminderQuestions = makeQuestions(1);
+const reminderSession = createQuizSession(reminderQuestions);
+const reminderInitial = reminderQuestions[0].variants[DIRECTIONS.SPANISH_TO_ENGLISH];
+const reminderOpposite = reminderQuestions[0].variants[DIRECTIONS.ENGLISH_TO_SPANISH];
+const originalWrongAnswer = reminderInitial.choices[0];
+reminderSession.submitAnswer(originalWrongAnswer);
+reminderSession.advance();
+const reminderResult = reminderSession.submitAnswer(reminderOpposite.correctAnswer);
+assert.deepEqual(reminderResult.repriseReminder, {
+  prompt: reminderInitial.prompt,
+  selectedAnswer: originalWrongAnswer,
+});
+
+console.log("Alternating review, elimination, and first-opposite reminder checks passed.");

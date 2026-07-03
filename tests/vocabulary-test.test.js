@@ -14,6 +14,53 @@ assert.equal(metadata.entryCount, officialVocabulary.length);
 assert.equal(metadata.applicationStatus, "active-official-vocabulary");
 assert.equal(new Set(officialVocabulary.map((entry) => entry.id)).size, officialVocabulary.length);
 assert.equal(
+  officialVocabulary.filter((entry) => entry.partOfSpeech === "unknown").length,
+  0,
+  "official vocabulary should not contain unknown parts of speech",
+);
+assert.equal(metadata.transformation.unknownPartOfSpeechCount, 0);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "expression").length, 0);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "question").length, 29);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "phrase").length, 45);
+assert.ok(
+  officialVocabulary
+    .filter((entry) => /[¿?]/.test(entry.spanish))
+    .every((entry) => entry.partOfSpeech === "question"),
+);
+assert.equal(
+  metadata.transformation.semanticTagging.taggedEntryCount,
+  officialVocabulary.filter((entry) => entry.semanticTags.length > 0).length,
+);
+assert.equal(
+  metadata.transformation.semanticTagging.untaggedEntryCount,
+  officialVocabulary.filter((entry) => entry.semanticTags.length === 0).length,
+);
+assert.ok(
+  officialVocabulary.filter((entry) => entry.semanticTags.length > 0).length
+    >= officialVocabulary.length * 0.85,
+);
+assert.ok(officialVocabulary.every((entry) => Array.isArray(entry.semanticTags)));
+
+const verbos = officialVocabulary.filter((entry) => entry.distractorTraits?.includes("verbo"));
+const verbosFalsos = officialVocabulary.filter(
+  (entry) => entry.distractorTraits?.includes("verbo-falso"),
+);
+assert.equal(verbos.length, 129);
+assert.deepEqual(
+  verbosFalsos.map((entry) => entry.lemma).sort(),
+  ["azúcar", "calamar", "celular", "lugar", "mujer", "suéter"],
+);
+assert.equal(metadata.transformation.distractorTraits.verboCount, verbos.length);
+assert.equal(metadata.transformation.distractorTraits.verboFalsoCount, verbosFalsos.length);
+const lexicalFamilyEntries = officialVocabulary.filter((entry) => entry.lexicalFamily);
+assert.equal(metadata.transformation.lexicalFamilies.familyCount, 24);
+assert.equal(metadata.transformation.lexicalFamilies.taggedEntryCount, lexicalFamilyEntries.length);
+assert.equal(lexicalFamilyEntries.length, 53);
+assert.equal(
+  officialVocabulary.find((entry) => entry.lemma === "invitar").lexicalFamily,
+  officialVocabulary.find((entry) => entry.lemma === "invitado").lexicalFamily,
+);
+assert.equal(
   new Set(officialVocabulary.map((entry) => entry.spanish.toLocaleLowerCase("es"))).size,
   officialVocabulary.length,
 );

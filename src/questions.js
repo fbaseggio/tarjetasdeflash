@@ -1,3 +1,8 @@
+import {
+  questionFieldText,
+  selectWeightedDistractors,
+} from "./distractors.js?v=0.13.0";
+
 export const DIRECTIONS = Object.freeze({
   SPANISH_TO_ENGLISH: "spanish-to-english",
   ENGLISH_TO_SPANISH: "english-to-spanish",
@@ -44,40 +49,24 @@ export function buildQuestionForAnswer(
 
   const promptField = isSpanishPrompt ? "spanish" : "english";
   const answerField = isSpanishPrompt ? "english" : "spanish";
-  const correctAnswer = answer[answerField];
-  const seenAnswers = new Set([correctAnswer]);
-  const distractors = [];
-
-  for (const entry of shuffle(vocabulary, random)) {
-    const possibleAnswer = entry[answerField];
-
-    if (
-      entry.id === answer.id
-      || entry[promptField] === answer[promptField]
-      || seenAnswers.has(possibleAnswer)
-    ) {
-      continue;
-    }
-
-    seenAnswers.add(possibleAnswer);
-    distractors.push(possibleAnswer);
-
-    if (distractors.length === 3) {
-      break;
-    }
-  }
-
-  if (distractors.length !== 3) {
-    throw new Error("Four distinct answer choices could not be generated.");
-  }
+  const correctAnswer = questionFieldText(answer, answerField, { direction });
+  const distractorDetails = selectWeightedDistractors(
+    vocabulary,
+    answer,
+    direction,
+    3,
+    random,
+  );
+  const distractors = distractorDetails.map((choice) => choice.answer);
 
   return Object.freeze({
     vocabularyId: answer.id,
     direction,
     promptLanguage: isSpanishPrompt ? "es" : "en",
     answerLanguage: isSpanishPrompt ? "en" : "es",
-    prompt: answer[promptField],
+    prompt: questionFieldText(answer, promptField, { direction }),
     correctAnswer,
+    distractors: distractorDetails,
     choices: Object.freeze(shuffle([correctAnswer, ...distractors], random)),
   });
 }

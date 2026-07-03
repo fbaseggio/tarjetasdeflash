@@ -16,6 +16,8 @@ for (let index = 0; index < 10_000; index += 1) {
   const question = buildQuestion(vocabulary, previousVocabularyId);
 
   assert.equal(question.choices.length, 4);
+  assert.equal(question.distractors.length, 3);
+  assert.ok(question.distractors.every((distractor) => distractor.vocabularyId));
   assert.equal(new Set(question.choices).size, 4);
   assert.ok(question.choices.includes(question.correctAnswer));
   assert.notEqual(question.vocabularyId, previousVocabularyId);

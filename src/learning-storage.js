@@ -6,7 +6,7 @@ import {
   isBelowFrontier,
   masteryAfterAttempt,
   REVIEW_INTERVALS,
-} from "./mastery-policy.js?v=0.10.1";
+} from "./mastery-policy.js?v=0.13.0";
 
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v2.";
 const CALENDAR_MODEL_VERSION = 2;
