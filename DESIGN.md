@@ -13,7 +13,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
 - Four playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
-- An active, versioned 1,500-entry CC BY-SA testing vocabulary with three 500-entry bands, source attribution, retained original IDs, a reproducible build script, and validation tests.
+- An active, versioned 998-entry curriculum vocabulary derived from the project-provided workbook, with chapter order, three chapter-derived bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
 - A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
 - Due-only frontier practice plus sparse below-frontier audits: expanding learners receive one Foundation and one Everyday audit slot when available; Everyday learners receive two Foundation audit slots.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
@@ -38,7 +38,8 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ### Next local-learning work
 
-- Migration support for the eventual user-provided vocabulary.
+- Further editorial cleanup of part-of-speech gaps, phrases, and source annotations in the official curriculum vocabulary.
+- Selective salvage of useful supplementary entries from the former 1,500-word testing list.
 - Exact in-round recovery from the stored question and attempt history.
 - Fuller learner-level revision beyond the latest per-word evidence.
 - More sophisticated vocabulary selection using recency, confidence, and history.
@@ -74,30 +75,37 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## 4. Vocabulary universe
 
-The active vocabulary universe is the 1,500-entry CC BY-SA testing set at [`assets/vocabulary-test-v1.json`](assets/vocabulary-test-v1.json), with metadata and attribution alongside it. It preserves every ID and translation from the original 100-entry [`assets/vocabulary.json`](assets/vocabulary.json), which remains as migration reference material. Each original entry has this shape:
+The active vocabulary universe is the 998-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided `Vocab for G.xlsx` workbook. Chapters remain the fine-grained curriculum order; application tiers are derived as Foundation chapters 0–2, Everyday chapters 3–6, and Expanding chapters 7–9. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
 
 ```json
 {
-  "id": "manzana",
-  "spanish": "manzana",
-  "english": "apple",
-  "category": "food-and-drink"
+  "id": "g-pedir-13unzbp",
+  "spanish": "pedir",
+  "english": "to ask for; to request; to order (food)",
+  "lemma": "pedir",
+  "partOfSpeech": "verb",
+  "tier": "everyday",
+  "chapter": 4,
+  "chapters": [4, 8],
+  "category": "chapter-4",
+  "senses": ["to ask for", "to request", "to order (food)"],
+  "grammar": { "stemChange": "e:i", "irregularPreterite": "yes" }
 }
 ```
 
 Requirements:
 
 - `id` is stable and unique. Historical records refer to this ID, so changing display text must not change the ID.
-- `spanish` and `english` are the answer text displayed to learners.
-- `category` supports future filtering and better distractor selection.
-- Automated dataset tests validate required text fields, unique IDs, unique Spanish display values, tier counts, retained original entries, and four-choice generation in both directions. Runtime generation also checks that enough distinct displayed choices can be formed and fails visibly when vocabulary cannot be loaded.
+- `spanish` and `english` are clean answer text displayed to learners; source notation such as `pedir (e:i)` is represented as `spanish: "pedir"` plus grammar metadata.
+- `lemma` is the canonical lexical identity; `senses` preserves source meanings merged under one unambiguous Spanish prompt.
+- `chapter` is the first curriculum introduction and `chapters` preserves later repetitions. `category` currently records that first chapter.
+- Source-row references and alternate source forms remain available for editorial auditing. Personal columns such as individual learners' self-reports are excluded from the shared vocabulary.
+- Automated dataset tests validate required fields, unique IDs and Spanish prompts, tier counts, structured grammar examples, and four-choice generation in both directions. Runtime generation also checks that enough distinct displayed choices can be formed and fails visibly when vocabulary cannot be loaded.
 - Question generation must not assume that display text is unique. Distractor choices must be deduplicated by their displayed answer text.
 
 The vocabulary file remains a static application asset in the MVP. Moving vocabulary into Firestore is unnecessary until browser-based editing or dynamic decks are desired.
 
-Future vocabulary IDs identify a lemma, part of speech, and intended sense rather than a row or dataset version. Per-word history belongs to the learner, not to a particular vocabulary file. When the final vocabulary arrives, exact semantic matches retain their history and schedule; probable matches require review; ambiguous or changed senses start fresh; removed entries are archived rather than silently deleted. This allows evidence for durable words such as `gato`, `perro`, `rojo`, and `uno` to survive a dataset replacement.
-
-The larger testing data carries a dataset version and source metadata. Its attribution and CC BY-SA licensing are documented separately from application code. It uses English Wiktionary lexical data and the FrequencyWords corpus through the CC-licensed `doozan/spanish_data` compilation, with automated filtering and reviewed learner-facing gloss overrides.
+The first official import merged 80 repeated source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, retained 251 entries with structured grammar metadata, and left 362 entries explicitly marked with an unknown part of speech for later editorial work. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
 
 ## 5. Core concepts
 
@@ -261,7 +269,7 @@ The quiz domain remains independent from persistence. The current app coordinate
 
 ### 9.2 Initial browser storage
 
-The working release stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, daily session plans, per-word directional first-presentation evidence, and review due dates in `localStorage`. IndexedDB database `tarjetas-learning`, schema version 1, stores practice-session snapshots, quiz-round snapshots, and every submitted answer. Each attempt snapshots its prompt, choices, correct and selected answers, direction, stage, phase, sequence, timestamps, and preceding attempt for that word.
+The working release stores active-profile selection, compact per-profile activity summaries, completed onboarding placement, per-tier onboarding scores, daily session plans, per-word directional first-presentation evidence, and review due dates in `localStorage`. IndexedDB database `tarjetas-learning-v2`, schema version 1, stores practice-session snapshots, quiz-round snapshots, and every submitted answer. Each attempt snapshots its prompt, choices, correct and selected answers, direction, stage, phase, sequence, timestamps, and preceding attempt for that word.
 
 A reload resumes the saved practice stage and restarts an unfinished quiz round without recording its abandoned clicks. Exact reconstruction from the already stored round definition and attempts remains to be implemented. The planned fuller local release also moves or projects these records into IndexedDB-backed sources of truth for:
 
@@ -270,9 +278,7 @@ A reload resumes the saved practice stage and restarts an unfinished quiz round 
 - Per-profile, per-word scheduling state.
 - The generated state of an in-progress quiz so a reload does not reshuffle it.
 
-The browser records use versioned key prefixes, dataset ID/version checks, and stable profile and vocabulary IDs. Diagnostic exports also contain a versioned per-concept mastery projection keyed by normalized Spanish lemma, part of speech, and meaning. Future releases must migrate existing records rather than silently replacing them.
-
-The current 1,500-word vocabulary is test content, so general-purpose import is intentionally deferred. Active-profile diagnostic export is implemented now. Stable semantic vocabulary IDs and explicit dataset migration are still required before the final user-provided vocabulary arrives, because useful word history should survive overlap between the testing and final datasets.
+The browser records use versioned key prefixes, dataset ID/version checks, and stable profile and vocabulary IDs. Diagnostic exports also contain a versioned per-concept mastery projection. Activation of official vocabulary v1 intentionally advanced the local-storage and IndexedDB generation and erased all prior learning, onboarding, activity, and immutable attempt history while preserving the remembered profile identity. Later vocabulary revisions should migrate compatible mastery rather than repeat this early-development reset.
 
 ### 9.3 Later shared service
 
@@ -443,6 +449,8 @@ index.html
 styles.css
 assets/
   vocabulary.json
+  vocabulary-official-v1.json
+  vocabulary-official-v1.meta.json
   vocabulary-test-v1.json
   vocabulary-test-v1.meta.json
   VOCABULARY_TEST_ATTRIBUTION.md
@@ -460,6 +468,7 @@ src/
   profiles.js
   questions.js
   quiz-selection.js
+  storage-generation.js
   quiz-session.js
   recognition.js
 scripts/
@@ -520,7 +529,7 @@ Question-generation logic should be tested independently from the interface.
 
 Implemented prototype acceptance criteria:
 
-- The active vocabulary loads 1,500 entries in three 500-word tiers, preserves the original 100 IDs and translations, validates required fields and unique IDs, and carries versioned attribution metadata.
+- The active vocabulary loads 998 official curriculum entries in three chapter-derived tiers, validates required fields and unique IDs/prompts, and carries versioned source and transformation metadata.
 - Question generation rejects an asset that cannot produce four distinct displayed choices.
 - A ten-question quiz contains ten distinct vocabulary IDs.
 - A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
@@ -579,7 +588,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 1B — Local learning sessions (in progress)
 
-- [x] Approximately 1,500-entry tiered CC BY-SA testing vocabulary with attribution, retained original IDs, and version metadata.
+- [x] A 998-entry official curriculum vocabulary with chapter order, canonical lemmas, merged senses, structured grammar metadata, source metadata, and validation tests.
 - [x] One-time 12-core-plus-6-confirmation adaptive onboarding with persisted tentative placement.
 - [x] Activation of the larger vocabulary and frontier-weighted quiz selection with Foundation auditing.
 - [x] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.

@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { createAssessmentSession } from "../src/assessment.js";
 
 const vocabulary = JSON.parse(
-  await readFile(new URL("../assets/vocabulary-test-v1.json", import.meta.url), "utf8"),
+  await readFile(new URL("../assets/vocabulary-official-v1.json", import.meta.url), "utf8"),
 );
 
 function completeAssessment(answerCorrectlyForTier) {

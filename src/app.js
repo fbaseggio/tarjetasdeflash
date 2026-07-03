@@ -1,23 +1,23 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.8.0";
-import { APP_VERSION } from "./app-version.js?v=0.8.0";
+import { createActivityStorage } from "./activity-storage.js?v=0.9.0";
+import { APP_VERSION } from "./app-version.js?v=0.9.0";
 import { createAssessmentSession } from "./assessment.js";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.8.0";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.9.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.8.0";
+} from "./diagnostic-export.js?v=0.9.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.8.0";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.8.0";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.8.0";
+} from "./indexed-history.js?v=0.9.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.9.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.9.0";
 import { createOnboardingStorage } from "./onboarding-storage.js";
 import { createProfileStorage } from "./profile-storage.js";
 import { buildQuizFromAnswers } from "./questions.js";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.8.0";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.9.0";
 import { createQuizSession } from "./quiz-session.js";
 import { initializeRecognition } from "./recognition.js";
 import {
@@ -27,6 +27,7 @@ import {
   buildHistoryReview,
   reviewGapLabel,
 } from "./review-results.js";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.9.0";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -82,6 +83,8 @@ const reviewAllWordsButton = document.querySelector("#review-all-words-button");
 const backFromReviewButton = document.querySelector("#back-from-review-button");
 const exportButton = document.querySelector("#export-diagnostics");
 const exportStatusElement = document.querySelector("#export-status");
+
+await ensureCurrentStorageGeneration(window.localStorage, window.indexedDB);
 
 const activityStorage = createActivityStorage(window.localStorage);
 const onboardingStorage = createOnboardingStorage(window.localStorage);
@@ -873,11 +876,11 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-test-v1.json"),
-      fetch("./assets/vocabulary-test-v1.meta.json"),
+      fetch("./assets/vocabulary-official-v1.json"),
+      fetch("./assets/vocabulary-official-v1.meta.json"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
-        throw new Error("The testing vocabulary or its metadata could not be loaded.");
+        throw new Error("The official vocabulary or its metadata could not be loaded.");
       }
       vocabulary = await vocabularyResponse.json();
       vocabularyById = new Map(vocabulary.map((entry) => [entry.id, entry]));

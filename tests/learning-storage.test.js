@@ -130,7 +130,7 @@ assert.equal(learning.getDailySessionsForDate("franco", dataset, "2026-07-04").l
 assert.equal(learning.nextDailySessionKey("franco", dataset, "2026-07-04"), "2026-07-04#3");
 assert.equal(learning.getSnapshot("franco", { ...dataset, version: 2 }).words.agua, undefined);
 
-const legacyValues = new Map([["tarjetas.learning.v1.franco", JSON.stringify({
+const legacyValues = new Map([["tarjetas.learning.v2.franco", JSON.stringify({
   datasetId: dataset.id,
   datasetVersion: dataset.version,
   words: {

@@ -83,7 +83,7 @@ assert.equal(summary.currentStreak, 2);
 assert.equal(summary.daysPracticed, 2);
 
 const legacyStorage = createMemoryStorage();
-legacyStorage.setItem("tarjetas.activity.v1.franco", JSON.stringify({
+legacyStorage.setItem("tarjetas.activity.v2.franco", JSON.stringify({
   joinedDate: "2026-07-01",
   lastPracticeDate: "2026-07-04",
   currentStreak: 4,

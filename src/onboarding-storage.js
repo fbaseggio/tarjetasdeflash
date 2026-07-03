@@ -1,4 +1,4 @@
-const ONBOARDING_KEY_PREFIX = "tarjetas.onboarding.v1.";
+const ONBOARDING_KEY_PREFIX = "tarjetas.onboarding.v2.";
 
 export function createOnboardingStorage(storage, now = () => new Date()) {
   function keyFor(profileId) {

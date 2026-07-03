@@ -1,0 +1,46 @@
+{
+  "id": "tarjetas-official-vocabulary-v1",
+  "version": 1,
+  "createdOn": "2026-07-02",
+  "entryCount": 998,
+  "applicationStatus": "active-official-vocabulary",
+  "source": {
+    "id": "vocab-for-g-2026-07-02",
+    "description": "Project-provided high-school Spanish curriculum workbook.",
+    "sourceFile": "Vocab for G.xlsx",
+    "sourceSheet": "Sheet1",
+    "sourceRowCount": 1078,
+    "rightsStatus": "Project-provided source material; provenance documentation remains to be finalized."
+  },
+  "tiers": [
+    {
+      "id": "foundation",
+      "entryCount": 326,
+      "chapters": [0, 1, 2]
+    },
+    {
+      "id": "everyday",
+      "entryCount": 410,
+      "chapters": [3, 4, 5, 6]
+    },
+    {
+      "id": "expanding",
+      "entryCount": 262,
+      "chapters": [7, 8, 9]
+    }
+  ],
+  "transformation": {
+    "duplicateRowsMerged": 80,
+    "missingTranslationsSupplied": 1,
+    "unknownPartOfSpeechCount": 362,
+    "entriesWithStructuredGrammar": 251,
+    "personalAnnotationsExcluded": true
+  },
+  "notes": [
+    "Chapter is the fine-grained curriculum order; the three application tiers are derived chapter bands.",
+    "Learner-facing Spanish is separated from the canonical lemma and source forms.",
+    "Stem changes, required prepositions, reflexivity, irregular forms, and related notes are retained as structured grammar metadata.",
+    "Repeated Spanish prompts are merged for fair multiple-choice questions; distinct source glosses are retained in the senses array.",
+    "The former 1,500-entry testing vocabulary remains in the repository as possible future supplementary material but is no longer active."
+  ]
+}

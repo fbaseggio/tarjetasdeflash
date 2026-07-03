@@ -1,4 +1,4 @@
-const DATABASE_NAME = "tarjetas-learning";
+const DATABASE_NAME = "tarjetas-learning-v2";
 const DATABASE_VERSION = 1;
 const STORE_NAMES = Object.freeze(["practiceSessions", "quizRounds", "attempts"]);
 

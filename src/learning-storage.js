@@ -8,7 +8,7 @@ import {
   REVIEW_INTERVALS,
 } from "./mastery-policy.js";
 
-const LEARNING_KEY_PREFIX = "tarjetas.learning.v1.";
+const LEARNING_KEY_PREFIX = "tarjetas.learning.v2.";
 const CALENDAR_MODEL_VERSION = 2;
 const MASTERY_MODEL_VERSION = 1;
 const DIRECTIONS = Object.freeze(["spanish-to-english", "english-to-spanish"]);

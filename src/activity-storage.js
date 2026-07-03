@@ -1,4 +1,4 @@
-const ACTIVITY_KEY_PREFIX = "tarjetas.activity.v1.";
+const ACTIVITY_KEY_PREFIX = "tarjetas.activity.v2.";
 const EMPTY_TOTALS = Object.freeze({ quizCount: 0, correctCount: 0, wrongCount: 0 });
 
 function localDateKey(date) {

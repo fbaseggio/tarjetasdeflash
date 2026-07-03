@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { buildQuestion, buildQuiz, buildQuizFromAnswers, DIRECTIONS } from "../src/questions.js";
+import {
+  buildQuestion,
+  buildQuestionForAnswer,
+  buildQuiz,
+  buildQuizFromAnswers,
+  DIRECTIONS,
+} from "../src/questions.js";
 
 const vocabulary = JSON.parse(fs.readFileSync(new URL("../assets/vocabulary.json", import.meta.url)));
 const answerSlots = [0, 0, 0, 0];
@@ -59,3 +65,21 @@ assert.ok(shortRound.every((definition) => (
 )));
 
 console.log("Generated a short review round with distractors from the full vocabulary.");
+
+const synonymous = [
+  { id: "ser", spanish: "ser", english: "to be" },
+  { id: "estar", spanish: "estar", english: "to be" },
+  { id: "tener", spanish: "tener", english: "to have" },
+  { id: "hacer", spanish: "hacer", english: "to do" },
+  { id: "ir", spanish: "ir", english: "to go" },
+];
+const synonymQuestion = buildQuestionForAnswer(
+  synonymous,
+  synonymous[0],
+  DIRECTIONS.ENGLISH_TO_SPANISH,
+  () => 0.5,
+);
+assert.equal(synonymQuestion.prompt, "to be");
+assert.ok(!synonymQuestion.choices.includes("estar"));
+
+console.log("Equivalent prompts cannot become each other's distractors.");

@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/questions.test.js && node tests/quiz-session.test.js && node tests/profiles.test.js && node tests/recognition.test.js && node tests/activity-storage.test.js && node tests/vocabulary-test.test.js && node tests/assessment.test.js && node tests/onboarding-storage.test.js && node tests/quiz-selection.test.js && node tests/mastery-policy.test.js && node tests/learning-storage.test.js && node tests/daily-session.test.js && node tests/indexed-history.test.js && node tests/diagnostic-export.test.js && node tests/review-results.test.js"
+    "test": "node tests/questions.test.js && node tests/quiz-session.test.js && node tests/profiles.test.js && node tests/recognition.test.js && node tests/activity-storage.test.js && node tests/storage-generation.test.js && node tests/vocabulary-test.test.js && node tests/assessment.test.js && node tests/onboarding-storage.test.js && node tests/quiz-selection.test.js && node tests/mastery-policy.test.js && node tests/learning-storage.test.js && node tests/daily-session.test.js && node tests/indexed-history.test.js && node tests/diagnostic-export.test.js && node tests/review-results.test.js"
   }
 }

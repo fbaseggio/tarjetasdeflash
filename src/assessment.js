@@ -8,21 +8,20 @@ export const ASSESSMENT_TIERS = Object.freeze({
 
 export const ASSESSMENT_ANCHORS = Object.freeze({
   foundation: Object.freeze([
-    "casa", "agua", "puerta", "escuela", "calle", "pregunta", "verdad", "dormir",
-    "recordar", "escuchar", "buscar", "llegar", "feliz", "grande", "pequeño", "leer",
-    "escribir", "comer", "hablar", "tiempo", "lluvia", "familia", "trabajo", "ciudad",
+    "cuaderno", "libro", "escuela", "mochila", "hombre", "mujer", "mapa", "palabra",
+    "cama", "ahora", "con", "porque", "computadora", "silla", "tarea", "padre",
+    "día", "diccionario", "número", "semana", "país", "bandera", "arte", "historia",
   ]),
   everyday: Object.freeze([
-    "noticia", "cerrar", "construir", "crecer", "hambre", "consejo", "cárcel",
-    "peligroso", "esconder", "antiguo", "maravilloso", "fuente", "decisión", "resolver",
-    "entrada", "salida", "completo", "cantar", "preferir", "opinión", "viaje", "calmar",
-    "doler", "sociedad", "cantidad", "agradecer",
+    "azul", "fácil", "importante", "tener", "verde", "oír", "repetir", "traer",
+    "ver", "volver", "aeropuerto", "hotel", "playa", "pasaporte", "feliz", "llave",
+    "limpio", "triste", "ayudar", "camisa", "barato", "bueno", "cambiar", "anoche",
   ]),
   expanding: Object.freeze([
-    "universo", "instituto", "obligar", "respeto", "investigar", "propiedad", "discurso",
-    "rechazar", "convencer", "población", "compromiso", "búsqueda", "estructura",
-    "extranjero", "conocimiento", "ciudadano", "industria", "recurso", "actitud",
-    "proponer", "archivo", "temporada", "tratamiento", "capacidad",
+    "acordarse", "acostarse", "despertarse", "durante", "gritar", "levantarse",
+    "sentirse", "vestirse", "aceite", "arroz", "carne", "cebolla", "ensalada",
+    "escoger", "leche", "manzana", "azúcar", "camarero", "siempre", "toalla",
+    "jabón", "espejo", "preocuparse", "probarse",
   ]),
 });
 
@@ -43,8 +42,8 @@ function balancedDirections(count, random) {
   );
 }
 
-function vocabularyBySpanish(vocabulary) {
-  return new Map(vocabulary.map((entry) => [entry.spanish, entry]));
+function vocabularyByLemma(vocabulary) {
+  return new Map(vocabulary.map((entry) => [entry.lemma ?? entry.spanish, entry]));
 }
 
 function selectAnchors(vocabularyMap, tier, count, excludedIds, random) {
@@ -112,12 +111,12 @@ export function createAssessmentSession(vocabulary, random = Math.random) {
     throw new Error("The assessment requires a populated tiered vocabulary.");
   }
 
-  const bySpanish = vocabularyBySpanish(vocabulary);
+  const byLemma = vocabularyByLemma(vocabulary);
   const usedIds = new Set();
   const coreItems = [];
 
   for (const tier of Object.values(ASSESSMENT_TIERS)) {
-    const entries = selectAnchors(bySpanish, tier, CORE_PER_TIER, usedIds, random);
+    const entries = selectAnchors(byLemma, tier, CORE_PER_TIER, usedIds, random);
     entries.forEach((entry) => usedIds.add(entry.id));
     coreItems.push(...buildItems(vocabulary, entries, tier, random));
   }
@@ -188,7 +187,7 @@ export function createAssessmentSession(vocabulary, random = Math.random) {
     if (phase === "core" && index === coreItems.length) {
       confirmationTier = chooseConfirmationTier(scores);
       const entries = selectAnchors(
-        bySpanish,
+        byLemma,
         confirmationTier,
         CONFIRMATION_COUNT,
         usedIds,

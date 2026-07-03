@@ -51,7 +51,11 @@ export function buildQuestionForAnswer(
   for (const entry of shuffle(vocabulary, random)) {
     const possibleAnswer = entry[answerField];
 
-    if (entry.id === answer.id || seenAnswers.has(possibleAnswer)) {
+    if (
+      entry.id === answer.id
+      || entry[promptField] === answer[promptField]
+      || seenAnswers.has(possibleAnswer)
+    ) {
       continue;
     }
 
