@@ -27,11 +27,12 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Tier coverage reporting for distinct tested words and their latest first-presentation result.
 - A concise, single-column result review for onboarding, each daily-session stage, and extra quizzes, including each word's scheduled review gap as a demonstrated-mastery signal.
 - A deduplicated whole-day vocabulary review available from the section-results screen.
-- End-of-practice choices for another quiz or another full simulated-day session.
-- A testing-only “Start another full session” control that advances the effective practice date and exercises due reviews, streaks, and daily baselines without waiting overnight.
+- End-of-practice choices for another quiz or another full session on the same actual local date.
+- Multiple full sessions may share one calendar day while retaining distinct session identities; only the day's first completed quiz affects its streak and first-quiz baseline.
+- A one-time calendar repair collapses legacy simulated future sessions onto the actual local date and corrects review dates that were inflated by the old testing shortcut.
 - Versioned IndexedDB history for practice sessions, quiz rounds, and every submitted answer, including reprise attempts and exact question snapshots.
 - Active-profile diagnostic JSON export containing local learning data, IndexedDB history, application and vocabulary versions, storage status, and browser context.
-- Automated tests for question generation, quiz/reprise behavior, profiles, recognition, onboarding, activity summaries, daily planning, effective-date simulation, word evidence, and scheduling.
+- Automated tests for question generation, quiz/reprise behavior, profiles, recognition, onboarding, activity summaries, same-day repeated sessions, legacy calendar repair, word evidence, and scheduling.
 
 ### Next local-learning work
 
@@ -164,7 +165,7 @@ The current question number is visible during the initial pass, followed by the 
 
 Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
 
-The result screen appears only at completion and offers a concise review, optional extra practice, and another full simulated-day session.
+The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day.
 
 Completing a quiz also updates a per-profile practice summary in local browser storage. Calendar dates use the device's local timezone. The first completed quiz on a date is that day's baseline quiz: it adds one practiced day, advances the streak when the preceding practice date was yesterday, and contributes to the daily first-quiz error rate. Later quizzes that day do not change the streak or baseline rate, but do increase the total quiz count and all-quiz error rate.
 
@@ -199,7 +200,7 @@ The implemented initial target is fifteen new words per study day plus all due r
 
 The standalone quiz and reprise behavior is the interaction primitive used by the check-in and due-review stages. Newly presented words are due for retrieval in Step 3 the same day. A practice session may contain several stored quiz rounds, but streak and first-quiz-of-day reporting are awarded only once per local calendar day.
 
-For early testing, a completed session or extra quiz offers **Start another full session**. It creates or resumes the next uncompleted simulated calendar date, uses that date for review scheduling and activity summaries, and may be repeated to exercise several learning days immediately. These simulated sessions intentionally alter the selected profile's local test history; the control can be removed or hidden when the scheduling behavior is calibrated.
+A completed session or extra quiz offers **Start another full session today**. Each repeated session receives a distinct session key but retains the device's actual local calendar date. Repeated same-day sessions contribute quiz totals and word evidence but cannot manufacture practice days, streak credit, or early due dates.
 
 ## 8. Profiles and identity
 
@@ -307,8 +308,9 @@ The count fields are cached summaries for standings. Attempt and session records
 
 ```text
 profileId
-effectiveDate          // local YYYY-MM-DD learning date
-simulated              // true for Start another full session
+effectiveDate          // actual local YYYY-MM-DD learning date
+sessionKey             // date for the first session, then date#2, date#3, ...
+repeatedSameDay        // true after the day's first full session
 status                 // "in-progress", "completed", or "abandoned"
 checkInWordIds
 newWordIds
@@ -535,8 +537,8 @@ Implemented prototype acceptance criteria:
 - Optional extra-practice rounds draw eight words from the learning frontier and two Foundation audit words, except Foundation-repair rounds which draw ten Foundation words.
 - Reloading recovers the saved session stage and safely restarts an unfinished quiz round without recording partial clicks.
 - Completed onboarding, daily sessions, and extra quizzes offer a concise one-page review grouped by tier or session stage.
-- Extra-quiz results offer both another quiz and **Start another full session**.
-- **Start another full session** advances the effective date for due reviews, daily baselines, and streak calculations and can be repeated across simulated days.
+- Extra-quiz results offer both another quiz and **Start another full session today**.
+- **Start another full session today** preserves the actual local date, creates a distinct session record, and does not add another practice day or streak credit.
 - IndexedDB stores practice-session snapshots, quiz-round definitions, and every initial or reprise submission as an immutable attempt with exact question text and choices.
 - Failure or absence of IndexedDB does not prevent practice; storage status and the failure message appear in diagnostic exports.
 - **Export** downloads only the active profile's versioned diagnostic JSON, including application/vocabulary metadata and both browser storage layers.
@@ -575,11 +577,11 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - [x] IndexedDB practice-session snapshots, quiz-round definitions, and immutable attempts.
 - [x] Active-profile diagnostic JSON export with application, vocabulary, storage, and browser metadata.
 - [x] Concise result review for onboarding, daily-session stages, and extra quizzes.
-- [x] End-of-practice actions for another quiz or another full simulated-day session.
+- [x] End-of-practice actions for another quiz or another full same-day session.
 - [ ] IndexedDB-backed profiles, learner-level evidence, word progress, and summary counters.
 - [x] Per-word, per-direction latest first-presentation progress and the initial 1/3/7/14/30/60-day review schedule.
 - [x] Tier coverage reporting for distinct tested words and latest first-presentation outcomes.
-- [x] Repeatable simulated next-day sessions for scheduler and streak testing.
+- [x] Repeatable same-day sessions with distinct history identities and one daily streak baseline.
 - [x] Initial learner known-through band, learning frontier, and low confidence derived from onboarding first attempts.
 - [ ] Continuous level revision and confidence growth from later check-ins.
 - [ ] Vocabulary migration that preserves exact overlapping word/sense history.
@@ -617,7 +619,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - The exact testing-vocabulary tier boundaries and how the final user-provided vocabulary maps onto them.
 - Whether the session's soft cap is controlled primarily by prompt count, elapsed time, or learner choice.
 - Calibration of level-estimation promotion, demotion, and confidence thresholds after early testing.
-- When to hide or remove the simulated-next-day control after scheduler calibration.
+- Whether repeated full sessions should introduce the normal fifteen new words or use a lighter same-day practice mix.
 
 ## 18. References
 

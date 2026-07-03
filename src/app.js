@@ -1,4 +1,4 @@
-import { createActivityStorage } from "./activity-storage.js";
+import { createActivityStorage } from "./activity-storage.js?v=0.7.1";
 import { createAssessmentSession } from "./assessment.js";
 import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js";
 import {
@@ -10,8 +10,8 @@ import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js";
-import { createLearningStorage, localDateKey } from "./learning-storage.js";
+} from "./indexed-history.js?v=0.7.1";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.7.1";
 import { createOnboardingStorage } from "./onboarding-storage.js";
 import { createProfileStorage } from "./profile-storage.js";
 import { buildQuizFromAnswers } from "./questions.js";
@@ -39,7 +39,7 @@ const startAssessmentButton = document.querySelector("#start-assessment-button")
 const startPracticeButton = document.querySelector("#start-practice-button");
 const startSessionButton = document.querySelector("#start-session-button");
 const nextPresentationButton = document.querySelector("#next-presentation-button");
-const testNextDayButton = document.querySelector("#test-next-day-button");
+const newSessionButton = document.querySelector("#new-session-button");
 const sessionEyebrowElement = document.querySelector("#session-eyebrow");
 const placementLevelElement = document.querySelector("#placement-level");
 const placementSummaryElement = document.querySelector("#placement-summary");
@@ -122,12 +122,6 @@ const tierLabels = Object.freeze({
 function dateFromKey(dateKey) {
   const [year, month, day] = dateKey.split("-").map(Number);
   return new Date(year, month - 1, day, 12);
-}
-
-function nextDateKey(dateKey) {
-  const date = dateFromKey(dateKey);
-  date.setDate(date.getDate() + 1);
-  return localDateKey(date);
 }
 
 function displayDate(dateKey) {
@@ -349,8 +343,8 @@ function saveDailySession() {
 function showSessionIntro() {
   hideMainPanels();
   panels.session.hidden = false;
-  sessionEyebrowElement.textContent = dailySession.simulated
-    ? `Test day · ${displayDate(dailySession.date)}`
+  sessionEyebrowElement.textContent = dailySession.repeat
+    ? "Another full session today"
     : "Today’s practice session";
   checkInCountElement.textContent = `${dailySession.checkInIds.length} check-in words`;
   newWordCountElement.textContent = dailySession.newWordIds.length > 0
@@ -365,7 +359,10 @@ function showSessionIntro() {
 
 function prepareDailySession() {
   learningStorage.seedOnboarding(activeProfileId, datasetMetadata, onboardingRecord, vocabulary);
-  const today = localDateKey(new Date());
+  const actualNow = new Date();
+  const today = localDateKey(actualNow);
+  learningStorage.normalizeCalendar(activeProfileId, datasetMetadata, today);
+  activityStorage.normalizeCalendar(activeProfileId, actualNow);
   dailySession = learningStorage.getDailySession(activeProfileId, datasetMetadata, today);
   if (!dailySession) {
     dailySession = createDailySessionPlan(
@@ -374,6 +371,12 @@ function prepareDailySession() {
       learningStorage.getSnapshot(activeProfileId, datasetMetadata),
       today,
     );
+    dailySession.sessionKey = learningStorage.nextDailySessionKey(
+      activeProfileId,
+      datasetMetadata,
+      today,
+    );
+    dailySession.historyId = `${activeProfileId}:${dailySession.sessionKey}`;
   }
   saveDailySession();
   if (dailySession.status === "complete") {
@@ -406,7 +409,7 @@ function startRound(entries, kind) {
   currentRoundRecord = quizRoundRecord({
     id: historyStorage.createId("round"),
     profileId: activeProfileId,
-    practiceSessionId: kind === "extra" ? null : `${activeProfileId}:${dailySession.date}`,
+    practiceSessionId: kind === "extra" ? null : dailySession.historyId,
     stage: kind === "review" ? "due-review" : kind,
     definitions,
     startedAt: historyStorage.nowIso(),
@@ -698,6 +701,13 @@ function sessionWordIds(session) {
   ])];
 }
 
+function dayWordIds(date = localDateKey(new Date())) {
+  return [...new Set(
+    learningStorage.getDailySessionsForDate(activeProfileId, datasetMetadata, date)
+      .flatMap((session) => sessionWordIds(session)),
+  )];
+}
+
 function showResultsBase(correctCount, wrongCount, summary) {
   hideMainPanels();
   panels.results.hidden = false;
@@ -712,25 +722,18 @@ function showSessionResults() {
   resultsEyebrowElement.textContent = "Daily session complete";
   resultsTitleElement.textContent = "¡Buen trabajo!";
   resultsIntroElement.textContent = `You finished ${dailySession.quizRounds} short quiz rounds and met ${dailySession.newWordIds.length} new words.`;
-  if (dailySession.simulated) {
-    const testDate = displayDate(dailySession.date);
-    dailyCreditElement.textContent = dailySession.streakCredited
-      ? `The ${testDate} test-day check-in counted toward your streak.`
-      : `The ${testDate} test day already had streak credit—and this session still counts.`;
-  } else {
-    dailyCreditElement.textContent = dailySession.streakCredited
-      ? "Today’s check-in counted toward your streak."
-      : "You had already earned today’s streak credit—and this session still counts.";
-  }
+  dailyCreditElement.textContent = dailySession.streakCredited
+    ? "Today’s first check-in counted toward your streak."
+    : "You had already earned today’s streak credit—and this session still counts.";
   newQuizButton.firstChild.textContent = "Start additional quiz ";
-  testNextDayButton.hidden = false;
+  newSessionButton.hidden = false;
   reviewContext = {
     type: "session",
     title: `Session review · ${displayDate(dailySession.date)}`,
-    practiceSessionId: `${activeProfileId}:${dailySession.date}`,
+    practiceSessionId: dailySession.historyId,
     newWords: entryList(dailySession.newWordIds),
     date: dailySession.date,
-    allWordIds: sessionWordIds(dailySession),
+    allWordIds: dayWordIds(dailySession.date),
   };
   reviewReturn = showSessionResults;
   showResultsBase(
@@ -748,14 +751,14 @@ function showQuizResults(state, activity) {
     ? "Today’s first quiz counted toward your streak."
     : "You already earned today’s streak credit—and this quiz still counts.";
   newQuizButton.firstChild.textContent = "Start another quiz ";
-  testNextDayButton.hidden = false;
+  newSessionButton.hidden = false;
   reviewContext = {
     type: "extra",
     title: "Extra quiz review",
     roundId: currentRoundRecord.id,
     date: dailySession?.date ?? localDateKey(new Date()),
     allWordIds: [...new Set([
-      ...sessionWordIds(dailySession),
+      ...dayWordIds(dailySession?.date),
       ...roundEntries.map((entry) => entry.id),
     ])],
   };
@@ -763,22 +766,21 @@ function showQuizResults(state, activity) {
   showResultsBase(state.correctCount, state.wrongCount, activity);
 }
 
-function startTestNextDay() {
-  let testDate = nextDateKey(dailySession.date);
-  let existing = learningStorage.getDailySession(activeProfileId, datasetMetadata, testDate);
-
-  while (existing?.status === "complete") {
-    testDate = nextDateKey(testDate);
-    existing = learningStorage.getDailySession(activeProfileId, datasetMetadata, testDate);
-  }
-
-  dailySession = existing ?? createDailySessionPlan(
+function startAnotherSessionToday() {
+  const today = localDateKey(new Date());
+  dailySession = createDailySessionPlan(
     vocabulary,
     onboardingRecord.placement,
     learningStorage.getSnapshot(activeProfileId, datasetMetadata),
-    testDate,
+    today,
   );
-  dailySession.simulated = true;
+  dailySession.sessionKey = learningStorage.nextDailySessionKey(
+    activeProfileId,
+    datasetMetadata,
+    today,
+  );
+  dailySession.historyId = `${activeProfileId}:${dailySession.sessionKey}`;
+  dailySession.repeat = true;
   saveDailySession();
   showSessionIntro();
 }
@@ -920,7 +922,7 @@ startAssessmentButton.addEventListener("click", startAssessment);
 startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
-testNextDayButton.addEventListener("click", startTestNextDay);
+newSessionButton.addEventListener("click", startAnotherSessionToday);
 exportButton.addEventListener("click", exportDiagnostics);
 reviewAssessmentButton.addEventListener("click", () => {
   reviewContext = {

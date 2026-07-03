@@ -1,4 +1,5 @@
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v1.";
+const CALENDAR_MODEL_VERSION = 2;
 const REVIEW_INTERVALS = Object.freeze([1, 3, 7, 14, 30, 60]);
 const DIRECTIONS = Object.freeze(["spanish-to-english", "english-to-spanish"]);
 
@@ -19,6 +20,7 @@ function emptyLearning(dataset) {
   return {
     datasetId: dataset.id,
     datasetVersion: dataset.version,
+    calendarModelVersion: CALENDAR_MODEL_VERSION,
     words: {},
     dailySessions: {},
   };
@@ -39,6 +41,11 @@ function latestWordResult(word) {
     .map((direction) => word.directions?.[direction])
     .filter(Boolean)
     .sort((left, right) => right.testedAt.localeCompare(left.testedAt))[0] ?? null;
+}
+
+function sessionSequence(session) {
+  const suffix = (session.sessionKey ?? session.date).split("#")[1];
+  return suffix ? Number.parseInt(suffix, 10) : 1;
 }
 
 function summarize(words) {
@@ -189,14 +196,87 @@ export function createLearningStorage(storage, now = () => new Date()) {
   }
 
   function getDailySession(profileId, dataset, dateKey = localDateKey(now())) {
-    return read(profileId, dataset).dailySessions[dateKey] ?? null;
+    const sessions = Object.values(read(profileId, dataset).dailySessions)
+      .filter((session) => session.date === dateKey)
+      .sort((left, right) => sessionSequence(left) - sessionSequence(right));
+    return [...sessions].reverse().find((session) => session.status !== "complete")
+      ?? sessions.at(-1)
+      ?? null;
+  }
+
+  function getDailySessionsForDate(profileId, dataset, dateKey = localDateKey(now())) {
+    return Object.values(read(profileId, dataset).dailySessions)
+      .filter((session) => session.date === dateKey)
+      .sort((left, right) => sessionSequence(left) - sessionSequence(right));
+  }
+
+  function nextDailySessionKey(profileId, dataset, dateKey = localDateKey(now())) {
+    const learning = read(profileId, dataset);
+    if (!learning.dailySessions[dateKey]) return dateKey;
+    let sequence = 2;
+    while (learning.dailySessions[`${dateKey}#${sequence}`]) sequence += 1;
+    return `${dateKey}#${sequence}`;
   }
 
   function saveDailySession(profileId, dataset, session) {
     const learning = read(profileId, dataset);
-    learning.dailySessions[session.date] = session;
+    session.sessionKey ??= nextDailySessionKey(profileId, dataset, session.date);
+    session.historyId ??= `${profileId}:${session.sessionKey}`;
+    learning.dailySessions[session.sessionKey] = session;
     write(profileId, learning);
     return session;
+  }
+
+  function normalizeCalendar(profileId, dataset, today = localDateKey(now())) {
+    const learning = read(profileId, dataset);
+    if (learning.calendarModelVersion === CALENDAR_MODEL_VERSION) {
+      return Object.freeze({ changed: false, collapsedSessions: 0 });
+    }
+
+    const originalSessions = Object.entries(learning.dailySessions)
+      .sort(([, left], [, right]) => (
+        (left.completedAt ?? left.date).localeCompare(right.completedAt ?? right.date)
+      ));
+    const normalizedSessions = {};
+    const dateCounts = new Map();
+    let collapsedSessions = 0;
+
+    originalSessions.forEach(([originalKey, originalSession]) => {
+      const session = { ...originalSession };
+      const synthetic = Boolean(session.simulated) || session.date > today;
+      const date = synthetic ? today : session.date;
+      const sequence = (dateCounts.get(date) ?? 0) + 1;
+      dateCounts.set(date, sequence);
+      const sessionKey = sequence === 1 ? date : `${date}#${sequence}`;
+      session.historyId ??= `${profileId}:${originalKey}`;
+      session.sessionKey = sessionKey;
+      session.date = date;
+      session.repeat = Boolean(session.repeat) || sequence > 1;
+      session.simulated = false;
+      normalizedSessions[sessionKey] = session;
+      if (synthetic) collapsedSessions += 1;
+    });
+
+    if (collapsedSessions > 0) {
+      Object.values(learning.words).forEach((word) => {
+        if (!word.schedule) return;
+        const reference = word.schedule.lastReviewedAt ?? word.encounteredAt;
+        if (!reference) return;
+        const intervalDays = Number.isInteger(word.schedule.intervalDays)
+          ? word.schedule.intervalDays
+          : REVIEW_INTERVALS[word.schedule.intervalIndex] ?? 0;
+        const correctedDueDate = addDays(localDateKey(new Date(reference)), intervalDays);
+        if (word.schedule.dueDate > correctedDueDate) {
+          word.schedule.dueDate = correctedDueDate;
+        }
+        word.schedule.intervalDays = intervalDays;
+      });
+    }
+
+    learning.dailySessions = normalizedSessions;
+    learning.calendarModelVersion = CALENDAR_MODEL_VERSION;
+    write(profileId, learning);
+    return Object.freeze({ changed: true, collapsedSessions });
   }
 
   return Object.freeze({
@@ -206,6 +286,9 @@ export function createLearningStorage(storage, now = () => new Date()) {
     recordFirstAttempts,
     getCoverage,
     getDailySession,
+    getDailySessionsForDate,
+    nextDailySessionKey,
     saveDailySession,
+    normalizeCalendar,
   });
 }

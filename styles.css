@@ -443,7 +443,7 @@ h1 {
 .choice:focus-visible,
 .next-button:focus-visible,
 .secondary-button:focus-visible,
-.test-day-button:focus-visible,
+.repeat-session-button:focus-visible,
 .identify-button:focus-visible,
 .user-menu button:focus-visible {
   outline: 3px solid rgb(98 83 217 / 28%);
@@ -517,7 +517,7 @@ h1 {
   display: none;
 }
 
-.test-day-button,
+.repeat-session-button,
 .secondary-button {
   width: 100%;
   min-height: 48px;
@@ -530,7 +530,7 @@ h1 {
   font-weight: 800;
 }
 
-.test-day-button:hover,
+.repeat-session-button:hover,
 .secondary-button:hover {
   background: var(--violet-soft);
 }

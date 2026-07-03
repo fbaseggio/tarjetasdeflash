@@ -13,7 +13,9 @@ assert.equal(
 
 const session = practiceSessionRecord("franco", {
   date: "2026-07-03",
-  simulated: true,
+  sessionKey: "2026-07-03#2",
+  historyId: "franco:2026-07-03#2",
+  repeat: true,
   status: "in-progress",
   stage: "due-reviews",
   checkInIds: ["agua"],
@@ -28,8 +30,10 @@ const session = practiceSessionRecord("franco", {
   streakCredited: true,
 }, "2026-07-02T20:00:00.000Z");
 
-assert.equal(session.id, "franco:2026-07-03");
-assert.equal(session.simulated, true);
+assert.equal(session.id, "franco:2026-07-03#2");
+assert.equal(session.sessionKey, "2026-07-03#2");
+assert.equal(session.repeatedSameDay, true);
+assert.equal(session.simulated, false);
 assert.deepEqual(session.presentedWordIds, ["viaje"]);
 
 const round = quizRoundRecord({

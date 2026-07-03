@@ -82,4 +82,21 @@ summary = activity.recordCompletedQuiz(
 assert.equal(summary.currentStreak, 2);
 assert.equal(summary.daysPracticed, 2);
 
-console.log("Daily activity, simulated dates, streak, membership, and error-rate checks passed.");
+const legacyStorage = createMemoryStorage();
+legacyStorage.setItem("tarjetas.activity.v1.franco", JSON.stringify({
+  joinedDate: "2026-07-01",
+  lastPracticeDate: "2026-07-04",
+  currentStreak: 4,
+  practiceDates: ["2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04"],
+  firstQuizzes: { quizCount: 4, correctCount: 38, wrongCount: 2 },
+  allQuizzes: { quizCount: 9, correctCount: 86, wrongCount: 4 },
+}));
+const legacyActivity = createActivityStorage(legacyStorage, () => new Date(2026, 6, 1, 12));
+const normalized = legacyActivity.normalizeCalendar("franco");
+assert.equal(normalized.changed, true);
+assert.equal(legacyActivity.getSummary("franco").daysPracticed, 1);
+assert.equal(legacyActivity.getSummary("franco").currentStreak, 1);
+assert.equal(legacyActivity.getSummary("franco").firstQuizCount, 1);
+assert.equal(legacyActivity.getSummary("franco").totalQuizzes, 9);
+
+console.log("Same-day activity, streak, membership, and legacy calendar repair checks passed.");

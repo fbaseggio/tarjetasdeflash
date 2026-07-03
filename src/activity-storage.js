@@ -151,5 +151,43 @@ export function createActivityStorage(storage, now = () => new Date()) {
     return Object.freeze({ ...summarize(activity, today), firstQuizToday });
   }
 
-  return Object.freeze({ ensureMember, getSummary, getExport, recordCompletedQuiz });
+  function normalizeCalendar(profileId, effectiveDate = now()) {
+    const today = localDateKey(effectiveDate);
+    const activity = read(profileId, today);
+    const normalizedDates = [...new Set(activity.practiceDates.map((date) => (
+      date > today ? today : date
+    )))].sort();
+    const changed = normalizedDates.length !== activity.practiceDates.length
+      || normalizedDates.some((date, index) => date !== activity.practiceDates[index])
+      || (activity.lastPracticeDate && activity.lastPracticeDate > today)
+      || activity.joinedDate > today;
+    if (!changed) return Object.freeze({ changed: false, collapsedDates: 0 });
+
+    const collapsedDates = activity.practiceDates.length - normalizedDates.length;
+    activity.practiceDates = normalizedDates;
+    if (activity.joinedDate > today) activity.joinedDate = today;
+    activity.lastPracticeDate = normalizedDates.at(-1) ?? null;
+    activity.firstQuizzes.quizCount = normalizedDates.length;
+    activity.currentStreak = 0;
+    for (let index = normalizedDates.length - 1; index >= 0; index -= 1) {
+      if (
+        index === normalizedDates.length - 1
+        || calendarDaysBetween(normalizedDates[index], normalizedDates[index + 1]) === 1
+      ) {
+        activity.currentStreak += 1;
+      } else {
+        break;
+      }
+    }
+    write(profileId, activity);
+    return Object.freeze({ changed: true, collapsedDates });
+  }
+
+  return Object.freeze({
+    ensureMember,
+    getSummary,
+    getExport,
+    recordCompletedQuiz,
+    normalizeCalendar,
+  });
 }

@@ -46,10 +46,12 @@ export function createRecordId(prefix, cryptoObject = globalThis.crypto) {
 
 export function practiceSessionRecord(profileId, session, updatedAt = new Date().toISOString()) {
   return {
-    id: `${profileId}:${session.date}`,
+    id: session.historyId ?? `${profileId}:${session.sessionKey ?? session.date}`,
     profileId,
     effectiveDate: session.date,
-    simulated: Boolean(session.simulated),
+    sessionKey: session.sessionKey ?? session.date,
+    repeatedSameDay: Boolean(session.repeat),
+    simulated: false,
     status: session.status,
     currentStage: session.stage,
     checkInWordIds: [...session.checkInIds],
