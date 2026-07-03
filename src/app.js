@@ -1,38 +1,40 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.10.0";
-import { APP_VERSION } from "./app-version.js?v=0.10.0";
-import { createAssessmentSession } from "./assessment.js?v=0.10.0";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.10.0";
+import { createActivityStorage } from "./activity-storage.js?v=0.10.1";
+import { APP_VERSION } from "./app-version.js?v=0.10.1";
+import { createAssessmentSession } from "./assessment.js?v=0.10.1";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.10.1";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.10.0";
+} from "./diagnostic-export.js?v=0.10.1";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.10.0";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.10.0";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.10.0";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.10.0";
-import { createProfileStorage } from "./profile-storage.js?v=0.10.0";
-import { buildQuizFromAnswers } from "./questions.js?v=0.10.0";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.10.0";
-import { createQuizSession } from "./quiz-session.js?v=0.10.0";
-import { initializeRecognition } from "./recognition.js?v=0.10.0";
+} from "./indexed-history.js?v=0.10.1";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.10.1";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.10.1";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.10.1";
+import { createProfileStorage } from "./profile-storage.js?v=0.10.1";
+import { buildQuizFromAnswers } from "./questions.js?v=0.10.1";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.10.1";
+import { createQuizSession } from "./quiz-session.js?v=0.10.1";
+import { initializeRecognition } from "./recognition.js?v=0.10.1";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.10.0";
+} from "./review-results.js?v=0.10.1";
 import {
   buildSessionSharePayload,
+  buildShareCardSvg,
+  createShareImageFile,
   isFirstSessionOfDay,
   shareSessionResults,
-} from "./share-results.js?v=0.10.0";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.10.0";
+} from "./share-results.js?v=0.10.1";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.10.1";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -80,6 +82,8 @@ const firstQuizErrorElement = document.querySelector("#stat-first-error");
 const overallErrorElement = document.querySelector("#stat-overall-error");
 const coverageReportElement = document.querySelector("#coverage-report");
 const coverageRowsElement = document.querySelector("#coverage-rows");
+const shareCardPreviewElement = document.querySelector("#share-card-preview");
+const shareCardImageElement = document.querySelector("#share-card-image");
 const shareResultsButton = document.querySelector("#share-results-button");
 const shareResultsStatusElement = document.querySelector("#share-results-status");
 const reviewResultsButton = document.querySelector("#review-results-button");
@@ -775,6 +779,14 @@ function showSessionResults() {
     retries: dailySession.wrongCount,
     streak: activitySummary.currentStreak,
   });
+  shareCardPreviewElement.hidden = !shareResultsPayload;
+  if (shareResultsPayload) {
+    const svg = buildShareCardSvg(shareResultsPayload);
+    shareCardImageElement.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    shareCardImageElement.alt = `${activeProfile.displayName}’s Spanish practice results: ${sessionWordIds(dailySession).length} words practiced, ${dailySession.newWordIds.length} new words, ${dailySession.wrongCount} retries, ${activitySummary.currentStreak}-day streak.`;
+  } else {
+    shareCardImageElement.removeAttribute("src");
+  }
   reviewContext = {
     type: "session",
     title: `Session review · ${displayDate(dailySession.date)}`,
@@ -801,6 +813,8 @@ function showQuizResults(state, activity) {
   newQuizButton.firstChild.textContent = "Start another quiz ";
   newSessionButton.hidden = false;
   shareResultsButton.hidden = true;
+  shareCardPreviewElement.hidden = true;
+  shareCardImageElement.removeAttribute("src");
   shareResultsStatusElement.textContent = "";
   shareResultsPayload = null;
   reviewContext = {
@@ -820,10 +834,18 @@ function showQuizResults(state, activity) {
 async function shareDailyResults() {
   if (!shareResultsPayload) return;
   shareResultsButton.disabled = true;
-  shareResultsStatusElement.textContent = "Opening sharing options…";
+  shareResultsStatusElement.textContent = "Creating your results card…";
   try {
-    const result = await shareSessionResults(navigator, shareResultsPayload);
-    if (result === "shared") {
+    let imageFile = null;
+    try {
+      imageFile = await createShareImageFile(document, URL, File, shareResultsPayload);
+    } catch (error) {
+      console.warn("The results image could not be created.", error);
+    }
+    const result = await shareSessionResults(navigator, shareResultsPayload, imageFile);
+    if (result === "shared-image") {
+      shareResultsStatusElement.textContent = "Results card shared.";
+    } else if (result === "shared") {
       shareResultsStatusElement.textContent = "Results shared.";
     } else if (result === "copied") {
       shareResultsStatusElement.textContent = "Results copied—paste them into a text.";
@@ -923,8 +945,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.10.0"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.10.0"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.10.1"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.10.1"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");

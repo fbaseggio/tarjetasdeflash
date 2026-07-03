@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   buildSessionSharePayload,
+  buildShareCardSvg,
   isFirstSessionOfDay,
   PUBLIC_APP_URL,
   shareSessionResults,
@@ -20,6 +21,23 @@ assert.equal(
 );
 assert.equal(payload.url, PUBLIC_APP_URL);
 assert.match(payload.clipboardText, /Try it: https:\/\/fbaseggio\.github\.io\/tarjetasdeflash\/$/);
+const svg = buildShareCardSvg(payload);
+assert.match(svg, /width="1200" height="630"/);
+assert.match(svg, />Franco practiced Spanish today</);
+assert.match(svg, />27<\/text>/);
+assert.match(svg, />15<\/text>/);
+assert.match(svg, />4<\/text>/);
+assert.match(svg, />3<\/text>/);
+assert.match(
+  buildShareCardSvg(buildSessionSharePayload({
+    displayName: "Milo & Gideon",
+    distinctWords: 1,
+    newWords: 0,
+    retries: 0,
+    streak: 1,
+  })),
+  /Milo &amp; Gideon practiced Spanish today/,
+);
 
 let sharedPayload;
 assert.equal(await shareSessionResults({
@@ -30,6 +48,13 @@ assert.deepEqual(sharedPayload, {
   text: payload.text,
   url: payload.url,
 });
+
+const fakeImage = { name: "tarjetas-session-results.png", type: "image/png" };
+assert.equal(await shareSessionResults({
+  canShare(value) { return value.files?.[0] === fakeImage; },
+  async share(value) { sharedPayload = value; },
+}, payload, fakeImage), "shared-image");
+assert.deepEqual(sharedPayload.files, [fakeImage]);
 
 assert.equal(await shareSessionResults({
   async share() {

@@ -6,7 +6,7 @@
     <meta name="description" content="A tiny Spanish vocabulary quiz.">
     <title>Tarjetas de Flash</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=0.10.0">
+    <link rel="stylesheet" href="./styles.css?v=0.10.1">
   </head>
   <body>
     <main class="page-shell">
@@ -227,6 +227,10 @@
           <div id="coverage-rows"></div>
         </div>
 
+        <figure id="share-card-preview" class="share-card-preview" hidden>
+          <img id="share-card-image" alt="Today’s shareable Spanish practice results">
+          <figcaption>This is what your friends will see.</figcaption>
+        </figure>
         <button id="share-results-button" class="secondary-button share-results-button" type="button" hidden>
           Text my friends
         </button>
@@ -263,6 +267,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./src/app.js?v=0.10.0"></script>
+    <script type="module" src="./src/app.js?v=0.10.1"></script>
   </body>
 </html>
