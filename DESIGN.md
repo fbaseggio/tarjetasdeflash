@@ -28,6 +28,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - A concise, single-column result review for onboarding, each daily-session stage, and extra quizzes, including each word's scheduled review gap as a demonstrated-mastery signal.
 - A deduplicated whole-day vocabulary review available from the section-results screen.
 - End-of-practice choices for another quiz or another full session on the same actual local date.
+- A first-session-of-day results-sharing option using the device share sheet, with a clipboard fallback and no recipient or contact access.
 - Multiple full sessions may share one calendar day while retaining distinct session identities; only the day's first completed quiz affects its streak and first-quiz baseline.
 - A one-time calendar repair collapses legacy simulated future sessions onto the actual local date and corrects review dates that were inflated by the old testing shortcut.
 - Versioned IndexedDB history for practice sessions, quiz rounds, and every submitted answer, including reprise attempts and exact question snapshots.
@@ -179,7 +180,7 @@ The current question number is visible during the initial pass, followed by the 
 
 Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
 
-The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day.
+The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day. The first completed full session for a calendar day also offers **Text my friends**. It shares a concise, editable summary containing the learner's display name, distinct words practiced, new words, retries, current streak, and public application link. The browser's native share sheet chooses the recipient application; when unavailable, the same text is copied to the clipboard. Later sessions and standalone extra quizzes do not offer this action.
 
 Completing a quiz also updates a per-profile practice summary in local browser storage. Calendar dates use the device's local timezone. The first completed quiz on a date is that day's baseline quiz: it adds one practiced day, advances the streak when the preceding practice date was yesterday, and contributes to the daily first-quiz error rate. Later quizzes that day do not change the streak or baseline rate, but do increase the total quiz count and all-quiz error rate.
 

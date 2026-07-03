@@ -535,6 +535,35 @@ h1 {
   background: var(--violet-soft);
 }
 
+.share-results-button {
+  margin-top: 24px;
+  color: var(--green);
+  background: var(--green-soft);
+  border-color: #7bc9ae;
+}
+
+.share-results-button:hover {
+  background: #d8f3e8;
+}
+
+.share-results-button[hidden] {
+  display: none;
+}
+
+.share-results-button:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.share-results-status {
+  min-height: 1.3em;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+}
+
 .review-sections {
   display: grid;
   gap: 22px;

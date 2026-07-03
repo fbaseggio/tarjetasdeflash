@@ -1,4 +1,4 @@
-import { getProfileById, resolveProfile } from "./profiles.js?v=0.9.1";
+import { getProfileById, resolveProfile } from "./profiles.js?v=0.10.0";
 
 export function initializeRecognition({
   form,

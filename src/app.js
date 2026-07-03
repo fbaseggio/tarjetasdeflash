@@ -1,33 +1,38 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.9.1";
-import { APP_VERSION } from "./app-version.js?v=0.9.1";
-import { createAssessmentSession } from "./assessment.js?v=0.9.1";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.9.1";
+import { createActivityStorage } from "./activity-storage.js?v=0.10.0";
+import { APP_VERSION } from "./app-version.js?v=0.10.0";
+import { createAssessmentSession } from "./assessment.js?v=0.10.0";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.10.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.9.1";
+} from "./diagnostic-export.js?v=0.10.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.9.1";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.9.1";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.9.1";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.9.1";
-import { createProfileStorage } from "./profile-storage.js?v=0.9.1";
-import { buildQuizFromAnswers } from "./questions.js?v=0.9.1";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.9.1";
-import { createQuizSession } from "./quiz-session.js?v=0.9.1";
-import { initializeRecognition } from "./recognition.js?v=0.9.1";
+} from "./indexed-history.js?v=0.10.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.10.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.10.0";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.10.0";
+import { createProfileStorage } from "./profile-storage.js?v=0.10.0";
+import { buildQuizFromAnswers } from "./questions.js?v=0.10.0";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.10.0";
+import { createQuizSession } from "./quiz-session.js?v=0.10.0";
+import { initializeRecognition } from "./recognition.js?v=0.10.0";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.9.1";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.9.1";
+} from "./review-results.js?v=0.10.0";
+import {
+  buildSessionSharePayload,
+  isFirstSessionOfDay,
+  shareSessionResults,
+} from "./share-results.js?v=0.10.0";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.10.0";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -75,6 +80,8 @@ const firstQuizErrorElement = document.querySelector("#stat-first-error");
 const overallErrorElement = document.querySelector("#stat-overall-error");
 const coverageReportElement = document.querySelector("#coverage-report");
 const coverageRowsElement = document.querySelector("#coverage-rows");
+const shareResultsButton = document.querySelector("#share-results-button");
+const shareResultsStatusElement = document.querySelector("#share-results-status");
 const reviewResultsButton = document.querySelector("#review-results-button");
 const reviewTitleElement = document.querySelector("#review-title");
 const reviewSummaryElement = document.querySelector("#review-summary");
@@ -118,6 +125,7 @@ let reviewReturn = null;
 let sectionReviewState = [];
 let allWordsReviewState = [];
 let showingAllWords = false;
+let shareResultsPayload = null;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -754,6 +762,19 @@ function showSessionResults() {
     : "You had already earned today’s streak credit—and this session still counts.";
   newQuizButton.firstChild.textContent = "Start additional quiz ";
   newSessionButton.hidden = false;
+  const activitySummary = activityStorage.getSummary(
+    activeProfileId,
+    dateFromKey(dailySession.date),
+  );
+  shareResultsStatusElement.textContent = "";
+  shareResultsButton.hidden = !isFirstSessionOfDay(dailySession);
+  shareResultsPayload = shareResultsButton.hidden ? null : buildSessionSharePayload({
+    displayName: activeProfile.displayName,
+    distinctWords: sessionWordIds(dailySession).length,
+    newWords: dailySession.newWordIds.length,
+    retries: dailySession.wrongCount,
+    streak: activitySummary.currentStreak,
+  });
   reviewContext = {
     type: "session",
     title: `Session review · ${displayDate(dailySession.date)}`,
@@ -766,7 +787,7 @@ function showSessionResults() {
   showResultsBase(
     dailySession.correctCount,
     dailySession.wrongCount,
-    activityStorage.getSummary(activeProfileId, dateFromKey(dailySession.date)),
+    activitySummary,
   );
 }
 
@@ -779,6 +800,9 @@ function showQuizResults(state, activity) {
     : "You already earned today’s streak credit—and this quiz still counts.";
   newQuizButton.firstChild.textContent = "Start another quiz ";
   newSessionButton.hidden = false;
+  shareResultsButton.hidden = true;
+  shareResultsStatusElement.textContent = "";
+  shareResultsPayload = null;
   reviewContext = {
     type: "extra",
     title: "Extra quiz review",
@@ -791,6 +815,29 @@ function showQuizResults(state, activity) {
   };
   reviewReturn = () => showQuizResults(state, activity);
   showResultsBase(state.correctCount, state.wrongCount, activity);
+}
+
+async function shareDailyResults() {
+  if (!shareResultsPayload) return;
+  shareResultsButton.disabled = true;
+  shareResultsStatusElement.textContent = "Opening sharing options…";
+  try {
+    const result = await shareSessionResults(navigator, shareResultsPayload);
+    if (result === "shared") {
+      shareResultsStatusElement.textContent = "Results shared.";
+    } else if (result === "copied") {
+      shareResultsStatusElement.textContent = "Results copied—paste them into a text.";
+    } else if (result === "canceled") {
+      shareResultsStatusElement.textContent = "Sharing canceled.";
+    } else {
+      shareResultsStatusElement.textContent = "Sharing is not available in this browser.";
+    }
+  } catch (error) {
+    console.error(error);
+    shareResultsStatusElement.textContent = "The results could not be shared.";
+  } finally {
+    shareResultsButton.disabled = false;
+  }
 }
 
 function startAnotherSessionToday() {
@@ -876,8 +923,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.9.1"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.9.1"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.10.0"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.10.0"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -963,6 +1010,7 @@ startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 newSessionButton.addEventListener("click", startAnotherSessionToday);
+shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 reviewAssessmentButton.addEventListener("click", () => {
   reviewContext = {

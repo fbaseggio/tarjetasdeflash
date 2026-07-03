@@ -1,4 +1,4 @@
-import { APP_RELEASE_DATE, APP_VERSION, DIAGNOSTIC_EXPORT_VERSION } from "./app-version.js?v=0.9.1";
+import { APP_RELEASE_DATE, APP_VERSION, DIAGNOSTIC_EXPORT_VERSION } from "./app-version.js?v=0.10.0";
 
 export function buildDiagnosticExport({
   exportedAt,
