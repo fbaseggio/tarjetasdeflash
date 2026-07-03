@@ -89,6 +89,43 @@ assert.equal(questionScore.eligible, true);
 assert.ok(questionScore.reasons.includes("both-questions"));
 assert.ok(questionScore.weight >= 60);
 
+const properNoun = {
+  id: "madrid",
+  spanish: "Madrid",
+  english: "Madrid",
+  partOfSpeech: "proper noun",
+  tier: "foundation",
+  chapter: 1,
+  semanticTags: ["colors"],
+};
+const otherProperNoun = {
+  id: "lima",
+  spanish: "Lima",
+  english: "Lima",
+  partOfSpeech: "proper noun",
+  tier: "foundation",
+  chapter: 1,
+  semanticTags: ["place", "place:geography"],
+};
+const properForOrdinaryScore = scoreDistractorCandidate(
+  target,
+  properNoun,
+  "spanish-to-english",
+);
+assert.equal(properForOrdinaryScore.eligible, true);
+assert.equal(properForOrdinaryScore.weight, 1);
+assert.equal(properForOrdinaryScore.baseline, true);
+assert.deepEqual(properForOrdinaryScore.reasons, []);
+
+const properForProperScore = scoreDistractorCandidate(
+  properNoun,
+  otherProperNoun,
+  "spanish-to-english",
+);
+assert.equal(properForProperScore.eligible, true);
+assert.ok(properForProperScore.reasons.includes("both-proper-nouns"));
+assert.ok(properForProperScore.weight >= 8);
+
 assert.ok(textSimilarity("casa", "caza") >= 0.7);
 assert.ok(
   FALSE_COGNATE_RELATIONS.has(

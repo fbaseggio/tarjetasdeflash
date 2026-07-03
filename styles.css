@@ -288,6 +288,36 @@ a {
   gap: 10px;
 }
 
+.challenge-options {
+  display: grid;
+  gap: 10px;
+}
+
+.challenge-options .identity-option {
+  justify-items: start;
+  text-align: left;
+}
+
+.name-picker-label {
+  font-weight: 800;
+}
+
+.name-picker {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: 13px;
+  font: inherit;
+}
+
+.name-picker:focus-visible {
+  outline: 3px solid rgb(87 68 196 / 22%);
+  outline-offset: 2px;
+}
+
 .identity-option {
   position: relative;
   display: grid;

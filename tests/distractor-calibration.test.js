@@ -31,6 +31,15 @@ for (let index = 0; index < questionCount; index += 1) {
       "questions must not distract non-question targets",
     );
   }
+  if (target.partOfSpeech !== "proper noun") {
+    assert.ok(
+      choices.every((choice) => (
+        vocabularyById.get(choice.vocabularyId).partOfSpeech !== "proper noun"
+        || choice.baseline
+      )),
+      "proper nouns may only use baseline selection for non-proper-noun targets",
+    );
+  }
   baselineByDirection[direction].questions += 1;
   baselineByDirection[direction].baseline += choices.filter((choice) => choice.baseline).length;
 }
@@ -49,6 +58,22 @@ const questionsPerQuestion = questionDistractorCount / 200;
 assert.ok(
   questionsPerQuestion >= 1.8 && questionsPerQuestion <= 2.8,
   `${questionsPerQuestion} question distractors per question target`,
+);
+
+const properNouns = vocabulary.filter((entry) => entry.partOfSpeech === "proper noun");
+let properNounDistractorCount = 0;
+for (let index = 0; index < 200; index += 1) {
+  const target = properNouns[index % properNouns.length];
+  const direction = index % 2 === 0 ? "spanish-to-english" : "english-to-spanish";
+  const choices = selectWeightedDistractors(vocabulary, target, direction, 3, random);
+  properNounDistractorCount += choices.filter(
+    (choice) => vocabularyById.get(choice.vocabularyId).partOfSpeech === "proper noun",
+  ).length;
+}
+const properNounsPerProperNoun = properNounDistractorCount / 200;
+assert.ok(
+  properNounsPerProperNoun >= 1.5 && properNounsPerProperNoun <= 2.8,
+  `${properNounsPerProperNoun} proper-noun distractors per proper-noun target`,
 );
 
 const verbos = vocabulary.filter((entry) => entry.distractorTraits?.includes("verbo"));
@@ -138,6 +163,9 @@ console.log(
   + `EN→ES ${directionAverages["english-to-spanish"].toFixed(3)}.`,
 );
 console.log(`${questionsPerQuestion.toFixed(3)} question distractors per question target.`);
+console.log(
+  `${properNounsPerProperNoun.toFixed(3)} proper-noun distractors per proper-noun target.`,
+);
 console.log(
   `${falsosPerVerbo.toFixed(3)} verbos-falsos per verbo; `
   + `${verbosPerFalso.toFixed(3)} verbos per verbo-falso.`,

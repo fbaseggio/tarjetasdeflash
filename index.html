@@ -6,7 +6,7 @@
     <meta name="description" content="A tiny Spanish vocabulary quiz.">
     <title>Tarjetas de Flash</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=0.13.0">
+    <link rel="stylesheet" href="./styles.css?v=0.14.0">
   </head>
   <body>
     <main class="page-shell">
@@ -80,9 +80,58 @@
             </div>
           </fieldset>
 
-          <p id="recognition-feedback" class="recognition-feedback" aria-live="polite"></p>
           <button class="identify-button" type="submit">That’s me</button>
         </form>
+
+        <form id="swallow-form" class="recognition-form" hidden>
+          <fieldset>
+            <legend>Choose carefully.</legend>
+            <div class="challenge-options">
+              <label class="identity-option">
+                <input type="radio" name="swallow-answer" value="meters-per-second" required>
+                <span>11 meters per second</span>
+              </label>
+              <label class="identity-option">
+                <input type="radio" name="swallow-answer" value="miles-per-hour">
+                <span>24 miles per hour</span>
+              </label>
+              <label class="identity-option">
+                <input type="radio" name="swallow-answer" value="laden-pigeon">
+                <span>Faster than a laden pigeon</span>
+              </label>
+              <label class="identity-option">
+                <input type="radio" name="swallow-answer" value="african-or-european">
+                <span>What do you mean, an African or a European swallow?</span>
+              </label>
+            </div>
+          </fieldset>
+          <button class="identify-button" type="submit">Answer</button>
+        </form>
+
+        <form id="name-form" class="recognition-form" hidden>
+          <label class="name-picker-label" for="profile-name">Choose your name</label>
+          <select id="profile-name" class="name-picker" name="profile-name" required>
+            <option value="">Select a name…</option>
+            <option value="seth">Seth</option>
+            <option value="cristina">Cristina</option>
+            <option value="jeremy">Jeremy</option>
+            <option value="hannah">Hannah</option>
+            <option value="natalie">Natalie</option>
+            <option value="jackie">Jackie</option>
+            <option value="lisa">Lisa</option>
+            <option value="sherry">Sherry</option>
+            <option value="lynette">Lynette</option>
+            <option value="kari">Kari</option>
+            <option value="sam">Sam</option>
+            <option value="ajit">Ajit</option>
+            <option value="jake">Jake</option>
+            <option value="karen">Karen</option>
+            <option value="tricia">Tricia</option>
+          </select>
+          <button class="identify-button" type="submit">Continue</button>
+        </form>
+
+        <p id="recognition-feedback" class="recognition-feedback" aria-live="polite"></p>
       </section>
 
       <section id="onboarding-panel" class="onboarding-panel" aria-labelledby="onboarding-title" hidden>
@@ -267,6 +316,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./src/app.js?v=0.13.0"></script>
+    <script type="module" src="./src/app.js?v=0.14.0"></script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.13.0";
+import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.14.0";
 
 export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   baseline: 1,
@@ -15,6 +15,7 @@ export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   similarAnswerForm: 1.03,
   learnerConfusion: 6,
   bothQuestions: 60,
+  bothProperNouns: 8,
   verboFalsoForVerbo: 8,
   verboForVerboFalso: 5,
   lexicalFamily: 12,
@@ -191,6 +192,8 @@ export function scoreDistractorCandidate(
   const overlappingSenses = setsOverlap(normalizedSenses(target), normalizedSenses(candidate));
   const targetIsQuestion = target.partOfSpeech === "question";
   const candidateIsQuestion = candidate.partOfSpeech === "question";
+  const targetIsProperNoun = target.partOfSpeech === "proper noun";
+  const candidateIsProperNoun = candidate.partOfSpeech === "proper noun";
   const targetIsVerbo = hasDistractorTrait(target, "verbo");
   const targetIsVerboFalso = hasDistractorTrait(target, "verbo-falso");
   const candidateIsVerbo = hasDistractorTrait(candidate, "verbo");
@@ -213,6 +216,18 @@ export function scoreDistractorCandidate(
     return Object.freeze({ eligible: false, weight: 0, reasons: Object.freeze([]), baseline: false });
   }
 
+  // A proper name is rarely a useful related distractor for an ordinary word.
+  // Keep it in the long tail, but do not let incidental tier, chapter, spelling,
+  // or semantic metadata promote it into the affinity-weighted pool.
+  if (candidateIsProperNoun && !targetIsProperNoun) {
+    return Object.freeze({
+      eligible: true,
+      weight: weights.baseline,
+      reasons: Object.freeze([]),
+      baseline: true,
+    });
+  }
+
   let weight = weights.baseline;
   const reasons = [];
   const apply = (reason, multiplier) => {
@@ -227,6 +242,9 @@ export function scoreDistractorCandidate(
   }
   if (targetIsQuestion && candidateIsQuestion) {
     apply("both-questions", weights.bothQuestions);
+  }
+  if (targetIsProperNoun && candidateIsProperNoun) {
+    apply("both-proper-nouns", weights.bothProperNouns);
   }
   if (targetIsVerbo && candidateIsVerboFalso) {
     apply("verbo-falso-for-verbo", weights.verboFalsoForVerbo);

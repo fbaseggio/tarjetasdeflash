@@ -11,7 +11,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 ### Implemented and deployed
 
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
-- Four playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
+- Nineteen playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
 - An active, versioned 998-entry curriculum vocabulary derived from the project-provided workbook, with chapter order, three chapter-derived bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
 - A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
@@ -55,7 +55,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 ## 2. Goals
 
 - Present quick Spanish vocabulary quizzes with clear prompts and uninterrupted progression.
-- Support approximately four named learner profiles in one browser initially.
+- Support a small invited group of named learner profiles in one browser initially.
 - Track quiz sessions and individual answers over time.
 - Track per-word progress and schedule spaced-repetition reviews.
 - Generate follow-up quizzes from missed vocabulary.
@@ -164,6 +164,7 @@ Candidate weights then increase according to independent, potentially compoundin
 
 - Same part of speech.
 - Question structure: a question has a very strong affinity for other questions, while a question has zero eligibility as a distractor for any non-question target.
+- Proper-name structure: a proper noun receives only baseline weight for a non-proper-noun target. Proper-noun targets strongly favor other proper nouns while still allowing semantically related common nouns and the ordinary baseline tail.
 - Same curriculum tier and proximity in chapter order.
 - Same semantic family or topic.
 - Verbo surface form: bare infinitives and the six noun lookalikes use a separately calibrated eligibility and weighting policy.
@@ -174,7 +175,7 @@ Candidate weights then increase according to independent, potentially compoundin
 
 False-cognate relationships may be directional: a particular English answer can be tempting for a Spanish prompt without the reverse direction being equally useful. Sound and spelling similarity should be computed between the relevant Spanish forms even when the displayed answers are English. Explicit editorial relationships take precedence where automatic similarity would be misleading.
 
-Weights are configuration, not domain invariants. Initial values favor same-part-of-speech, same-tier, semantic, false-cognate, lexical-family, and sound-alike candidates while never forcing a fixed composition. Broad semantic matches receive a moderate increase and narrow matches a stronger increase. The former `expression` category has been split into 29 questions and 45 phrases. Question targets currently average about 2.4 question distractors; non-question targets can never receive a question distractor. Learner-confusion data has a defined scoring hook but is not yet populated. Selection remains random within this weighted distribution, so questions do not become predictable category-matching exercises.
+Weights are configuration, not domain invariants. Initial values favor same-part-of-speech, same-tier, semantic, false-cognate, lexical-family, and sound-alike candidates while never forcing a fixed composition. Broad semantic matches receive a moderate increase and narrow matches a stronger increase. The former `expression` category has been split into 29 questions and 45 phrases. Question targets currently average about 2.4 question distractors; non-question targets can never receive a question distractor. Proper nouns cannot enter the related pool for ordinary targets, while proper-noun targets strongly favor other proper names without excluding semantically useful common nouns. Learner-confusion data has a defined scoring hook but is not yet populated. Selection remains random within this weighted distribution, so questions do not become predictable category-matching exercises.
 
 A **verbo** is a curriculum entry categorized as a verb whose displayed Spanish is one bare word ending in `-ar`, `-er`, or `-ir`. When a verbo is the target, only other verbos, `verbos-falsos`, and curated lexical-family exceptions are eligible in either direction. A **verbo-falso** is a single-word noun longer than three letters whose lemma has the same ending. Verbo-falso targets retain the ordinary long-tail pool but moderately favor true verbos. Calibration currently produces about `0.45` verbos-falsos per verbo target and `1.05` true verbos per verbo-falso target; neither is imposed as a fixed quota. Verb expressions and conjugated forms do not participate in this special surface-form rule.
 
@@ -259,7 +260,7 @@ A completed session or extra quiz offers **Start another full session today**. E
 
 ## 8. Profiles and identity
 
-The first release supports four profiles stored in the browser. A profile has a stable ID, display name, optional color or avatar marker, and timestamps. On a device without a remembered profile, the learner answers two playful recognition questions using Spanish choices:
+The first release supports a small invited set of profiles stored in the browser. A profile has a stable ID, display name, optional color or avatar marker, and timestamps. On a device without a remembered profile, the learner answers two playful recognition questions using Spanish choices:
 
 | Favorite animal | Favorite color | Profile ID | Display name |
 |---|---|---|---|
@@ -268,7 +269,7 @@ The first release supports four profiles stored in the browser. A profile has a 
 | Pingüino | Rojo | `milo` | Milo |
 | León | Verde | `gideon` | Gideon |
 
-Other combinations do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
+The `León` / `Morado` combination opens an additional invitation check: “What is the air-speed of a swallow?” Choosing the question “What do you mean, an African or a European swallow?” opens a picker containing Seth, Cristina, Jeremy, Hannah, Natalie, Jackie, Lisa, Sherry, Lynette, Kari, Sam, Ajit, Jake, Karen, and Tricia. Each is a stable profile with independent learning history. Other combinations or invitation answers do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
 
 Currently, each profile's activity summary, onboarding placement, daily session plans, latest first-presentation result by word and direction, review schedule, quiz rounds, and immutable attempts persist across visits made with the same browser and GitHub Pages origin. Continuously revised level evidence, exact in-round restoration, and local standings remain next-phase work. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry local history with the learner.
 
@@ -446,7 +447,7 @@ If a summary update fails after an attempt is preserved, a repair routine can re
 
 The current result screen reports the active learner's streak, membership days, practice days, completed quizzes, daily first-quiz error rate, overall error rate, and vocabulary coverage by tier. Coverage shows distinct words tested and divides them by the most recent first-presentation result: right or wrong. Presumed-known but untested words do not count as tested.
 
-A separate standings screen is planned. It will read the four small local profile summaries rather than scanning all historical attempts. These standings compare only activity stored in that browser. After Firestore synchronization is added, the same screen reads shared profile summary documents and becomes cross-device.
+A separate standings screen is planned. It will read the small local profile summaries rather than scanning all historical attempts. These standings compare only activity stored in that browser. After Firestore synchronization is added, the same screen reads shared profile summary documents and becomes cross-device.
 
 The persistent user menu provides **Export**, which downloads a formatted JSON diagnostic for only the active profile. The export has its own schema version and includes application version/release date, vocabulary ID/version/count, onboarding placement, activity data, per-word learning state, daily plans, IndexedDB practice sessions/rounds/attempts, storage health, origin, locale, timezone, and user agent. It excludes the complete vocabulary, unrelated browser data, and every other profile. The learner can attach this file to an email or a support conversation; no data is transmitted automatically.
 
@@ -472,7 +473,7 @@ When Firestore is added, the database should not be entirely unauthenticated:
 
 - Require Firebase Authentication for Firestore access.
 - Enable anonymous sign-in.
-- Allow only the expected four profile IDs.
+- Allow only the expected invited-group profile IDs.
 - Validate permitted fields, primitive types, string lengths, choice counts, and reasonable numeric bounds in Firestore Security Rules.
 - Permit public authenticated reads needed for standings.
 - Permit creation of attempts and sessions, but not client deletion of history.
@@ -528,7 +529,7 @@ Responsibilities:
 - `quiz-selection.js`: implemented the standalone frontier/Foundation selection strategy.
 - `indexed-history.js`: implemented versioned IndexedDB stores and immutable history records.
 - `diagnostic-export.js` and `app-version.js`: implemented active-profile diagnostic export and version metadata.
-- `profiles.js`, `recognition.js`, and `profile-storage.js`: implemented honor-system identity flow.
+- `profiles.js`, `recognition.js`, and `profile-storage.js`: implemented honor-system identity flow, including the invited-user registration branch.
 - `activity-storage.js`: implemented `localStorage` activity summaries and daily streak calculations.
 - `daily-session.js`: implemented daily plan construction, check-in selection, new-word throttling, and review-round slicing.
 - `mastery-policy.js`: implemented frontier, audit, repair, same-day retirement, and portable concept projection rules.
@@ -617,7 +618,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 1A — Deployed quiz prototype (complete)
 
-- [x] Static layout and four-profile selector.
+- [x] Static recognition layout for four original profiles and fifteen invited-user profiles.
 - [x] Loading of the 100-entry placeholder vocabulary.
 - [x] Random ten-question rounds balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - [x] Random distractors and answer positions.

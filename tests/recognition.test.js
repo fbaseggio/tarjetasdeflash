@@ -51,7 +51,11 @@ function createMemoryStorage() {
 function createHarness(memoryStorage, initialAnswers = { animal: null, color: null }) {
   const elements = {
     form: new FakeElement(),
+    swallowForm: new FakeElement(),
+    nameForm: new FakeElement(),
     panel: new FakeElement(),
+    title: new FakeElement(),
+    intro: new FakeElement(),
     feedback: new FakeElement(),
     quizPanel: new FakeElement(),
     userMenu: new FakeElement(),
@@ -60,6 +64,8 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
   };
   const recognizedProfiles = [];
   let answers = initialAnswers;
+  let swallowAnswer = null;
+  let profileName = null;
 
   initializeRecognition({
     ...elements,
@@ -70,6 +76,12 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
     readAnswers() {
       return answers;
     },
+    readSwallowAnswer() {
+      return swallowAnswer;
+    },
+    readName() {
+      return profileName;
+    },
   });
 
   return {
@@ -77,6 +89,12 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
     recognizedProfiles,
     setAnswers(nextAnswers) {
       answers = nextAnswers;
+    },
+    setSwallowAnswer(nextAnswer) {
+      swallowAnswer = nextAnswer;
+    },
+    setProfileName(nextName) {
+      profileName = nextName;
     },
   };
 }
@@ -115,5 +133,36 @@ assert.equal(returnVisit.form.focusCount, 1);
 const afterChange = createHarness(memoryStorage);
 assert.equal(afterChange.panel.hidden, false);
 assert.equal(afterChange.recognizedProfiles.length, 0);
+
+const registrationStorage = createMemoryStorage();
+const registration = createHarness(registrationStorage);
+registration.setAnswers({ animal: "lion", color: "purple" });
+registration.form.dispatch("submit");
+assert.equal(registration.form.hidden, true);
+assert.equal(registration.swallowForm.hidden, false);
+assert.equal(registration.nameForm.hidden, true);
+assert.equal(registration.title.textContent, "One last identity check.");
+assert.equal(registration.intro.textContent, "What is the air-speed of a swallow?");
+
+registration.setSwallowAnswer("miles-per-hour");
+registration.swallowForm.dispatch("submit");
+assert.equal(registration.feedback.textContent, "We don’t recognize that answer yet. Try again.");
+assert.equal(registration.nameForm.hidden, true);
+
+registration.setSwallowAnswer("african-or-european");
+registration.swallowForm.dispatch("submit");
+assert.equal(registration.swallowForm.hidden, true);
+assert.equal(registration.nameForm.hidden, false);
+assert.equal(registration.title.textContent, "Welcome, traveler.");
+
+registration.setProfileName("cristina");
+registration.nameForm.dispatch("submit");
+assert.equal(registration.greeting.textContent, "¡Hola, Cristina!");
+assert.equal(registration.recognizedProfiles[0].id, "cristina");
+assert.equal(registration.panel.hidden, true);
+
+const registeredReturnVisit = createHarness(registrationStorage);
+assert.equal(registeredReturnVisit.greeting.textContent, "¡Hola, Cristina!");
+assert.equal(registeredReturnVisit.recognizedProfiles[0].id, "cristina");
 
 console.log("Recognition controller checks passed.");

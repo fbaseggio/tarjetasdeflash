@@ -1,8 +1,18 @@
-import { getProfileById, resolveProfile } from "./profiles.js?v=0.13.0";
+import {
+  beginsSelfRegistration,
+  getProfileById,
+  isCorrectSwallowAnswer,
+  resolveProfile,
+  resolveSelfRegisteredProfile,
+} from "./profiles.js?v=0.14.0";
 
 export function initializeRecognition({
   form,
+  swallowForm,
+  nameForm,
   panel,
+  title,
+  intro,
   feedback,
   quizPanel,
   userMenu,
@@ -18,10 +28,32 @@ export function initializeRecognition({
       color: formData.get("color"),
     };
   },
+  readSwallowAnswer = (currentForm) => new FormData(currentForm).get("swallow-answer"),
+  readName = (currentForm) => new FormData(currentForm).get("profile-name"),
 }) {
+  function showStep(step) {
+    form.hidden = step !== "favorites";
+    swallowForm.hidden = step !== "swallow";
+    nameForm.hidden = step !== "name";
+    feedback.textContent = "";
+
+    if (step === "favorites") {
+      title.textContent = "First, tell us your favorites.";
+      intro.textContent = "We’ll remember you the next time you study on this device.";
+    } else if (step === "swallow") {
+      title.textContent = "One last identity check.";
+      intro.textContent = "What is the air-speed of a swallow?";
+    } else {
+      title.textContent = "Welcome, traveler.";
+      intro.textContent = "What is your name?";
+    }
+  }
+
   function showRecognition() {
     form.reset();
-    feedback.textContent = "";
+    swallowForm.reset();
+    nameForm.reset();
+    showStep("favorites");
     panel.hidden = false;
     quizPanel.hidden = true;
     additionalPanels.forEach((additionalPanel) => {
@@ -51,8 +83,38 @@ export function initializeRecognition({
     const answers = readAnswers(form);
     const profile = resolveProfile(answers.animal, answers.color);
 
+    if (beginsSelfRegistration(answers.animal, answers.color)) {
+      showStep("swallow");
+      swallowForm.querySelector("input")?.focus();
+      return;
+    }
+
     if (!profile) {
       feedback.textContent = "We don’t recognize that combination yet. Try again.";
+      return;
+    }
+
+    activateProfile(profile);
+  });
+
+  swallowForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!isCorrectSwallowAnswer(readSwallowAnswer(swallowForm))) {
+      feedback.textContent = "We don’t recognize that answer yet. Try again.";
+      return;
+    }
+
+    showStep("name");
+    nameForm.querySelector("select")?.focus();
+  });
+
+  nameForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const profile = resolveSelfRegisteredProfile(readName(nameForm));
+
+    if (!profile) {
+      feedback.textContent = "Please choose your name from the list.";
       return;
     }
 
