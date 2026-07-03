@@ -53,6 +53,9 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
     form: new FakeElement(),
     swallowForm: new FakeElement(),
     nameForm: new FakeElement(),
+    nameSelect: new FakeElement(),
+    customNameGroup: new FakeElement(),
+    customNameInput: new FakeElement(),
     panel: new FakeElement(),
     title: new FakeElement(),
     intro: new FakeElement(),
@@ -66,6 +69,7 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
   let answers = initialAnswers;
   let swallowAnswer = null;
   let profileName = null;
+  let customName = null;
 
   initializeRecognition({
     ...elements,
@@ -80,7 +84,7 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
       return swallowAnswer;
     },
     readName() {
-      return profileName;
+      return { profileId: profileName, customName };
     },
   });
 
@@ -95,6 +99,9 @@ function createHarness(memoryStorage, initialAnswers = { animal: null, color: nu
     },
     setProfileName(nextName) {
       profileName = nextName;
+    },
+    setCustomName(nextName) {
+      customName = nextName;
     },
   };
 }
@@ -164,5 +171,34 @@ assert.equal(registration.panel.hidden, true);
 const registeredReturnVisit = createHarness(registrationStorage);
 assert.equal(registeredReturnVisit.greeting.textContent, "¡Hola, Cristina!");
 assert.equal(registeredReturnVisit.recognizedProfiles[0].id, "cristina");
+
+const customRegistrationStorage = createMemoryStorage();
+const customRegistration = createHarness(customRegistrationStorage);
+customRegistration.setAnswers({ animal: "lion", color: "purple" });
+customRegistration.form.dispatch("submit");
+customRegistration.setSwallowAnswer("african-or-european");
+customRegistration.swallowForm.dispatch("submit");
+customRegistration.nameSelect.value = "other";
+customRegistration.nameSelect.dispatch("change");
+assert.equal(customRegistration.customNameGroup.hidden, false);
+assert.equal(customRegistration.customNameInput.required, true);
+
+customRegistration.setProfileName("other");
+customRegistration.setCustomName("Arthur Pendragon");
+customRegistration.nameForm.dispatch("submit");
+assert.equal(
+  customRegistration.feedback.textContent,
+  "Enter the full name of a Monty Python member.",
+);
+assert.equal(customRegistration.recognizedProfiles.length, 0);
+
+customRegistration.setCustomName("  michael   PALIN ");
+customRegistration.nameForm.dispatch("submit");
+assert.equal(customRegistration.greeting.textContent, "¡Hola, Michael Palin!");
+assert.equal(customRegistration.recognizedProfiles[0].id, "michael-palin");
+
+const customReturnVisit = createHarness(customRegistrationStorage);
+assert.equal(customReturnVisit.greeting.textContent, "¡Hola, Michael Palin!");
+assert.equal(customReturnVisit.recognizedProfiles[0].id, "michael-palin");
 
 console.log("Recognition controller checks passed.");

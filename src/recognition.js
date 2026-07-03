@@ -4,12 +4,15 @@ import {
   isCorrectSwallowAnswer,
   resolveProfile,
   resolveSelfRegisteredProfile,
-} from "./profiles.js?v=0.14.0";
+} from "./profiles.js?v=0.15.0";
 
 export function initializeRecognition({
   form,
   swallowForm,
   nameForm,
+  nameSelect,
+  customNameGroup,
+  customNameInput,
   panel,
   title,
   intro,
@@ -29,8 +32,19 @@ export function initializeRecognition({
     };
   },
   readSwallowAnswer = (currentForm) => new FormData(currentForm).get("swallow-answer"),
-  readName = (currentForm) => new FormData(currentForm).get("profile-name"),
+  readName = (currentForm) => {
+    const formData = new FormData(currentForm);
+    return {
+      profileId: formData.get("profile-name"),
+      customName: formData.get("custom-name"),
+    };
+  },
 }) {
+  function hideCustomName() {
+    customNameGroup.hidden = true;
+    customNameInput.required = false;
+  }
+
   function showStep(step) {
     form.hidden = step !== "favorites";
     swallowForm.hidden = step !== "swallow";
@@ -53,6 +67,7 @@ export function initializeRecognition({
     form.reset();
     swallowForm.reset();
     nameForm.reset();
+    hideCustomName();
     showStep("favorites");
     panel.hidden = false;
     quizPanel.hidden = true;
@@ -106,15 +121,25 @@ export function initializeRecognition({
     }
 
     showStep("name");
-    nameForm.querySelector("select")?.focus();
+    nameSelect.focus();
+  });
+
+  nameSelect.addEventListener("change", () => {
+    const usesCustomName = nameSelect.value === "other";
+    customNameGroup.hidden = !usesCustomName;
+    customNameInput.required = usesCustomName;
+    if (usesCustomName) customNameInput.focus();
   });
 
   nameForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const profile = resolveSelfRegisteredProfile(readName(nameForm));
+    const answer = readName(nameForm);
+    const profile = resolveSelfRegisteredProfile(answer.profileId, answer.customName);
 
     if (!profile) {
-      feedback.textContent = "Please choose your name from the list.";
+      feedback.textContent = answer.profileId === "other"
+        ? "Enter the full name of a Monty Python member."
+        : "Please choose your name from the list.";
       return;
     }
 

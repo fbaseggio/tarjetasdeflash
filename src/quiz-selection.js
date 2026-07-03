@@ -1,4 +1,4 @@
-import { shuffle } from "./questions.js?v=0.14.0";
+import { shuffle } from "./questions.js?v=0.15.0";
 
 export function selectQuizVocabulary(
   vocabulary,

@@ -318,6 +318,15 @@ a {
   outline-offset: 2px;
 }
 
+.custom-name-group {
+  display: grid;
+  gap: 9px;
+}
+
+.custom-name-group small {
+  color: var(--muted);
+}
+
 .identity-option {
   position: relative;
   display: grid;

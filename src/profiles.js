@@ -35,14 +35,38 @@ export const SELF_REGISTRATION_NAMES = Object.freeze([
   "Jake",
   "Karen",
   "Tricia",
+  "Anne",
+  "Jamie",
 ]);
 
+export const MONTY_PYTHON_NAMES = Object.freeze([
+  "Graham Chapman",
+  "John Cleese",
+  "Terry Gilliam",
+  "Eric Idle",
+  "Terry Jones",
+  "Michael Palin",
+]);
+
+function profileIdForName(displayName) {
+  return displayName.toLocaleLowerCase("en-US").replace(/\s+/g, "-");
+}
+
 const SELF_REGISTERED_PROFILES = SELF_REGISTRATION_NAMES.map((displayName) => ({
-  id: displayName.toLocaleLowerCase("en-US"),
+  id: profileIdForName(displayName),
   displayName,
 }));
 
-export const PROFILES = Object.freeze([...ORIGINAL_PROFILES, ...SELF_REGISTERED_PROFILES]);
+const CUSTOM_NAME_PROFILES = MONTY_PYTHON_NAMES.map((displayName) => ({
+  id: profileIdForName(displayName),
+  displayName,
+}));
+
+export const PROFILES = Object.freeze([
+  ...ORIGINAL_PROFILES,
+  ...SELF_REGISTERED_PROFILES,
+  ...CUSTOM_NAME_PROFILES,
+]);
 
 export const SWALLOW_ANSWERS = Object.freeze([
   { id: "meters-per-second", label: "11 meters per second" },
@@ -58,6 +82,9 @@ export const SWALLOW_ANSWERS = Object.freeze([
 const profilesById = new Map(PROFILES.map((profile) => [profile.id, profile]));
 const profilesByAnswers = new Map(
   ORIGINAL_PROFILES.map((profile) => [`${profile.animal}:${profile.color}`, profile]),
+);
+const customProfilesByName = new Map(
+  CUSTOM_NAME_PROFILES.map((profile) => [profile.displayName.toLocaleLowerCase("en-US"), profile]),
 );
 
 export function getProfileById(profileId) {
@@ -76,7 +103,15 @@ export function isCorrectSwallowAnswer(answerId) {
   return SWALLOW_ANSWERS.some((answer) => answer.id === answerId && answer.correct);
 }
 
-export function resolveSelfRegisteredProfile(profileId) {
+export function resolveSelfRegisteredProfile(profileId, customName = "") {
+  if (profileId === "other") {
+    const normalizedName = String(customName)
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLocaleLowerCase("en-US");
+    return customProfilesByName.get(normalizedName) ?? null;
+  }
+
   const profile = profilesById.get(profileId);
   return SELF_REGISTERED_PROFILES.includes(profile) ? profile : null;
 }

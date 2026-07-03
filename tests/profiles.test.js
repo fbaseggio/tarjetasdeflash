@@ -3,6 +3,7 @@ import {
   beginsSelfRegistration,
   getProfileById,
   isCorrectSwallowAnswer,
+  MONTY_PYTHON_NAMES,
   resolveProfile,
   resolveSelfRegisteredProfile,
   SELF_REGISTRATION_NAMES,
@@ -17,6 +18,9 @@ assert.equal(resolveProfile("elephant", "green"), null);
 assert.equal(resolveProfile("unknown", "blue"), null);
 assert.equal(getProfileById("milo")?.displayName, "Milo");
 assert.equal(getProfileById("cristina")?.displayName, "Cristina");
+assert.equal(getProfileById("anne")?.displayName, "Anne");
+assert.equal(getProfileById("jamie")?.displayName, "Jamie");
+assert.equal(getProfileById("john-cleese")?.displayName, "John Cleese");
 assert.equal(getProfileById("unknown"), null);
 assert.equal(beginsSelfRegistration("lion", "purple"), true);
 assert.equal(beginsSelfRegistration("lion", "green"), false);
@@ -24,7 +28,11 @@ assert.equal(isCorrectSwallowAnswer("african-or-european"), true);
 assert.equal(isCorrectSwallowAnswer("meters-per-second"), false);
 assert.equal(resolveSelfRegisteredProfile("seth")?.displayName, "Seth");
 assert.equal(resolveSelfRegisteredProfile("franco"), null);
-assert.equal(SELF_REGISTRATION_NAMES.length, 15);
+assert.equal(resolveSelfRegisteredProfile("other", "  john   CLEESE ")?.id, "john-cleese");
+assert.equal(resolveSelfRegisteredProfile("other", "Carol Cleveland"), null);
+assert.equal(resolveSelfRegisteredProfile("john-cleese"), null);
+assert.equal(SELF_REGISTRATION_NAMES.length, 17);
+assert.equal(MONTY_PYTHON_NAMES.length, 6);
 
 const values = new Map();
 const memoryStorage = {

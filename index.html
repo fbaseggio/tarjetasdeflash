@@ -6,7 +6,7 @@
     <meta name="description" content="A tiny Spanish vocabulary quiz.">
     <title>Tarjetas de Flash</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=0.14.0">
+    <link rel="stylesheet" href="./styles.css?v=0.15.0">
   </head>
   <body>
     <main class="page-shell">
@@ -127,7 +127,22 @@
             <option value="jake">Jake</option>
             <option value="karen">Karen</option>
             <option value="tricia">Tricia</option>
+            <option value="anne">Anne</option>
+            <option value="jamie">Jamie</option>
+            <option value="other">Someone else…</option>
           </select>
+          <div id="custom-name-group" class="custom-name-group" hidden>
+            <label class="name-picker-label" for="custom-name">Enter your full name</label>
+            <input
+              id="custom-name"
+              class="name-picker"
+              name="custom-name"
+              type="text"
+              autocomplete="name"
+              placeholder="First and last name"
+            >
+            <small>Monty Python members only. Obviously.</small>
+          </div>
           <button class="identify-button" type="submit">Continue</button>
         </form>
 
@@ -316,6 +331,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./src/app.js?v=0.14.0"></script>
+    <script type="module" src="./src/app.js?v=0.15.0"></script>
   </body>
 </html>

@@ -11,7 +11,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 ### Implemented and deployed
 
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
-- Nineteen playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
+- Twenty-seven playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
 - An active, versioned 998-entry curriculum vocabulary derived from the project-provided workbook, with chapter order, three chapter-derived bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
 - A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
@@ -269,7 +269,7 @@ The first release supports a small invited set of profiles stored in the browser
 | Pingüino | Rojo | `milo` | Milo |
 | León | Verde | `gideon` | Gideon |
 
-The `León` / `Morado` combination opens an additional invitation check: “What is the air-speed of a swallow?” Choosing the question “What do you mean, an African or a European swallow?” opens a picker containing Seth, Cristina, Jeremy, Hannah, Natalie, Jackie, Lisa, Sherry, Lynette, Kari, Sam, Ajit, Jake, Karen, and Tricia. Each is a stable profile with independent learning history. Other combinations or invitation answers do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
+The `León` / `Morado` combination opens an additional invitation check: “What is the air-speed of a swallow?” Choosing the question “What do you mean, an African or a European swallow?” opens a picker containing Seth, Cristina, Jeremy, Hannah, Natalie, Jackie, Lisa, Sherry, Lynette, Kari, Sam, Ajit, Jake, Karen, Tricia, Anne, and Jamie. “Someone else…” accepts a case-insensitive, whitespace-tolerant full-name match for Graham Chapman, John Cleese, Terry Gilliam, Eric Idle, Terry Jones, or Michael Palin. Each accepted name is a stable profile with independent learning history. Other combinations, invitation answers, or custom names do not identify a known profile and prompt the learner to try again. A successful match stores only the active profile ID in `localStorage`, greets that learner by name on later visits, and skips the questions. A quiet **Change user** action clears the active selection without deleting any profile's learning history.
 
 Currently, each profile's activity summary, onboarding placement, daily session plans, latest first-presentation result by word and direction, review schedule, quiz rounds, and immutable attempts persist across visits made with the same browser and GitHub Pages origin. Continuously revised level evidence, exact in-round restoration, and local standings remain next-phase work. Clearing site data, using private browsing, changing browsers, changing the site's origin, or moving to another device will not carry local history with the learner.
 
@@ -618,7 +618,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 1A — Deployed quiz prototype (complete)
 
-- [x] Static recognition layout for four original profiles and fifteen invited-user profiles.
+- [x] Static recognition layout for four original profiles, seventeen invited names, and six validated Monty Python names.
 - [x] Loading of the 100-entry placeholder vocabulary.
 - [x] Random ten-question rounds balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - [x] Random distractors and answer positions.
