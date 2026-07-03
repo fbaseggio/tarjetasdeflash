@@ -1,4 +1,4 @@
-import { buildQuestionForAnswer, DIRECTIONS, shuffle } from "./questions.js";
+import { buildQuestionForAnswer, DIRECTIONS, shuffle } from "./questions.js?v=0.9.1";
 
 export const ASSESSMENT_TIERS = Object.freeze({
   FOUNDATION: "foundation",

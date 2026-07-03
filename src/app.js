@@ -1,33 +1,33 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.9.0";
-import { APP_VERSION } from "./app-version.js?v=0.9.0";
-import { createAssessmentSession } from "./assessment.js";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.9.0";
+import { createActivityStorage } from "./activity-storage.js?v=0.9.1";
+import { APP_VERSION } from "./app-version.js?v=0.9.1";
+import { createAssessmentSession } from "./assessment.js?v=0.9.1";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.9.1";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.9.0";
+} from "./diagnostic-export.js?v=0.9.1";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.9.0";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.9.0";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.9.0";
-import { createOnboardingStorage } from "./onboarding-storage.js";
-import { createProfileStorage } from "./profile-storage.js";
-import { buildQuizFromAnswers } from "./questions.js";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.9.0";
-import { createQuizSession } from "./quiz-session.js";
-import { initializeRecognition } from "./recognition.js";
+} from "./indexed-history.js?v=0.9.1";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.9.1";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.9.1";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.9.1";
+import { createProfileStorage } from "./profile-storage.js?v=0.9.1";
+import { buildQuizFromAnswers } from "./questions.js?v=0.9.1";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.9.1";
+import { createQuizSession } from "./quiz-session.js?v=0.9.1";
+import { initializeRecognition } from "./recognition.js?v=0.9.1";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.9.0";
+} from "./review-results.js?v=0.9.1";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.9.1";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -876,8 +876,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json"),
-      fetch("./assets/vocabulary-official-v1.meta.json"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.9.1"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.9.1"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");

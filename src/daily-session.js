@@ -1,4 +1,4 @@
-import { shuffle } from "./questions.js";
+import { shuffle } from "./questions.js?v=0.9.1";
 
 const TIER_ORDER = Object.freeze(["foundation", "everyday", "expanding"]);
 
