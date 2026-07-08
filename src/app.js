@@ -68,6 +68,7 @@ const quizTitleElement = document.querySelector("#quiz-title");
 const directionLabelElement = document.querySelector("#direction-label");
 const quizErrorElement = document.querySelector("#quiz-error");
 const progressElement = document.querySelector("#quiz-progress");
+const roundCompleteButton = document.querySelector("#round-complete-button");
 const newQuizButton = document.querySelector("#new-quiz-button");
 const resultsEyebrowElement = document.querySelector("#results-eyebrow");
 const resultsTitleElement = document.querySelector("#results-title");
@@ -134,6 +135,7 @@ let shareResultsPayload = null;
 let choiceRevealTimer = null;
 let autoAdvanceTimer = null;
 let lastFeedbackSnapshot = null;
+let pendingRoundCompletion = null;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -157,6 +159,7 @@ function displayDate(dateKey) {
 function hideMainPanels() {
   clearChoiceRevealTimer();
   clearAutoAdvanceTimer();
+  hideRoundCompleteButton();
   hideLastResult();
   Object.values(panels).forEach((panel) => { panel.hidden = true; });
 }
@@ -197,6 +200,42 @@ function hideLastResult() {
   lastResultElement.className = "last-result";
 }
 
+function hideRoundCompleteButton() {
+  pendingRoundCompletion = null;
+  roundCompleteButton.hidden = true;
+}
+
+function appendTeachingLine(container, question) {
+  if (
+    !question.hasTeachingVariant
+    || !question.teachingSpanish
+    || !question.teachingEnglish
+  ) {
+    return;
+  }
+
+  const teaching = document.createElement("span");
+  teaching.className = "last-result-teaching";
+  const icon = document.createElement("span");
+  icon.className = "flashcard-icon";
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = "▣";
+  teaching.append(
+    icon,
+    document.createTextNode(` ${question.teachingSpanish} ↔ ${question.teachingEnglish}`),
+  );
+  container.append(teaching);
+}
+
+function appendRepriseReminderLine(container, repriseReminder) {
+  if (!repriseReminder) return;
+
+  const reminder = document.createElement("span");
+  reminder.className = "last-result-reminder";
+  reminder.textContent = `Last time you answered “${repriseReminder.selectedAnswer}” for “${repriseReminder.prompt}”.`;
+  container.append(reminder);
+}
+
 function renderLastResult() {
   const snapshot = lastFeedbackSnapshot;
   if (!snapshot) {
@@ -206,9 +245,11 @@ function renderLastResult() {
 
   lastResultElement.replaceChildren();
   lastResultElement.className = `last-result ${snapshot.correct ? "correct" : "incorrect"}`;
+  const mainLine = document.createElement("span");
+  mainLine.className = "last-result-main";
   const label = document.createElement("strong");
   label.textContent = snapshot.correct ? "Last: ✓ " : "Last: ✕ ";
-  lastResultElement.append(label);
+  mainLine.append(label);
 
   if (snapshot.correct) {
     const prompt = document.createElement("span");
@@ -218,18 +259,10 @@ function renderLastResult() {
     const answer = document.createElement("span");
     answer.lang = snapshot.question.answerLanguage;
     answer.textContent = snapshot.question.correctAnswer;
-    lastResultElement.append(prompt, arrow, answer);
-
-    if (
-      snapshot.question.hasTeachingVariant
-      && snapshot.question.teachingSpanish
-      && snapshot.question.teachingEnglish
-    ) {
-      const teaching = document.createElement("span");
-      teaching.className = "last-result-teaching";
-      teaching.textContent = ` · learning: ${snapshot.question.teachingSpanish} ↔ ${snapshot.question.teachingEnglish}`;
-      lastResultElement.append(teaching);
-    }
+    mainLine.append(prompt, arrow, answer);
+    lastResultElement.append(mainLine);
+    appendTeachingLine(lastResultElement, snapshot.question);
+    appendRepriseReminderLine(lastResultElement, snapshot.repriseReminder);
   } else {
     const selected = document.createElement("span");
     selected.lang = snapshot.question.answerLanguage;
@@ -237,13 +270,14 @@ function renderLastResult() {
     const prompt = document.createElement("span");
     prompt.lang = snapshot.question.promptLanguage;
     prompt.textContent = snapshot.question.prompt;
-    lastResultElement.append(
+    mainLine.append(
       document.createTextNode("You chose “"),
       selected,
       document.createTextNode("” for “"),
       prompt,
       document.createTextNode("”"),
     );
+    lastResultElement.append(mainLine);
   }
 
   lastResultElement.hidden = false;
@@ -397,6 +431,7 @@ function feedbackDelay({ hasRepriseReminder = false, showsTeaching = false } = {
 
 function renderQuestion() {
   clearAutoAdvanceTimer();
+  hideRoundCompleteButton();
   const state = quizSession.getState();
   const currentQuestion = state.question;
   renderProgress(state);
@@ -417,6 +452,7 @@ function renderQuestion() {
 
 function renderAssessmentQuestion() {
   clearAutoAdvanceTimer();
+  hideRoundCompleteButton();
   const state = assessmentSession.getState();
   const currentQuestion = state.question;
   const isSpanishPrompt = state.direction === "spanish-to-english";
@@ -429,6 +465,63 @@ function renderAssessmentQuestion() {
   promptElement.lang = currentQuestion.promptLanguage;
   renderLastResult();
   scheduleChoiceReveal(currentQuestion, new Set(), handleAssessmentAnswer);
+}
+
+function roundCompletionButtonText() {
+  if (lastFeedbackSnapshot?.kind === "assessment") {
+    return "See starting point ";
+  }
+
+  if (roundKind === "extra") {
+    return "View summary ";
+  }
+
+  if (roundKind === "review") {
+    const reviewedThrough = dailySession.reviewCursor + roundEntries.length;
+    return reviewedThrough >= dailySession.reviewIds.length
+      ? "View session summary "
+      : "Continue reviews ";
+  }
+
+  return "Continue session ";
+}
+
+function renderRoundCompletion(onContinue) {
+  clearChoiceRevealTimer();
+  clearAutoAdvanceTimer();
+  pendingRoundCompletion = onContinue;
+  directionLabelElement.textContent = lastFeedbackSnapshot?.kind === "assessment"
+    ? "Starting point complete"
+    : roundKind === "check-in"
+    ? "Check-in complete"
+    : roundKind === "review"
+      ? "Review round complete"
+      : "Quiz complete";
+  progressElement.textContent = "";
+  quizTitleElement.textContent = lastFeedbackSnapshot?.kind === "assessment"
+    ? "Starting point finished."
+    : roundKind === "review"
+    ? "Review round finished."
+    : "Section complete.";
+  promptElement.textContent = lastFeedbackSnapshot?.kind === "assessment"
+    ? "Nice—your starting point is ready."
+    : "Nice—every word in this round is resolved.";
+  promptElement.removeAttribute("lang");
+  choicesElement.replaceChildren();
+  choicesElement.classList.remove("choices-pending");
+  choicesElement.removeAttribute("aria-busy");
+  quizErrorElement.hidden = true;
+  renderLastResult();
+  roundCompleteButton.firstChild.textContent = roundCompletionButtonText();
+  roundCompleteButton.hidden = false;
+  roundCompleteButton.focus();
+}
+
+function continueAfterRoundCompletion() {
+  const onContinue = pendingRoundCompletion;
+  if (!onContinue) return;
+  hideRoundCompleteButton();
+  onContinue();
 }
 
 function attemptFromState(state, correct, source) {
@@ -498,7 +591,7 @@ function handleAnswer(event) {
   scheduleAutoAdvance(() => {
     const state = quizSession.advance();
     if (state.phase === "complete") {
-      completeQuizRound(state);
+      renderRoundCompletion(() => completeQuizRound(state));
     } else {
       renderQuestion();
     }
@@ -529,7 +622,7 @@ function handleAssessmentAnswer(event) {
         latestAssessmentResult,
       );
       learningStorage.seedOnboarding(activeProfileId, datasetMetadata, onboardingRecord, vocabulary);
-      showPlacement(onboardingRecord.placement);
+      renderRoundCompletion(() => showPlacement(onboardingRecord.placement));
     } else {
       renderAssessmentQuestion();
     }
@@ -1251,6 +1344,7 @@ startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 newSessionButton.addEventListener("click", startAnotherSessionToday);
+roundCompleteButton.addEventListener("click", continueAfterRoundCompletion);
 shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 reviewAssessmentButton.addEventListener("click", () => {

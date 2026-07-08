@@ -19,8 +19,8 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
 - Quality-gated distractors using structural class, part of speech, semantic affinity, Spanish spelling and approximate sound, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic audit and simulation expose every backoff.
-- Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair before automatic advancement; misses still advance quickly without exposing the answer.
-- Active quiz rounds show a compact one-line last-result breadcrumb above the current prompt so learners can see what just happened without scrolling backward or pausing.
+- Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair; misses still advance quickly without exposing the answer.
+- Active quiz rounds carry the same post-answer information into a compact last-result breadcrumb above the next prompt so learners can see what just happened without scrolling backward or pausing. When the quiz form was shortened, the full flashcard/teaching version is shown as a small secondary line on phones.
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
@@ -300,7 +300,9 @@ The current question number is visible during the initial pass, followed by the 
 
 Each question first shows only the prompt for a brief recall pause, then reveals the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. Reduced-motion settings shorten the pause.
 
-After auto-advancing, the next active quiz or assessment screen keeps a compact one-line summary of the previous answer above the prompt. Correct summaries may show the compact prompt/answer pair and, when quiz text differs from teaching text, the full teaching pair. Wrong summaries show only what the learner chose for the prompt; they do not reveal the correct answer. The breadcrumb clears at the beginning of a new round and is separate from immutable attempt history.
+After auto-advancing, the next active quiz or assessment screen keeps a compact summary of the previous answer above the prompt. Correct summaries may show the compact prompt/answer pair, reprise reminders, and—when quiz text differs from teaching text—the full flashcard/teaching pair with a small card cue. On narrow screens, secondary details move to their own lines to keep the main result readable. Wrong summaries show only what the learner chose for the prompt; they do not reveal the correct answer. The breadcrumb clears at the beginning of a new round and is separate from immutable attempt history.
+
+When the previous answer completes a round or onboarding assessment, the application shows a small completion state in the quiz panel instead of immediately leaving. That state preserves the final answer's last-result breadcrumb and provides one button to continue the session, view the session summary, or see the starting-point result.
 
 ### 7.2 Scoring
 
@@ -319,7 +321,7 @@ Review is a continuation of the same quiz and contains only unresolved vocabular
 Default behavior:
 
 - First repeat a missed word in the direction opposite its initial question.
-- When the first opposite-direction reprise is answered correctly, briefly remind the learner of the original miss using both values, for example: `Last time you answered “dog” for “rojo”.` This appears only after a correct first reprise, never during ordinary questions or subsequent reprises. Later same-direction reprises already retain and strike through their prior wrong choices, so they need no additional reminder.
+- When the first opposite-direction reprise is answered correctly, remind the learner of the original miss using both values, for example: `Last time you answered “dog” for “rojo”.` This appears after the correct first reprise and is carried into the next-question or round-complete last-result breadcrumb. Later same-direction reprises already retain and strike through their prior wrong choices, so they need no additional reminder.
 - Alternate direction after every additional wrong review answer.
 - Briefly show whether the submitted answer was correct. After a correct answer whose compact quiz text differs from either imported teaching form, show the complete Spanish/English pair for about 1.4 seconds; unchanged pairs need only the ordinary correctness feedback. A first opposite-direction reprise with its reminder remains visible for about 2 seconds. A miss marks only the selected answer as incorrect, does not reveal or highlight the correct answer, and advances after about 850 milliseconds. Reduced-motion timing remains shorter.
 - Disable all choices during the short feedback interval, then advance automatically.
@@ -664,7 +666,7 @@ Implemented prototype acceptance criteria:
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
 - Each question gives a brief prompt-only recall pause before revealing choices, with a shorter reduced-motion delay.
-- Active quiz screens keep a compact one-line last-result breadcrumb; wrong-answer breadcrumbs do not reveal the correct answer.
+- Active quiz screens keep a compact last-result breadcrumb that carries forward the same post-answer information; wrong-answer breadcrumbs do not reveal the correct answer, and shortened quiz forms show the full flashcard version without crowding the main line on phones.
 - A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed; correct answers reveal the full teaching pair only when it differs from the quiz form, while misses never reveal the answer.
 - No running score is displayed.
 - Review first reverses each missed question, then alternates direction after each miss.

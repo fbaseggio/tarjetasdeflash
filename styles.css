@@ -570,7 +570,6 @@ h1 {
   font-size: 0.86rem;
   font-weight: 750;
   line-height: 1.2;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -587,8 +586,31 @@ h1 {
 }
 
 .last-result strong,
-.last-result-teaching {
+.last-result-teaching,
+.last-result-reminder {
   color: inherit;
+}
+
+.last-result-main,
+.last-result-teaching,
+.last-result-reminder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-result-teaching,
+.last-result-reminder {
+  margin-left: 0.45rem;
+  opacity: 0.9;
+}
+
+.last-result-reminder {
+  color: var(--muted);
+}
+
+.flashcard-icon {
+  font-size: 0.76rem;
+  opacity: 0.85;
 }
 
 .next-button {
@@ -969,6 +991,24 @@ footer {
 
   .choices {
     grid-template-columns: 1fr;
+  }
+
+  .last-result {
+    white-space: normal;
+  }
+
+  .last-result-main,
+  .last-result-teaching,
+  .last-result-reminder {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .last-result-teaching,
+  .last-result-reminder {
+    margin-top: 3px;
+    margin-left: 0;
+    font-size: 0.8rem;
   }
 
   .word-card {
