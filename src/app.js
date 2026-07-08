@@ -1,40 +1,40 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.15.0";
-import { APP_VERSION } from "./app-version.js?v=0.15.0";
-import { createAssessmentSession } from "./assessment.js?v=0.15.0";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.15.0";
+import { createActivityStorage } from "./activity-storage.js?v=0.16.0";
+import { APP_VERSION } from "./app-version.js?v=0.16.0";
+import { createAssessmentSession } from "./assessment.js?v=0.16.0";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.16.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.15.0";
+} from "./diagnostic-export.js?v=0.16.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.15.0";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.15.0";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.15.0";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.15.0";
-import { createProfileStorage } from "./profile-storage.js?v=0.15.0";
-import { buildQuizFromAnswers } from "./questions.js?v=0.15.0";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.15.0";
-import { createQuizSession } from "./quiz-session.js?v=0.15.0";
-import { initializeRecognition } from "./recognition.js?v=0.15.0";
+} from "./indexed-history.js?v=0.16.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.16.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.16.0";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.16.0";
+import { createProfileStorage } from "./profile-storage.js?v=0.16.0";
+import { buildQuizFromAnswers } from "./questions.js?v=0.16.0";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.16.0";
+import { createQuizSession } from "./quiz-session.js?v=0.16.0";
+import { initializeRecognition } from "./recognition.js?v=0.16.0";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.15.0";
+} from "./review-results.js?v=0.16.0";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   isFirstSessionOfDay,
   shareSessionResults,
-} from "./share-results.js?v=0.15.0";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.15.0";
+} from "./share-results.js?v=0.16.0";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.16.0";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -130,6 +130,7 @@ let sectionReviewState = [];
 let allWordsReviewState = [];
 let showingAllWords = false;
 let shareResultsPayload = null;
+let choiceRevealTimer = null;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -151,7 +152,23 @@ function displayDate(dateKey) {
 }
 
 function hideMainPanels() {
+  clearChoiceRevealTimer();
   Object.values(panels).forEach((panel) => { panel.hidden = true; });
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+}
+
+function clearChoiceRevealTimer() {
+  if (choiceRevealTimer) {
+    window.clearTimeout(choiceRevealTimer);
+    choiceRevealTimer = null;
+  }
+}
+
+function choiceRevealDelay() {
+  return prefersReducedMotion() ? 250 : 1000;
 }
 
 function renderProgress(state) {
@@ -166,6 +183,8 @@ function renderProgress(state) {
 
 function renderChoices(currentQuestion, knownWrongAnswers, onAnswer) {
   choicesElement.replaceChildren();
+  choicesElement.classList.remove("choices-pending");
+  choicesElement.removeAttribute("aria-busy");
   quizErrorElement.hidden = true;
 
   currentQuestion.choices.forEach((choice, index) => {
@@ -188,6 +207,25 @@ function renderChoices(currentQuestion, knownWrongAnswers, onAnswer) {
   });
 }
 
+function scheduleChoiceReveal(currentQuestion, knownWrongAnswers, onAnswer) {
+  clearChoiceRevealTimer();
+  choicesElement.replaceChildren();
+  choicesElement.classList.add("choices-pending");
+  choicesElement.setAttribute("aria-busy", "true");
+  quizErrorElement.hidden = true;
+
+  const prompt = document.createElement("p");
+  prompt.className = "choice-delay";
+  prompt.textContent = "Think of the answer… choices appear in a moment.";
+  choicesElement.append(prompt);
+
+  choiceRevealTimer = window.setTimeout(() => {
+    choiceRevealTimer = null;
+    renderChoices(currentQuestion, knownWrongAnswers, onAnswer);
+    choicesElement.querySelector("button:not(:disabled)")?.focus({ preventScroll: true });
+  }, choiceRevealDelay());
+}
+
 function showAnswerOutcome(question, selectedAnswer, correct, repriseReminder = null) {
   choicesElement.querySelectorAll("button").forEach((button) => {
     button.disabled = true;
@@ -199,18 +237,42 @@ function showAnswerOutcome(question, selectedAnswer, correct, repriseReminder = 
     }
   });
   quizErrorElement.className = `feedback ${correct ? "success" : "error"}`;
-  const reminderText = repriseReminder
-    ? ` Last time you answered “${repriseReminder.selectedAnswer}” for “${repriseReminder.prompt}”.`
-    : "";
-  quizErrorElement.textContent = `${answerFeedback(correct)}${reminderText}`;
+  quizErrorElement.replaceChildren(document.createTextNode(answerFeedback(correct)));
+  if (
+    correct
+    && question.hasTeachingVariant
+    && question.teachingSpanish
+    && question.teachingEnglish
+  ) {
+    const teachingReveal = document.createElement("span");
+    teachingReveal.className = "teaching-reveal";
+    const spanish = document.createElement("span");
+    spanish.lang = "es";
+    spanish.textContent = question.teachingSpanish;
+    const separator = document.createTextNode(" ↔ ");
+    const english = document.createElement("span");
+    english.lang = "en";
+    english.textContent = question.teachingEnglish;
+    teachingReveal.append(spanish, separator, english);
+    quizErrorElement.append(teachingReveal);
+  }
+  if (repriseReminder) {
+    const reminder = document.createElement("span");
+    reminder.className = "reprise-reminder";
+    reminder.textContent = `Last time you answered “${repriseReminder.selectedAnswer}” for “${repriseReminder.prompt}”.`;
+    quizErrorElement.append(reminder);
+  }
   quizErrorElement.hidden = false;
 }
 
-function feedbackDelay(hasRepriseReminder = false) {
+function feedbackDelay({ hasRepriseReminder = false, showsTeaching = false } = {}) {
   if (hasRepriseReminder) {
-    return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 800 : 1700;
+    return prefersReducedMotion() ? 900 : 2000;
   }
-  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 300 : 850;
+  if (showsTeaching) {
+    return prefersReducedMotion() ? 600 : 1400;
+  }
+  return prefersReducedMotion() ? 300 : 850;
 }
 
 function renderQuestion() {
@@ -228,7 +290,7 @@ function renderQuestion() {
     : "Choose the Spanish translation.";
   promptElement.textContent = currentQuestion.prompt;
   promptElement.lang = currentQuestion.promptLanguage;
-  renderChoices(currentQuestion, new Set(state.knownWrongAnswers), handleAnswer);
+  scheduleChoiceReveal(currentQuestion, new Set(state.knownWrongAnswers), handleAnswer);
 }
 
 function renderAssessmentQuestion() {
@@ -242,7 +304,7 @@ function renderAssessmentQuestion() {
     : "Choose the Spanish translation.";
   promptElement.textContent = currentQuestion.prompt;
   promptElement.lang = currentQuestion.promptLanguage;
-  renderChoices(currentQuestion, new Set(), handleAssessmentAnswer);
+  scheduleChoiceReveal(currentQuestion, new Set(), handleAssessmentAnswer);
 }
 
 function attemptFromState(state, correct, source) {
@@ -314,7 +376,10 @@ function handleAnswer(event) {
     } else {
       renderQuestion();
     }
-  }, feedbackDelay(Boolean(answer.repriseReminder)));
+  }, feedbackDelay({
+    hasRepriseReminder: Boolean(answer.repriseReminder),
+    showsTeaching: answer.correct && before.question.hasTeachingVariant,
+  }));
 }
 
 function handleAssessmentAnswer(event) {
@@ -336,7 +401,7 @@ function handleAssessmentAnswer(event) {
     } else {
       renderAssessmentQuestion();
     }
-  }, feedbackDelay());
+  }, feedbackDelay({ showsTeaching: correct && before.question.hasTeachingVariant }));
 }
 
 function showOnboarding() {
@@ -961,8 +1026,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.15.0"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.15.0"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.16.0"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.16.0"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");

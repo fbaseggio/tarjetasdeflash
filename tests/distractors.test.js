@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+  cognateTransparencyScore,
   questionFieldText,
   scoreDistractorCandidate,
   selectWeightedDistractors,
@@ -16,7 +17,7 @@ const target = {
   partOfSpeech: "adjective",
   tier: "foundation",
   chapter: 1,
-  semanticTags: ["colors"],
+  semanticTags: ["description", "description:color"],
 };
 const related = {
   id: "verde",
@@ -27,7 +28,7 @@ const related = {
   partOfSpeech: "adjective",
   tier: "foundation",
   chapter: 1,
-  semanticTags: ["colors"],
+  semanticTags: ["description", "description:color"],
 };
 const baseline = {
   id: "biblioteca",
@@ -55,12 +56,11 @@ const baselineScore = scoreDistractorCandidate(target, baseline, "spanish-to-eng
 const equivalentScore = scoreDistractorCandidate(target, equivalent, "spanish-to-english");
 
 assert.equal(relatedScore.eligible, true);
-assert.ok(relatedScore.weight > baselineScore.weight);
+assert.equal(relatedScore.qualified, true);
 assert.ok(relatedScore.reasons.includes("same-part-of-speech"));
 assert.ok(relatedScore.reasons.includes("same-broad-semantic-tag"));
-assert.equal(baselineScore.eligible, true);
-assert.equal(baselineScore.baseline, true);
-assert.equal(baselineScore.weight, 1);
+assert.equal(baselineScore.eligible, false);
+assert.equal(baselineScore.weight, 0);
 assert.equal(equivalentScore.eligible, false);
 assert.equal(equivalentScore.weight, 0);
 
@@ -96,7 +96,7 @@ const properNoun = {
   partOfSpeech: "proper noun",
   tier: "foundation",
   chapter: 1,
-  semanticTags: ["colors"],
+  semanticTags: ["description", "description:color"],
 };
 const otherProperNoun = {
   id: "lima",
@@ -112,9 +112,8 @@ const properForOrdinaryScore = scoreDistractorCandidate(
   properNoun,
   "spanish-to-english",
 );
-assert.equal(properForOrdinaryScore.eligible, true);
-assert.equal(properForOrdinaryScore.weight, 1);
-assert.equal(properForOrdinaryScore.baseline, true);
+assert.equal(properForOrdinaryScore.eligible, false);
+assert.equal(properForOrdinaryScore.weight, 0);
 assert.deepEqual(properForOrdinaryScore.reasons, []);
 
 const properForProperScore = scoreDistractorCandidate(
@@ -127,6 +126,51 @@ assert.ok(properForProperScore.reasons.includes("both-proper-nouns"));
 assert.ok(properForProperScore.weight >= 8);
 
 assert.ok(textSimilarity("casa", "caza") >= 0.7);
+const transparentCognate = {
+  id: "restaurante",
+  spanish: "el restaurante",
+  english: "restaurant",
+  lemma: "restaurante",
+  senses: ["restaurant"],
+  partOfSpeech: "noun",
+  semanticTags: ["place", "place:building"],
+};
+const placeTarget = {
+  id: "hotel",
+  spanish: "el hotel",
+  english: "hotel",
+  lemma: "hotel",
+  senses: ["hotel"],
+  partOfSpeech: "noun",
+  semanticTags: ["place", "place:building"],
+};
+assert.ok(cognateTransparencyScore(transparentCognate) >= 0.8);
+assert.equal(cognateTransparencyScore({
+  spanish: "el profesor",
+  english: "teacher",
+  lemma: "profesor",
+  senses: ["teacher"],
+}), 0.85);
+const transparentEnglishToSpanish = scoreDistractorCandidate(
+  placeTarget,
+  transparentCognate,
+  "english-to-spanish",
+);
+const transparentSpanishToEnglish = scoreDistractorCandidate(
+  placeTarget,
+  transparentCognate,
+  "spanish-to-english",
+);
+assert.ok(transparentEnglishToSpanish.reasons.includes("strong-transparent-cognate"));
+assert.ok(transparentEnglishToSpanish.weight < transparentSpanishToEnglish.weight);
+const falseCognateOverride = scoreDistractorCandidate(
+  placeTarget,
+  transparentCognate,
+  "english-to-spanish",
+  { falseCognateRelations: new Set(["hotel>restaurante:english-to-spanish"]) },
+);
+assert.ok(falseCognateOverride.reasons.includes("false-cognate"));
+assert.ok(!falseCognateOverride.reasons.includes("strong-transparent-cognate"));
 assert.ok(
   FALSE_COGNATE_RELATIONS.has(
     "g-libreria-0ntdy4c>g-biblioteca-0oo3f96:spanish-to-english",
@@ -147,7 +191,18 @@ const vocabulary = [
     partOfSpeech: "adjective",
     tier: "foundation",
     chapter: 1,
-    semanticTags: ["colors"],
+    semanticTags: ["description", "description:color"],
+  },
+  {
+    id: "azul",
+    spanish: "azul",
+    english: "blue",
+    lemma: "azul",
+    senses: ["blue"],
+    partOfSpeech: "adjective",
+    tier: "expanding",
+    chapter: 8,
+    semanticTags: [],
   },
   {
     id: "correr",
@@ -174,8 +229,8 @@ const selected = selectWeightedDistractors(
 assert.equal(selected.length, 3);
 assert.equal(new Set(selected.map((choice) => choice.answer)).size, 3);
 assert.ok(selected.every((choice) => choice.vocabularyId !== equivalent.id));
-assert.equal(selected.filter((choice) => choice.baseline).length, 1);
-assert.equal(selected.filter((choice) => choice.selectionMode === "related").length, 2);
+assert.equal(selected.filter((choice) => choice.selectionMode === "format-fallback").length, 1);
+assert.equal(selected.filter((choice) => choice.selectionMode === "quality").length, 2);
 
 const familyVerb = {
   id: "invitar",
@@ -199,8 +254,7 @@ const familyScore = scoreDistractorCandidate(
   familyNoun,
   "english-to-spanish",
 );
-assert.equal(familyScore.eligible, true);
-assert.ok(familyScore.reasons.includes("lexical-family"));
+assert.equal(familyScore.eligible, false);
 assert.equal(
   questionFieldText(familyNoun, "spanish", {
     target: familyVerb,
@@ -220,5 +274,33 @@ assert.equal(
   ),
   "calamar",
 );
+assert.equal(
+  questionFieldText(
+    { spanish: "el jugo (de fruta)", partOfSpeech: "noun" },
+    "spanish",
+  ),
+  "jugo",
+);
+assert.equal(
+  questionFieldText(
+    { english: "(fixed; set) price", partOfSpeech: "noun" },
+    "english",
+  ),
+  "price",
+);
+assert.equal(
+  questionFieldText(
+    { spanish: "Adiós.", partOfSpeech: "phrase" },
+    "spanish",
+  ),
+  "adiós",
+);
+assert.equal(
+  questionFieldText(
+    { spanish: "¿Cómo estás?", partOfSpeech: "question" },
+    "spanish",
+  ),
+  "¿Cómo estás?",
+);
 
-console.log("Baseline-slot, lexical-family, article, and weighted distractor checks passed.");
+console.log("Quality gate, compact quiz text, and weighted distractor checks passed.");

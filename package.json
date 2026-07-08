@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node tests/cache-version.test.js && node tests/distractors.test.js && node tests/distractor-calibration.test.js && node tests/questions.test.js && node tests/quiz-session.test.js && node tests/profiles.test.js && node tests/recognition.test.js && node tests/activity-storage.test.js && node tests/storage-generation.test.js && node tests/vocabulary-test.test.js && node tests/assessment.test.js && node tests/onboarding-storage.test.js && node tests/quiz-selection.test.js && node tests/mastery-policy.test.js && node tests/learning-storage.test.js && node tests/daily-session.test.js && node tests/indexed-history.test.js && node tests/diagnostic-export.test.js && node tests/review-results.test.js && node tests/share-results.test.js",
-    "simulate:distractors": "node scripts/simulate-distractors.mjs"
+    "simulate:distractors": "node scripts/simulate-distractors.mjs",
+    "audit:distractors": "node scripts/audit-distractors.mjs"
   }
 }

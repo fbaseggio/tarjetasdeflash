@@ -460,6 +460,21 @@ h1 {
   gap: 12px;
 }
 
+.choices-pending {
+  grid-template-columns: 1fr;
+}
+
+.choice-delay {
+  margin: 0;
+  padding: 15px 16px;
+  color: var(--muted);
+  background: rgb(255 253 247 / 70%);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  font-weight: 750;
+  text-align: center;
+}
+
 .choice {
   min-height: 58px;
   padding: 13px 16px;
@@ -528,6 +543,19 @@ h1 {
 
 .feedback.error {
   color: var(--red);
+}
+
+.teaching-reveal,
+.reprise-reminder {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.reprise-reminder {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .next-button {

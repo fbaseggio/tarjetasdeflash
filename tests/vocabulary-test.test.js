@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { buildQuestionForAnswer, DIRECTIONS } from "../src/questions.js";
+import { cognateTransparencyScore } from "../src/distractors.js";
 
 const officialVocabulary = JSON.parse(
   await readFile(new URL("../assets/vocabulary-official-v1.json", import.meta.url), "utf8"),
@@ -21,7 +22,9 @@ assert.equal(
 assert.equal(metadata.transformation.unknownPartOfSpeechCount, 0);
 assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "expression").length, 0);
 assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "question").length, 29);
-assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "phrase").length, 45);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "phrase").length, 46);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "proper noun").length, 28);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "number").length, 31);
 assert.ok(
   officialVocabulary
     .filter((entry) => /[¿?]/.test(entry.spanish))
@@ -37,9 +40,16 @@ assert.equal(
 );
 assert.ok(
   officialVocabulary.filter((entry) => entry.semanticTags.length > 0).length
-    >= officialVocabulary.length * 0.85,
+    === officialVocabulary.length,
 );
 assert.ok(officialVocabulary.every((entry) => Array.isArray(entry.semanticTags)));
+const transparentCognates = officialVocabulary.filter((entry) => (
+  entry.partOfSpeech !== "proper noun" && cognateTransparencyScore(entry) >= 0.63
+));
+assert.ok(
+  transparentCognates.length >= 120 && transparentCognates.length <= 160,
+  `${transparentCognates.length} transparent cognates`,
+);
 
 const verbos = officialVocabulary.filter((entry) => entry.distractorTraits?.includes("verbo"));
 const verbosFalsos = officialVocabulary.filter(
@@ -107,5 +117,36 @@ assert.equal(pedir.spanish, "pedir");
 assert.equal(pedir.grammar.stemChange, "e:i");
 assert.deepEqual(pedir.senses, ["to ask for", "to request", "to order (food)"]);
 assert.equal(officialVocabulary.find((entry) => entry.lemma === "cero").english, "0");
+assert.equal(officialVocabulary.find((entry) => entry.spanish === "Bogotá").partOfSpeech, "proper noun");
+assert.equal(officialVocabulary.find((entry) => entry.spanish === "ellos son").partOfSpeech, "conjugated verb");
+
+const jugo = officialVocabulary.find((entry) => entry.spanish === "el jugo (de fruta)");
+const jugoQuestion = buildQuestionForAnswer(
+  officialVocabulary,
+  jugo,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+assert.equal(jugo.spanish, "el jugo (de fruta)");
+assert.equal(jugoQuestion.prompt, "jugo");
+assert.equal(jugoQuestion.teachingSpanish, "el jugo (de fruta)");
+assert.equal(jugoQuestion.teachingEnglish, "(fruit) juice");
+assert.equal(jugoQuestion.hasTeachingVariant, true);
+
+const correr = officialVocabulary.find((entry) => entry.spanish === "correr");
+const correrQuestion = buildQuestionForAnswer(
+  officialVocabulary,
+  correr,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+assert.equal(correrQuestion.hasTeachingVariant, false);
+
+const precio = officialVocabulary.find((entry) => entry.lemma === "precio (fijo)");
+const precioQuestion = buildQuestionForAnswer(
+  officialVocabulary,
+  precio,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+assert.equal(precioQuestion.prompt, "precio");
+assert.equal(precioQuestion.correctAnswer, "price");
 
 console.log("Validated 998 entries in the official curriculum vocabulary.");

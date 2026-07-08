@@ -20,6 +20,9 @@ for (let index = 0; index < 10_000; index += 1) {
   assert.ok(question.distractors.every((distractor) => distractor.vocabularyId));
   assert.equal(new Set(question.choices).size, 4);
   assert.ok(question.choices.includes(question.correctAnswer));
+  assert.equal(typeof question.teachingSpanish, "string");
+  assert.equal(typeof question.teachingEnglish, "string");
+  assert.equal(typeof question.hasTeachingVariant, "boolean");
   assert.notEqual(question.vocabularyId, previousVocabularyId);
 
   answerSlots[question.choices.indexOf(question.correctAnswer)] += 1;
@@ -51,6 +54,8 @@ for (const definition of quiz) {
     assert.equal(question.choices.length, 4);
     assert.equal(new Set(question.choices).size, 4);
     assert.ok(question.choices.includes(question.correctAnswer));
+    assert.ok(question.teachingSpanish);
+    assert.ok(question.teachingEnglish);
   }
 }
 

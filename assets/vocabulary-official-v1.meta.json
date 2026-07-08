@@ -48,14 +48,14 @@
     "unknownPartOfSpeechCount": 0,
     "entriesWithStructuredGrammar": 251,
     "personalAnnotationsExcluded": true,
-    "inferredPartOfSpeechCount": 362,
+    "inferredPartOfSpeechCount": 380,
     "reclassifiedQuestionOrPhraseCount": 73,
     "semanticTagging": {
       "taxonomy": "Cervantes-inspired project taxonomy v1",
-      "taggedEntryCount": 898,
-      "untaggedEntryCount": 100,
+      "taggedEntryCount": 998,
+      "untaggedEntryCount": 0,
       "broadTagCount": 21,
-      "narrowTagCount": 64
+      "narrowTagCount": 77
     },
     "distractorTraits": {
       "verboCount": 129,

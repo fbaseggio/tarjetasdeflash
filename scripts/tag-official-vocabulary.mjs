@@ -117,6 +117,87 @@ const stemRules = [
   ["shopping:store", /compr|regate|vend/],
 ];
 
+const curatedSemanticGroups = [
+  ["education:subject", ["las ciencias", "las materias", "las lenguas extranjeras"]],
+  ["education:school", ["la cafeteria", "la libreria", "el proyecto"]],
+  ["people:family", [
+    "los abuelos", "el/la hermanastro/a", "el/la hijastro/a", "los padres",
+    "los parientes", "el/la mayor", "el/la menor", "el/la recien casado/a",
+  ]],
+  ["language:general", ["la cosa", "el problema", "el lugar"]],
+  ["communication:media", ["el diario"]],
+  ["leisure:sport", ["el casco", "el contragolpe", "el esqui (acuatico)", "escalar montanas", "practicar deportes"]],
+  ["leisure:activity", ["la entrada", "el globo"]],
+  ["shopping:money", ["la cartera"]],
+  ["action:support", ["la ayuda"]],
+  ["home:condition", ["el desorden"]],
+  ["food:vegetable", ["las aceitunas", "las arvejas", "los frijoles", "las verduras"]],
+  ["language:copula", [
+    "ella es", "ellas son", "ellos son", "el es", "nosotras somos", "nosotros somos", "tu eres", "usted es",
+    "yo soy", "ustedes son", "eras", "ser", "estar", "tener", "deber", "poder", "faltar",
+  ]],
+  ["action:movement", ["vais", "vamos", "pasear", "tirar"]],
+  ["language:discourse", [
+    "de todas partes", "porque", "tambien", "de repente", "cuando", "desde hace",
+    "por eso", "tampoco", "como", "solo",
+  ]],
+  ["action:communication", [
+    "contestar", "conversar", "hablar", "compartir", "describir", "gritar",
+    "recomendar", "preguntar", "llamarse",
+  ]],
+  ["emotion:preference", [
+    "desear", "esperar", "gustar", "necesitar", "fascinar", "molestar",
+  ]],
+  ["action:process", [
+    "preparar", "terminar", "cerrar", "comenzar", "conseguir", "empezar", "hacer",
+    "poner", "usar", "escoger", "cambiar de",
+  ]],
+  ["food:meal", ["tomando", "comer"]],
+  ["life:event", ["ganar"]],
+  ["travel:activity", ["hacer las maletas"]],
+  ["time:sequence", ["acabar de"]],
+  ["action:support", ["ayudar", "dar", "ofrecer"]],
+  ["people:identity", ["llamarse"]],
+  ["emotion:feeling", ["el amor"]],
+  ["communication:introduction", ["me llamo..."]],
+  ["education:school", ["asistir a", "la campana", "sonar"]],
+  ["home:housing", ["vivir"]],
+  ["language:possessive", ["mi", "su"]],
+];
+
+const phraseSemanticGroups = [
+  ["communication:salutation", ["hola.", "buenos dias.", "buenas tardes.", "buenas noches."]],
+  ["communication:farewell", [
+    "adios.", "chau.", "hasta la vista.", "hasta luego.", "hasta manana.",
+    "hasta pronto.", "nos vemos.", "saludos a...",
+  ]],
+  ["communication:courtesy", [
+    "con permiso.", "de nada.", "(muchas) gracias.", "lo siento.", "no hay de que.",
+    "perdon.", "disculpa", "por favor.",
+  ]],
+  ["communication:introduction", [
+    "encantado/a.", "el gusto es mio.", "igualmente.", "me llamo...", "mucho gusto.",
+    "soy de...", "este/esta es...", "le presento a...", "te presento a...",
+  ]],
+  ["communication:wellbeing", ["(muy) bien, gracias.", "no muy bien.", "regular."]],
+  ["communication:reaction", ["¡que guay!", "vale"]],
+  ["language:function", ["conmigo", "contigo"]],
+];
+
+const curatedSemanticTags = new Map();
+for (const [tag, forms] of curatedSemanticGroups) {
+  for (const form of forms) {
+    const key = normalized(form);
+    const tags = curatedSemanticTags.get(key) ?? [];
+    tags.push(tag);
+    curatedSemanticTags.set(key, tags);
+  }
+}
+
+const phraseSemanticTags = new Map(
+  phraseSemanticGroups.flatMap(([tag, forms]) => forms.map((form) => [normalized(form), tag])),
+);
+
 const lexicalFamilyGroups = {
   arrival: ["llegar", "llegada"],
   breakfast: ["desayunar", "desayuno"],
@@ -194,6 +275,15 @@ for (const entry of vocabulary) {
   }
   for (const [tag, pattern] of stemRules) {
     if (pattern.test(searchable)) addTag(tags, tag);
+  }
+  for (const curatedTag of curatedSemanticTags.get(normalized(entry.spanish)) ?? []) {
+    addTag(tags, curatedTag);
+  }
+  const phraseSemanticTag = phraseSemanticTags.get(normalized(entry.spanish));
+  if (phraseSemanticTag) {
+    removeNarrowTag(tags, "communication:greeting");
+    removeNarrowTag(tags, "communication:social");
+    addTag(tags, phraseSemanticTag);
   }
 
   if (["el esquí (acuático)", "marrón, café"].includes(entry.spanish)) {

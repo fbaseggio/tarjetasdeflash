@@ -18,8 +18,8 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Due-only frontier practice plus sparse below-frontier audits: expanding learners receive one Foundation and one Everyday audit slot when available; Everyday learners receive two Foundation audit slots.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
-- Weighted long-tail distractors using part of speech, tier, chapter proximity, answer form, Spanish spelling and approximate sound, semantic tags, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic simulation calibrates each distribution.
-- Brief correct/incorrect feedback after every submission, followed by automatic advancement after about 850 milliseconds (300 milliseconds for reduced-motion users).
+- Quality-gated distractors using structural class, part of speech, semantic affinity, Spanish spelling and approximate sound, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic audit and simulation expose every backoff.
+- Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair before automatic advancement; misses still advance quickly without exposing the answer.
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
@@ -110,7 +110,7 @@ Requirements:
 
 The vocabulary file remains a static application asset in the MVP. Moving vocabulary into Firestore is unnecessary until browser-based editing or dynamic decks are desired.
 
-The first official import merged 80 repeated source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, and retained 251 entries with structured grammar metadata. A later editorial pass inferred all 362 previously blank parts of speech from articles, infinitive forms, learner-facing glosses, and explicit review of introductory expressions; dataset validation now rejects any remaining `unknown` category. The first semantic pass assigns at least one broad or narrow tag to 898 entries using bounded word/phrase rules plus an explicit set of safe Spanish morphological stems. It marks 129 bare infinitives as `verbo`, the six longer noun lookalikes—`mujer`, `celular`, `lugar`, `suéter`, `azúcar`, and `calamar`—as `verbo-falso`, and 53 entries in 24 curated lexical families. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
+The first official import merged 80 repeated source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, and retained 251 entries with structured grammar metadata. Later editorial passes inferred all previously blank parts of speech, corrected geographic names and several conjugated forms, and now classify 28 proper nouns, 31 numbers, 29 questions, and 46 phrases; dataset validation rejects any remaining `unknown` category. The first-pass semantic taxonomy now assigns at least one broad and narrow tag to every entry using bounded word/phrase rules, safe Spanish morphological stems, and reviewed overrides for otherwise untagged curriculum words. It marks 129 bare infinitives as `verbo`, the six longer noun lookalikes—`mujer`, `celular`, `lugar`, `suéter`, `azúcar`, and `calamar`—as `verbo-falso`, and 53 entries in 24 curated lexical families. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
 
 ## 5. Core concepts
 
@@ -158,13 +158,13 @@ The distractor chooser selects three translations from other vocabulary items. I
 - Prevent duplicate displayed choices.
 - Stop with a clear error if four distinct choices cannot be formed.
 
-The implemented chooser uses weighted sampling without replacement from every valid candidate. Candidate eligibility and candidate weight are deliberately separate. A candidate receives zero weight only when it cannot safely be a wrong answer: it is the target entry, has the same displayed answer, duplicates another choice, represents the same merged lemma and sense, or is another defensible translation of the prompt. Every other candidate retains a nonzero baseline weight, producing a long tail of occasionally unrelated choices.
+The implemented chooser uses hierarchical weighted sampling without replacement. Candidate safety, structural compatibility, and affinity quality are deliberately separate. A candidate is rejected when it is the target entry, has the same compact displayed answer or prompt, duplicates another choice, represents the same merged lemma and sense, is another defensible translation, or belongs to an incompatible structural class. Ordinary candidates must share the target's part of speech. Questions, proper nouns, numbers, and phrases are isolated classes. The only cross-part-of-speech exception is a `verbo`/`verbo-falso` surface confuser with independently meaningful spelling or sound affinity.
 
 Candidate weights then increase according to independent, potentially compounding features:
 
 - Same part of speech.
 - Question structure: a question has a very strong affinity for other questions, while a question has zero eligibility as a distractor for any non-question target.
-- Proper-name structure: a proper noun receives only baseline weight for a non-proper-noun target. Proper-noun targets strongly favor other proper nouns while still allowing semantically related common nouns and the ordinary baseline tail.
+- Proper-name structure: proper nouns compete only with proper nouns; ordinary targets can never receive a capitalized proper-name distractor.
 - Same curriculum tier and proximity in chapter order.
 - Same semantic family or topic.
 - Verbo surface form: bare infinitives and the six noun lookalikes use a separately calibrated eligibility and weighting policy.
@@ -175,26 +175,29 @@ Candidate weights then increase according to independent, potentially compoundin
 
 False-cognate relationships may be directional: a particular English answer can be tempting for a Spanish prompt without the reverse direction being equally useful. Sound and spelling similarity should be computed between the relevant Spanish forms even when the displayed answers are English. Explicit editorial relationships take precedence where automatic similarity would be misleading.
 
-Weights are configuration, not domain invariants. Initial values favor same-part-of-speech, same-tier, semantic, false-cognate, lexical-family, and sound-alike candidates while never forcing a fixed composition. Broad semantic matches receive a moderate increase and narrow matches a stronger increase. The former `expression` category has been split into 29 questions and 45 phrases. Question targets currently average about 2.4 question distractors; non-question targets can never receive a question distractor. Proper nouns cannot enter the related pool for ordinary targets, while proper-noun targets strongly favor other proper names without excluding semantically useful common nouns. Learner-confusion data has a defined scoring hook but is not yet populated. Selection remains random within this weighted distribution, so questions do not become predictable category-matching exercises.
+English-to-Spanish selection also computes how transparently each Spanish candidate reveals its own English meaning. Normalized lemma-to-gloss similarity identifies 70 strong and 72 moderate non-proper cognates, with reviewed additions such as `profesor/a` whose stored gloss is “teacher.” Strong candidates receive a `0.12` multiplier and moderate candidates `0.35`; they remain possible but rarely outrank equally good opaque alternatives. This penalty is directional, never affects a correct answer, excludes proper names, and is suppressed when the candidate is an explicit false-cognate lure for the current prompt.
 
-A **verbo** is a curriculum entry categorized as a verb whose displayed Spanish is one bare word ending in `-ar`, `-er`, or `-ir`. When a verbo is the target, only other verbos, `verbos-falsos`, and curated lexical-family exceptions are eligible in either direction. A **verbo-falso** is a single-word noun longer than three letters whose lemma has the same ending. Verbo-falso targets retain the ordinary long-tail pool but moderately favor true verbos. Calibration currently produces about `0.45` verbos-falsos per verbo target and `1.05` true verbos per verbo-falso target; neither is imposed as a fixed quota. Verb expressions and conjugated forms do not participate in this special surface-form rule.
+Weights are configuration, not domain invariants. The first selection tier requires a narrow semantic match, meaningful spelling/sound similarity, an explicit relationship, or a special homogeneous class such as questions, proper nouns, or numbers. If fewer than three choices are available, the chooser backs off to same-part-of-speech broad semantic matches. Only after both affinity tiers are exhausted may it use a same-format, same-part-of-speech fallback. Tier, chapter, and answer length can adjust weights but can never qualify a candidate by themselves. Learner-confusion data has a defined scoring hook but is not yet populated. Selection remains random within each tier, so questions do not become fixed category-matching exercises.
 
-The first curated lexical-family set contains 24 families and 53 entries, including `invitar`/`invitado`, `llegar`/`llegada`, `desayunar`/`desayuno`, and `nacer`/`nacimiento`. A curated family member may bypass the verbo-only eligibility rule, receives a strong `lexical-family` weight, and is still rejected whenever it could also be a valid answer. Relationships are symmetric. Eligible verbo targets currently average about `0.46` lexical-family distractors rather than receiving a fixed quota.
+A **verbo** is a curriculum entry categorized as a verb whose displayed Spanish is one bare word ending in `-ar`, `-er`, or `-ir`. A **verbo-falso** is a single-word noun longer than three letters whose lemma has the same ending. Verbs now draw primarily from all semantically or orthographically related verb entries, rather than being limited to bare infinitives. A verbo/verbo-falso pair is eligible across part-of-speech boundaries only when spelling or approximate sound independently makes it a plausible surface-form confusion; the shared ending alone is insufficient. Verb expressions and conjugated forms remain separate structural classes.
 
-In generated questions only, the leading article is omitted from every verbo-falso prompt or choice (`calamar`, not `el calamar`). It is also omitted from a noun admitted as a lexical-family exception when it competes in an English-infinitive question (`invitado/a`, not `el/la invitado/a`). These rules prevent the article from revealing the noun. Vocabulary presentation and result review retain the full article-bearing form.
+The first curated lexical-family set contains 24 families and 53 entries, including `invitar`/`invitado`, `llegar`/`llegada`, `desayunar`/`desayuno`, and `nacer`/`nacimiento`. Lexical-family affinity receives a strong weight only after structural compatibility; it cannot place a noun among verb answers or otherwise create a grammatical clue. A family member is still rejected whenever it could also be a valid answer.
 
-A **baseline slot** is selected by a 50% coin flip, producing either zero or one baseline slot and therefore an expectation of `0.5`. The slot samples uniformly from the hard-eligible candidate pool without affinity weighting. The remaining two or three slots use weighted sampling only from candidates having at least one relationship feature; if too few exist, generation falls back safely to the remaining eligible pool. Thus baseline is a selection mode rather than a claim that the chosen entry happens to share no metadata. Deterministic calibration currently produces `0.49` baseline slots overall, nearly identical in both directions, and never more than one per question. Learner history does not yet personalize the distribution.
+Teaching text remains exactly as imported. Generated questions use compact quiz text: parenthetical glosses and abbreviations are removed, the first unambiguous gloss is used when teaching text contains semicolon-separated alternatives, terminal sentence punctuation is removed outside questions, and incidental initial capitalization is normalized outside proper nouns, questions, and numbers. Spanish noun articles are omitted consistently across prompts and choices, preventing gender or the exceptional article-free form of a `verbo-falso` from revealing an answer. Optional `quizSpanish` and `quizEnglish` fields can override this safe default. Thus teaching may show `el jugo (de fruta)` while a quiz asks `jugo`, and `el calamar` becomes `calamar`.
+
+There is no unrelated baseline tail. `npm run audit:distractors -- 200 40` produces a deterministic Markdown-style report with compact questions, every distractor's part of speech, selection tier, reason flags, quiz-text shortening counts, and aggregate backoff rates. Full two-direction calibration keeps plain same-format fallback below 5% of both choices and questions; every fallback remains visible for later semantic or editorial improvement.
 
 Implementation status:
 
 1. [x] Pure candidate scoring with an injectable random source and explicit reason flags for each weight multiplier.
 2. [x] Weighted sampling without replacement while retaining hard validity checks and stable generated questions.
-3. [x] Deterministic simulation reporting baseline count, relationship mix, and results by direction, tier, and part of speech.
-4. [x] Zero-or-one baseline-slot selection calibrated to a 50% probability.
+3. [x] Deterministic audit and simulation reporting affinity reasons, broad-semantic backoff, format fallback, and compact-text use.
+4. [x] Remove the unrelated baseline tail and enforce homogeneous structural classes.
 5. [x] Immutable attempts record distractor entry IDs, weights, reasons, and the selected entry ID.
-6. [x] Add a first-pass Cervantes-inspired broad/narrow semantic taxonomy covering about 90% of entries.
-7. [x] Add curated lexical-family exceptions and question-only article omission for noun lookalikes.
-8. [ ] Editorially review and extend semantic tags and lexical families, then use accumulated selections to personalize learner-confusion weights.
+6. [x] Add a first-pass Cervantes-inspired broad/narrow semantic taxonomy covering every entry.
+7. [x] Add compact quiz forms, preserve full teaching forms, and prevent lexical-family relationships from creating grammatical clues.
+8. [x] Downweight transparent true-cognate distractors in English-to-Spanish questions while preserving false-cognate lures.
+9. [ ] Continue editorial review of semantic tags, lexical families, and cognate exceptions, then use accumulated selections to personalize learner-confusion weights.
 
 ### 6.4 Answer position
 
@@ -216,6 +219,8 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
+Each question first shows only the prompt for a brief recall pause, then reveals the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. Reduced-motion settings shorten the pause.
+
 ### 7.2 Scoring
 
 Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
@@ -235,7 +240,7 @@ Default behavior:
 - First repeat a missed word in the direction opposite its initial question.
 - When the first opposite-direction reprise is answered correctly, briefly remind the learner of the original miss using both values, for example: `Last time you answered “dog” for “rojo”.` This appears only after a correct first reprise, never during ordinary questions or subsequent reprises. Later same-direction reprises already retain and strike through their prior wrong choices, so they need no additional reminder.
 - Alternate direction after every additional wrong review answer.
-- Briefly show whether the submitted answer was correct. A miss marks only the selected answer as incorrect and does not reveal or highlight the correct answer.
+- Briefly show whether the submitted answer was correct. After a correct answer whose compact quiz text differs from either imported teaching form, show the complete Spanish/English pair for about 1.4 seconds; unchanged pairs need only the ordinary correctness feedback. A first opposite-direction reprise with its reminder remains visible for about 2 seconds. A miss marks only the selected answer as incorrect, does not reveal or highlight the correct answer, and advances after about 850 milliseconds. Reduced-motion timing remains shorter.
 - Disable all choices during the short feedback interval, then advance automatically.
 - Maintain stable choices and answer positions separately for each direction.
 - Display previously selected wrong choices with a strike-through and disable them whenever that direction returns.
@@ -547,7 +552,7 @@ The practice-session and scheduling domain is implemented without DOM dependenci
 - Do not communicate correctness by color alone; use icons and text as well.
 - Keep accents and `ñ` intact throughout loading, display, and storage.
 - Announce new prompts, quiz progress, and brief answer outcomes for screen readers.
-- Avoid animations that delay the next question; respect reduced-motion preferences.
+- Avoid decorative animations that delay the next question; respect reduced-motion preferences. The intentional answer-choice reveal pause is short and reduced for users who request reduced motion.
 - Keep the visual tone cheerful and uncluttered rather than resembling a worksheet.
 
 ## 14. Deployment
@@ -577,7 +582,8 @@ Implemented prototype acceptance criteria:
 - A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
-- A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed.
+- Each question gives a brief prompt-only recall pause before revealing choices, with a shorter reduced-motion delay.
+- A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed; correct answers reveal the full teaching pair only when it differs from the quiz form, while misses never reveal the answer.
 - No running score is displayed.
 - Review first reverses each missed question, then alternates direction after each miss.
 - Each direction preserves its own answer positions and strikes through and disables its preceding wrong selections.

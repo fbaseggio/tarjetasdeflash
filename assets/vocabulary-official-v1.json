@@ -88,7 +88,7 @@
     "spanish": "Argentina",
     "english": "Argentina",
     "lemma": "argentina",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -177,7 +177,7 @@
     "spanish": "Bogotá",
     "english": "Bogotá",
     "lemma": "bogotá",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -202,7 +202,7 @@
     "spanish": "Buenos Aires",
     "english": "Buenos Aires",
     "lemma": "buenos aires",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -254,7 +254,7 @@
     "spanish": "Caracas",
     "english": "Caracas",
     "lemma": "caracas",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -269,14 +269,17 @@
       488
     ],
     "curriculumRank": 10,
-    "semanticTags": []
+    "semanticTags": [
+      "place",
+      "place:geography"
+    ]
   },
   {
     "id": "g-catorce-14olmue",
     "spanish": "catorce",
     "english": "14",
     "lemma": "catorce",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "number",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -301,7 +304,7 @@
     "spanish": "cero",
     "english": "0",
     "lemma": "cero",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "number",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -401,14 +404,17 @@
       "unknown"
     ],
     "curriculumRank": 15,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:subject"
+    ]
   },
   {
     "id": "g-cinco-0txjgbz",
     "spanish": "cinco",
     "english": "5",
     "lemma": "cinco",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "number",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -433,7 +439,7 @@
     "spanish": "Ciudad de México",
     "english": "Mexico City",
     "lemma": "ciudad de méxico",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -458,7 +464,7 @@
     "spanish": "Ciudad de Panamá",
     "english": "Panama City",
     "lemma": "ciudad de panamá",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -483,7 +489,7 @@
     "spanish": "Colombia",
     "english": "Colombia",
     "lemma": "colombia",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -653,7 +659,7 @@
     "curriculumRank": 24,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -661,7 +667,7 @@
     "spanish": "Costa Rica",
     "english": "Costa Rica",
     "lemma": "costa rica",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -921,7 +927,7 @@
     "curriculumRank": 34,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -1160,7 +1166,7 @@
     "spanish": "ella es",
     "english": "she is",
     "lemma": "ella es",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "conjugated verb",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -1175,14 +1181,17 @@
       522
     ],
     "curriculumRank": 44,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-ellas-son-1g0r3gs",
     "spanish": "ellas son",
     "english": "they are (all-female group)",
     "lemma": "ellas son",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "conjugated verb",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -1198,6 +1207,8 @@
     ],
     "curriculumRank": 45,
     "semanticTags": [
+      "language",
+      "language:copula",
       "people",
       "people:family"
     ]
@@ -1207,7 +1218,7 @@
     "spanish": "ellos son",
     "english": "they are",
     "lemma": "ellos son",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "conjugated verb",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -1223,6 +1234,8 @@
     ],
     "curriculumRank": 46,
     "semanticTags": [
+      "language",
+      "language:copula",
       "people",
       "people:family"
     ]
@@ -1284,7 +1297,7 @@
     "curriculumRank": 48,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:introduction"
     ]
   },
   {
@@ -1307,7 +1320,10 @@
       527
     ],
     "curriculumRank": 49,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-escritorio-0605891",
@@ -1614,7 +1630,7 @@
     "curriculumRank": 60,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -1622,7 +1638,7 @@
     "spanish": "El gusto es mío.",
     "english": "The pleasure is all mine.; The pleasure is mine.",
     "lemma": "gusto es mío",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "phrase",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -1640,7 +1656,10 @@
       677
     ],
     "curriculumRank": 61,
-    "semanticTags": []
+    "semanticTags": [
+      "communication",
+      "communication:introduction"
+    ]
   },
   {
     "id": "g-no-hay-189kort",
@@ -1726,7 +1745,7 @@
     "curriculumRank": 64,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:salutation"
     ]
   },
   {
@@ -1816,7 +1835,7 @@
     "curriculumRank": 67,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:introduction"
     ]
   },
   {
@@ -2153,7 +2172,10 @@
       557
     ],
     "curriculumRank": 79,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:subject"
+    ]
   },
   {
     "id": "g-me-llamo-1acm3o4",
@@ -2178,6 +2200,8 @@
     ],
     "curriculumRank": 80,
     "semanticTags": [
+      "communication",
+      "communication:introduction",
       "people",
       "people:identity"
     ]
@@ -2230,8 +2254,8 @@
     ],
     "curriculumRank": 82,
     "semanticTags": [
-      "description",
-      "description:quality"
+      "language",
+      "language:possessive"
     ]
   },
   {
@@ -2321,7 +2345,7 @@
     "curriculumRank": 85,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:introduction"
     ]
   },
   {
@@ -2479,7 +2503,10 @@
       569
     ],
     "curriculumRank": 91,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-nosotros-somos-19w52a7",
@@ -2501,7 +2528,10 @@
       570
     ],
     "curriculumRank": 92,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-nueve-1x3jtqe",
@@ -2743,7 +2773,8 @@
     "curriculumRank": 101,
     "semanticTags": [
       "communication",
-      "communication:classroom"
+      "communication:classroom",
+      "communication:courtesy"
     ]
   },
   {
@@ -3004,7 +3035,7 @@
     "spanish": "El Salvador",
     "english": "El Salvador",
     "lemma": "salvador",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 0,
     "chapters": [
@@ -3019,7 +3050,10 @@
       589
     ],
     "curriculumRank": 111,
-    "semanticTags": []
+    "semanticTags": [
+      "place",
+      "place:geography"
+    ]
   },
   {
     "id": "g-san-jose-0egtwy8",
@@ -3307,7 +3341,7 @@
     "curriculumRank": 122,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:introduction"
     ]
   },
   {
@@ -3331,8 +3365,8 @@
     ],
     "curriculumRank": 123,
     "semanticTags": [
-      "description",
-      "description:quality"
+      "language",
+      "language:possessive"
     ]
   },
   {
@@ -3511,7 +3545,10 @@
       608
     ],
     "curriculumRank": 130,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-uno-0mpdsa7",
@@ -3558,7 +3595,10 @@
       610
     ],
     "curriculumRank": 132,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-ustedes-son-1vauoqe",
@@ -3581,6 +3621,8 @@
     ],
     "curriculumRank": 133,
     "semanticTags": [
+      "language",
+      "language:copula",
       "people",
       "people:family"
     ]
@@ -3990,7 +4032,10 @@
       627
     ],
     "curriculumRank": 149,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-nada-1gh7zfr",
@@ -4046,7 +4091,7 @@
     "curriculumRank": 151,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:farewell"
     ]
   },
   {
@@ -4152,7 +4197,7 @@
     "curriculumRank": 155,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:wellbeing"
     ]
   },
   {
@@ -4205,7 +4250,7 @@
       "body",
       "body:routine",
       "communication",
-      "communication:greeting",
+      "communication:salutation",
       "description",
       "description:quality"
     ]
@@ -4234,7 +4279,7 @@
       "body",
       "body:routine",
       "communication",
-      "communication:greeting",
+      "communication:salutation",
       "description",
       "description:quality"
     ]
@@ -4263,7 +4308,7 @@
       "body",
       "body:routine",
       "communication",
-      "communication:greeting",
+      "communication:salutation",
       "description",
       "description:quality"
     ]
@@ -4315,7 +4360,7 @@
     "curriculumRank": 161,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:farewell"
     ]
   },
   {
@@ -4474,7 +4519,10 @@
       652
     ],
     "curriculumRank": 167,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:general"
+    ]
   },
   {
     "id": "g-cuanto-s-a-s-0tiuim1",
@@ -4599,7 +4647,10 @@
       662
     ],
     "curriculumRank": 172,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-dia-16lz65m",
@@ -4646,7 +4697,10 @@
       664
     ],
     "curriculumRank": 174,
-    "semanticTags": []
+    "semanticTags": [
+      "communication",
+      "communication:media"
+    ]
   },
   {
     "id": "g-diccionario-1wwzyn2",
@@ -4728,7 +4782,7 @@
     "spanish": "Estados Unidos (EE.UU.)",
     "english": "United States",
     "lemma": "estados unidos (ee.uu.)",
-    "partOfSpeech": "noun",
+    "partOfSpeech": "proper noun",
     "tier": "foundation",
     "chapter": 1,
     "chapters": [
@@ -4770,7 +4824,7 @@
     "curriculumRank": 179,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:introduction"
     ]
   },
   {
@@ -4905,7 +4959,7 @@
     "curriculumRank": 184,
     "semanticTags": [
       "communication",
-      "communication:greeting",
+      "communication:farewell",
       "time",
       "time:sequence"
     ]
@@ -4932,7 +4986,7 @@
     "curriculumRank": 185,
     "semanticTags": [
       "communication",
-      "communication:greeting",
+      "communication:farewell",
       "time",
       "time:sequence"
     ]
@@ -4959,7 +5013,7 @@
     "curriculumRank": 186,
     "semanticTags": [
       "communication",
-      "communication:greeting",
+      "communication:farewell",
       "time",
       "time:calendar"
     ]
@@ -4986,7 +5040,7 @@
     "curriculumRank": 187,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:farewell"
     ]
   },
   {
@@ -5093,6 +5147,8 @@
     ],
     "curriculumRank": 191,
     "semanticTags": [
+      "communication",
+      "communication:introduction",
       "people",
       "people:identity"
     ]
@@ -5144,7 +5200,7 @@
     "curriculumRank": 193,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -5278,7 +5334,7 @@
     "curriculumRank": 198,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -5303,7 +5359,7 @@
     "curriculumRank": 199,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:wellbeing"
     ]
   },
   {
@@ -5328,7 +5384,7 @@
     "curriculumRank": 200,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:farewell"
     ]
   },
   {
@@ -5463,7 +5519,7 @@
     "curriculumRank": 205,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -5520,7 +5576,10 @@
       713
     ],
     "curriculumRank": 207,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:general"
+    ]
   },
   {
     "id": "g-profesor-18w2ldk",
@@ -5608,7 +5667,7 @@
     "curriculumRank": 210,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:reaction"
     ]
   },
   {
@@ -5716,7 +5775,7 @@
     "curriculumRank": 214,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:wellbeing"
     ]
   },
   {
@@ -5741,7 +5800,7 @@
     "curriculumRank": 215,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:farewell"
     ]
   },
   {
@@ -5841,7 +5900,10 @@
       726
     ],
     "curriculumRank": 219,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -5867,6 +5929,8 @@
     ],
     "curriculumRank": 220,
     "semanticTags": [
+      "communication",
+      "communication:introduction",
       "people",
       "people:identity"
     ]
@@ -5919,7 +5983,10 @@
       730
     ],
     "curriculumRank": 222,
-    "semanticTags": []
+    "semanticTags": [
+      "food",
+      "food:meal"
+    ]
   },
   {
     "id": "g-turista-06wt8u2",
@@ -6511,7 +6578,10 @@
       751
     ],
     "curriculumRank": 244,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:school"
+    ]
   },
   {
     "id": "g-calculadora-1g8dj89",
@@ -6665,7 +6735,10 @@
       758
     ],
     "curriculumRank": 250,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:sport"
+    ]
   },
   {
     "id": "g-cenar-1bjopbq",
@@ -6929,7 +7002,10 @@
       769
     ],
     "curriculumRank": 260,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -6954,7 +7030,10 @@
       770
     ],
     "curriculumRank": 261,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ],
@@ -7165,7 +7244,10 @@
       778
     ],
     "curriculumRank": 269,
-    "semanticTags": [],
+    "semanticTags": [
+      "emotion",
+      "emotion:preference"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -7485,7 +7567,10 @@
       "usageNote": "y"
     },
     "curriculumRank": 281,
-    "semanticTags": [],
+    "semanticTags": [
+      "emotion",
+      "emotion:preference"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -7535,7 +7620,10 @@
       795
     ],
     "curriculumRank": 283,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -7667,7 +7755,10 @@
       803
     ],
     "curriculumRank": 288,
-    "semanticTags": [],
+    "semanticTags": [
+      "emotion",
+      "emotion:preference"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -7693,7 +7784,10 @@
       804
     ],
     "curriculumRank": 289,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -7793,7 +7887,10 @@
       813
     ],
     "curriculumRank": 293,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:subject"
+    ]
   },
   {
     "id": "g-libreria-0ntdy4c",
@@ -7815,7 +7912,10 @@
       814
     ],
     "curriculumRank": 294,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:school"
+    ]
   },
   {
     "id": "g-literatura-0p9i01d",
@@ -7956,7 +8056,10 @@
       "usageNote": "y"
     },
     "curriculumRank": 299,
-    "semanticTags": [],
+    "semanticTags": [
+      "emotion",
+      "emotion:preference"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -8081,7 +8184,10 @@
       836
     ],
     "curriculumRank": 304,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-practicar-1dcrdca",
@@ -8132,6 +8238,8 @@
     ],
     "curriculumRank": 306,
     "semanticTags": [
+      "action",
+      "action:communication",
       "communication",
       "communication:classroom"
     ],
@@ -8159,7 +8267,10 @@
       839
     ],
     "curriculumRank": 307,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -8469,7 +8580,10 @@
       858
     ],
     "curriculumRank": 319,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -8686,7 +8800,10 @@
       289
     ],
     "curriculumRank": 327,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-abrir-1e1y5pv",
@@ -8764,7 +8881,10 @@
       870
     ],
     "curriculumRank": 330,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-aleman-alemana-1jbo49c",
@@ -9041,7 +9161,10 @@
       "genderVariant": true
     },
     "curriculumRank": 340,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:school"
+    ]
   },
   {
     "id": "g-azul-0k98ly3",
@@ -9387,7 +9510,10 @@
       894
     ],
     "curriculumRank": 353,
-    "semanticTags": [],
+    "semanticTags": [
+      "food",
+      "food:meal"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -9412,7 +9538,10 @@
       895
     ],
     "curriculumRank": 354,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -9616,7 +9745,10 @@
       "usageNote": "y"
     },
     "curriculumRank": 361,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -9705,7 +9837,10 @@
       905
     ],
     "curriculumRank": 364,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -10226,7 +10361,10 @@
       "genderVariant": true
     },
     "curriculumRank": 383,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-hermano-1abq9lo",
@@ -10279,7 +10417,10 @@
       "genderVariant": true
     },
     "curriculumRank": 385,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-hijo-1yk14ma",
@@ -11032,7 +11173,10 @@
       955
     ],
     "curriculumRank": 413,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-parientes-19xdkra",
@@ -11054,7 +11198,10 @@
       956
     ],
     "curriculumRank": 414,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-pelirrojo-1hhjffl",
@@ -11219,7 +11366,10 @@
       963
     ],
     "curriculumRank": 420,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:school"
+    ]
   },
   {
     "id": "g-puertorriqueno-1bsjfwg",
@@ -11494,7 +11644,10 @@
       "irregularPreterite": "tuv- (no accent in yo/usted)"
     },
     "curriculumRank": 430,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -11608,7 +11761,10 @@
       978
     ],
     "curriculumRank": 434,
-    "semanticTags": []
+    "semanticTags": [
+      "action",
+      "action:movement"
+    ]
   },
   {
     "id": "g-vamos-1bhrgdl",
@@ -11630,7 +11786,10 @@
       979
     ],
     "curriculumRank": 435,
-    "semanticTags": []
+    "semanticTags": [
+      "action",
+      "action:movement"
+    ]
   },
   {
     "id": "g-vecino-0j661qg",
@@ -11764,7 +11923,10 @@
       984
     ],
     "curriculumRank": 440,
-    "semanticTags": [],
+    "semanticTags": [
+      "home",
+      "home:housing"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -12224,7 +12386,10 @@
       "stemChange": "e:ie"
     },
     "curriculumRank": 456,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -12307,7 +12472,10 @@
       "stemChange": "e:ie"
     },
     "curriculumRank": 459,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -12340,7 +12508,10 @@
       "irregularPreterite": "yes"
     },
     "curriculumRank": 460,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -12400,7 +12571,10 @@
       1004
     ],
     "curriculumRank": 462,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:sport"
+    ]
   },
   {
     "id": "g-decir-1nz6j1w",
@@ -12555,7 +12729,10 @@
       "stemChange": "e:ie"
     },
     "curriculumRank": 467,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -12648,7 +12825,10 @@
       1012
     ],
     "curriculumRank": 470,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:activity"
+    ]
   },
   {
     "id": "g-equipo-1vgyhdh",
@@ -12698,7 +12878,10 @@
       "escalar montañas (f., pl.)"
     ],
     "curriculumRank": 472,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:sport"
+    ]
   },
   {
     "id": "g-escribir-un-mensaje-electronico-0zu4st5",
@@ -12772,7 +12955,10 @@
       1017
     ],
     "curriculumRank": 475,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:sport"
+    ]
   },
   {
     "id": "g-esquiar-12d9ra1",
@@ -12925,7 +13111,10 @@
       1023
     ],
     "curriculumRank": 481,
-    "semanticTags": [],
+    "semanticTags": [
+      "life",
+      "life:event"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -13028,7 +13217,10 @@
       1027
     ],
     "curriculumRank": 485,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -13359,7 +13551,10 @@
       1039
     ],
     "curriculumRank": 497,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:general"
+    ],
     "distractorTraits": [
       "verbo-falso"
     ]
@@ -13609,7 +13804,10 @@
       1049
     ],
     "curriculumRank": 506,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:movement"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -13863,7 +14061,10 @@
       "takesInfinitive": "mostly"
     },
     "curriculumRank": 515,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -13889,7 +14090,10 @@
       1060
     ],
     "curriculumRank": 516,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -13917,7 +14121,10 @@
       "practicar deportes (m., pl.)"
     ],
     "curriculumRank": 517,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:sport"
+    ]
   },
   {
     "id": "g-preferir-1u8ltg8",
@@ -14841,7 +15048,10 @@
       16
     ],
     "curriculumRank": 549,
-    "semanticTags": []
+    "semanticTags": [
+      "education",
+      "education:school"
+    ]
   },
   {
     "id": "g-campo-16fj656",
@@ -15281,7 +15491,7 @@
     "curriculumRank": 565,
     "semanticTags": [
       "communication",
-      "communication:greeting"
+      "communication:courtesy"
     ]
   },
   {
@@ -15718,7 +15928,10 @@
       48
     ],
     "curriculumRank": 581,
-    "semanticTags": []
+    "semanticTags": [
+      "travel",
+      "travel:activity"
+    ]
   },
   {
     "id": "g-hacer-wind-surf-1diffe9",
@@ -17039,7 +17252,10 @@
       97
     ],
     "curriculumRank": 629,
-    "semanticTags": [],
+    "semanticTags": [
+      "education",
+      "education:school"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -17256,7 +17472,10 @@
       "takesInfinitive": "y"
     },
     "curriculumRank": 637,
-    "semanticTags": []
+    "semanticTags": [
+      "time",
+      "time:sequence"
+    ]
   },
   {
     "id": "g-almacen-02px2gb",
@@ -17414,7 +17633,10 @@
       113
     ],
     "curriculumRank": 643,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:support"
+    ],
     "distractorTraits": [
       "verbo"
     ],
@@ -17753,7 +17975,10 @@
       126
     ],
     "curriculumRank": 656,
-    "semanticTags": []
+    "semanticTags": [
+      "shopping",
+      "shopping:money"
+    ]
   },
   {
     "id": "g-centro-comercial-0su6tni",
@@ -18056,7 +18281,10 @@
       137
     ],
     "curriculumRank": 667,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:support"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -18106,7 +18334,10 @@
       139
     ],
     "curriculumRank": 669,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-dependiente-0ixi32r",
@@ -18842,7 +19073,10 @@
       168
     ],
     "curriculumRank": 697,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:support"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -19696,7 +19930,10 @@
       200
     ],
     "curriculumRank": 729,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -19723,7 +19960,7 @@
     "curriculumRank": 730,
     "semanticTags": [
       "communication",
-      "communication:social"
+      "communication:reaction"
     ]
   },
   {
@@ -20136,7 +20373,7 @@
     "spanish": "antes de",
     "english": "before",
     "lemma": "antes",
-    "partOfSpeech": "verb",
+    "partOfSpeech": "preposition",
     "tier": "expanding",
     "chapter": 7,
     "chapters": [
@@ -20207,7 +20444,10 @@
       218
     ],
     "curriculumRank": 747,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:support"
+    ],
     "lexicalFamily": "help"
   },
   {
@@ -20417,7 +20657,10 @@
       226
     ],
     "curriculumRank": 755,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-desde-hace-0p1c5cn",
@@ -20439,7 +20682,10 @@
       227
     ],
     "curriculumRank": 756,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-desorden-09tb4ao",
@@ -20461,7 +20707,10 @@
       228
     ],
     "curriculumRank": 757,
-    "semanticTags": []
+    "semanticTags": [
+      "home",
+      "home:condition"
+    ]
   },
   {
     "id": "g-despertador-163el5x",
@@ -20862,7 +21111,10 @@
       "irregularPreterite": "like gustar"
     },
     "curriculumRank": 771,
-    "semanticTags": [],
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -20891,7 +21143,10 @@
       "irregularPreterite": "like gustar"
     },
     "curriculumRank": 772,
-    "semanticTags": [],
+    "semanticTags": [
+      "emotion",
+      "emotion:preference"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -20944,7 +21199,10 @@
       245
     ],
     "curriculumRank": 774,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -21280,7 +21538,12 @@
       "reflexive": true
     },
     "curriculumRank": 786,
-    "semanticTags": []
+    "semanticTags": [
+      "action",
+      "action:communication",
+      "people",
+      "people:identity"
+    ]
   },
   {
     "id": "g-luego-16w6e2r",
@@ -21409,7 +21672,10 @@
       "irregularPreterite": "like gustar"
     },
     "curriculumRank": 791,
-    "semanticTags": [],
+    "semanticTags": [
+      "emotion",
+      "emotion:preference"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -21682,7 +21948,10 @@
       274
     ],
     "curriculumRank": 801,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-por-la-manana-1qo1ixe",
@@ -22108,7 +22377,10 @@
       290
     ],
     "curriculumRank": 816,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-toalla-01npwsx",
@@ -22213,7 +22485,10 @@
       294
     ],
     "curriculumRank": 820,
-    "semanticTags": []
+    "semanticTags": [
+      "food",
+      "food:vegetable"
+    ]
   },
   {
     "id": "g-agua-mineral-1pcnqhz",
@@ -22365,7 +22640,10 @@
       301
     ],
     "curriculumRank": 826,
-    "semanticTags": []
+    "semanticTags": [
+      "food",
+      "food:vegetable"
+    ]
   },
   {
     "id": "g-atun-0ylf6j9",
@@ -22877,7 +23155,10 @@
       322
     ],
     "curriculumRank": 846,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-croqueta-16uv5pu",
@@ -23031,7 +23312,10 @@
       329
     ],
     "curriculumRank": 852,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:process"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -23081,7 +23365,10 @@
       331
     ],
     "curriculumRank": 854,
-    "semanticTags": []
+    "semanticTags": [
+      "food",
+      "food:vegetable"
+    ]
   },
   {
     "id": "g-frutas-12uh5lk",
@@ -23586,7 +23873,10 @@
       "genderVariant": true
     },
     "curriculumRank": 874,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-mejor-0hqtnv2",
@@ -23663,7 +23953,10 @@
       "genderVariant": true
     },
     "curriculumRank": 877,
-    "semanticTags": []
+    "semanticTags": [
+      "people",
+      "people:family"
+    ]
   },
   {
     "id": "g-menos-de-0q8l1t0",
@@ -24185,7 +24478,10 @@
       "stemChange": "e:ie"
     },
     "curriculumRank": 896,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:communication"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -24586,7 +24882,10 @@
       391
     ],
     "curriculumRank": 911,
-    "semanticTags": [],
+    "semanticTags": [
+      "action",
+      "action:movement"
+    ],
     "distractorTraits": [
       "verbo"
     ]
@@ -24686,7 +24985,10 @@
       395
     ],
     "curriculumRank": 915,
-    "semanticTags": []
+    "semanticTags": [
+      "food",
+      "food:vegetable"
+    ]
   },
   {
     "id": "g-vinagre-0w3uc74",
@@ -24911,6 +25213,8 @@
     ],
     "curriculumRank": 924,
     "semanticTags": [
+      "emotion",
+      "emotion:feeling",
       "people",
       "people:relationship"
     ]
@@ -25075,7 +25379,10 @@
       "requiredPreposition": "de"
     },
     "curriculumRank": 930,
-    "semanticTags": []
+    "semanticTags": [
+      "action",
+      "action:process"
+    ]
   },
   {
     "id": "g-casado-1052mk8",
@@ -25249,8 +25556,8 @@
     ],
     "curriculumRank": 936,
     "semanticTags": [
-      "communication",
-      "communication:social"
+      "language",
+      "language:function"
     ]
   },
   {
@@ -25274,8 +25581,8 @@
     ],
     "curriculumRank": 937,
     "semanticTags": [
-      "communication",
-      "communication:social"
+      "language",
+      "language:function"
     ]
   },
   {
@@ -25620,7 +25927,10 @@
       429
     ],
     "curriculumRank": 949,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:copula"
+    ]
   },
   {
     "id": "g-estado-civil-0alycyp",
@@ -25792,7 +26102,10 @@
       436
     ],
     "curriculumRank": 956,
-    "semanticTags": []
+    "semanticTags": [
+      "leisure",
+      "leisure:activity"
+    ]
   },
   {
     "id": "g-graduarse-09xnxzo",
@@ -26497,7 +26810,10 @@
       "genderVariant": true
     },
     "curriculumRank": 982,
-    "semanticTags": [],
+    "semanticTags": [
+      "people",
+      "people:family"
+    ],
     "lexicalFamily": "marriage"
   },
   {
@@ -26736,7 +27052,10 @@
       470
     ],
     "curriculumRank": 990,
-    "semanticTags": []
+    "semanticTags": [
+      "language",
+      "language:discourse"
+    ]
   },
   {
     "id": "g-soltero-1rk7281",

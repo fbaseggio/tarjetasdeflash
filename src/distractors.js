@@ -1,8 +1,7 @@
-import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.15.0";
+import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.16.0";
 
 export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
-  baseline: 1,
-  baselineSlotProbability: 0.5,
+  baseWeight: 1,
   samePartOfSpeech: 1.5,
   sameTier: 1.15,
   sameChapter: 1.2,
@@ -19,7 +18,19 @@ export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   verboFalsoForVerbo: 8,
   verboForVerboFalso: 5,
   lexicalFamily: 12,
+  strongTransparentCognatePenalty: 0.12,
+  moderateTransparentCognatePenalty: 0.35,
 });
+
+const EDITORIAL_TRANSPARENT_COGNATES = new Set([
+  "conductor",
+  "futbol",
+  "ingeniero",
+  "periodista",
+  "profesor",
+  "profesora",
+  "programador",
+]);
 
 const similarityCache = new Map();
 
@@ -111,7 +122,16 @@ function haveSimilarAnswerForm(left, right) {
 }
 
 function normalizedSenses(entry) {
-  return new Set((entry.senses ?? [entry.english]).map(normalizeText).filter(Boolean));
+  const normalized = new Set();
+  for (const sense of entry.senses ?? [entry.english]) {
+    for (const variant of String(sense).split(/[;/]/)) {
+      const value = normalizeText(variant);
+      if (!value) continue;
+      normalized.add(value);
+      if (/^[a-z]+s$/.test(value)) normalized.add(value.slice(0, -1));
+    }
+  }
+  return normalized;
 }
 
 function setsOverlap(left, right) {
@@ -144,13 +164,90 @@ function sameLexicalFamily(left, right) {
   return Boolean(left.lexicalFamily && left.lexicalFamily === right.lexicalFamily);
 }
 
+function lowercaseInitial(value) {
+  if (!value || /^I(?:\b|')/.test(value)) return value;
+  return `${value[0].toLocaleLowerCase()}${value.slice(1)}`;
+}
+
+function removeParentheticalText(value) {
+  let depth = 0;
+  let result = "";
+  for (const character of value) {
+    if (character === "(") {
+      depth += 1;
+    } else if (character === ")" && depth > 0) {
+      depth -= 1;
+    } else if (depth === 0) {
+      result += character;
+    }
+  }
+  return result;
+}
+
+function compactQuizText(entry, field) {
+  const overrideField = field === "spanish"
+    ? "quizSpanish"
+    : field === "english" ? "quizEnglish" : null;
+  const override = overrideField ? entry[overrideField] : null;
+  if (override) return override;
+
+  let value = removeParentheticalText(String(entry[field] ?? ""))
+    .split(";")[0]
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (entry.partOfSpeech !== "question") {
+    value = value.split(/\.\s+/u)[0];
+    value = value.replace(/[.!…]+$/u, "").trim();
+  }
+  if (!['proper noun', 'question', 'number'].includes(entry.partOfSpeech)) {
+    value = lowercaseInitial(value);
+  }
+  return value;
+}
+
+function cognateComparisonForms(value, language) {
+  const normalized = normalizeText(value)
+    .replace(language === "spanish" ? /^(el|la|los|las|el la)\s+/ : /^to\s+/, "")
+    .trim();
+  if (!normalized) return [];
+  const words = normalized.split(/\s+/).filter((word) => word.length >= 4);
+  return [...new Set([normalized.replace(/\s+/g, ""), ...words])];
+}
+
+export function cognateTransparencyScore(entry) {
+  const lemmaHead = String(entry.lemma ?? entry.spanish).split(/[\/,;]/)[0];
+  const spanishForms = cognateComparisonForms(lemmaHead, "spanish");
+  const englishForms = [entry.english, ...(entry.senses ?? [])]
+    .flatMap((value) => cognateComparisonForms(compactQuizText({
+      ...entry,
+      english: value,
+    }, "english"), "english"));
+
+  let score = 0;
+  for (const spanish of spanishForms) {
+    for (const english of englishForms) {
+      if (Math.min(spanish.length, english.length) < 4) continue;
+      score = Math.max(score, textSimilarity(spanish, english));
+    }
+  }
+
+  const normalizedLemma = normalizeText(lemmaHead).replace(/\s+/g, "");
+  if (EDITORIAL_TRANSPARENT_COGNATES.has(normalizedLemma)) score = Math.max(score, 0.85);
+  return score;
+}
+
 export function questionFieldText(
   entry,
   field,
   { target = null, direction = null, isCandidate = false } = {},
 ) {
-  if (field !== "spanish") return entry[field];
-  if (hasDistractorTrait(entry, "verbo-falso")) return entry.lemma;
+  if (field !== "spanish") return compactQuizText(entry, field);
+  if (hasDistractorTrait(entry, "verbo-falso")) return compactQuizText(entry, "lemma");
+  const quizText = compactQuizText(entry, field);
+  if (entry.partOfSpeech === "noun") {
+    return quizText.replace(/^(el|la|los|las)(\/la)?\s+/i, "");
+  }
   if (
     isCandidate
     && direction === "english-to-spanish"
@@ -159,9 +256,22 @@ export function questionFieldText(
     && entry.partOfSpeech === "noun"
     && sameLexicalFamily(target, entry)
   ) {
-    return entry.spanish.replace(/^(el|la|los|las)(\/la)?\s+/i, "");
+    return quizText.replace(/^(el|la|los|las)(\/la)?\s+/i, "");
   }
-  return entry[field];
+  return quizText;
+}
+
+function structurallyCompatible({
+  target,
+  candidate,
+  targetIsVerbo,
+  targetIsVerboFalso,
+  candidateIsVerbo,
+  candidateIsVerboFalso,
+}) {
+  if (target.partOfSpeech === candidate.partOfSpeech) return true;
+  return (targetIsVerbo && candidateIsVerboFalso)
+    || (targetIsVerboFalso && candidateIsVerbo);
 }
 
 export function scoreDistractorCandidate(
@@ -199,6 +309,21 @@ export function scoreDistractorCandidate(
   const candidateIsVerbo = hasDistractorTrait(candidate, "verbo");
   const candidateIsVerboFalso = hasDistractorTrait(candidate, "verbo-falso");
   const lexicalFamilyMatch = sameLexicalFamily(target, candidate);
+  const falseCognateMatch = relationMatches(
+    falseCognateRelations,
+    target.id,
+    candidate.id,
+    direction,
+  );
+  const learnerConfusionMatch = learnerConfusionIds?.has(candidate.id) ?? false;
+  const compatible = structurallyCompatible({
+    target,
+    candidate,
+    targetIsVerbo,
+    targetIsVerboFalso,
+    candidateIsVerbo,
+    candidateIsVerboFalso,
+  });
 
   if (
     candidate.id === target.id
@@ -211,27 +336,21 @@ export function scoreDistractorCandidate(
     || sameLemma
     || overlappingSenses
     || (candidateIsQuestion && !targetIsQuestion)
-    || (targetIsVerbo && !candidateIsVerbo && !candidateIsVerboFalso && !lexicalFamilyMatch)
+    || !compatible
   ) {
-    return Object.freeze({ eligible: false, weight: 0, reasons: Object.freeze([]), baseline: false });
+    return Object.freeze({ eligible: false, weight: 0, reasons: Object.freeze([]) });
   }
 
-  // A proper name is rarely a useful related distractor for an ordinary word.
-  // Keep it in the long tail, but do not let incidental tier, chapter, spelling,
-  // or semantic metadata promote it into the affinity-weighted pool.
-  if (candidateIsProperNoun && !targetIsProperNoun) {
-    return Object.freeze({
-      eligible: true,
-      weight: weights.baseline,
-      reasons: Object.freeze([]),
-      baseline: true,
-    });
-  }
-
-  let weight = weights.baseline;
+  let weight = weights.baseWeight;
   const reasons = [];
   const apply = (reason, multiplier) => {
     if (multiplier > 1) {
+      weight *= multiplier;
+      reasons.push(reason);
+    }
+  };
+  const applyPenalty = (reason, multiplier) => {
+    if (multiplier > 0 && multiplier < 1) {
       weight *= multiplier;
       reasons.push(reason);
     }
@@ -275,7 +394,7 @@ export function scoreDistractorCandidate(
   if (sharedSemanticTags.some((tag) => tag.includes(":"))) {
     apply("same-narrow-semantic-tag", weights.sameNarrowSemanticTag);
   }
-  if (relationMatches(falseCognateRelations, target.id, candidate.id, direction)) {
+  if (falseCognateMatch) {
     apply("false-cognate", weights.falseCognate);
   }
 
@@ -301,15 +420,45 @@ export function scoreDistractorCandidate(
   if (haveSimilarAnswerForm(correctText, answerText)) {
     apply("similar-answer-form", weights.similarAnswerForm);
   }
-  if (learnerConfusionIds?.has(candidate.id)) {
+  if (learnerConfusionMatch) {
     apply("learner-confusion", weights.learnerConfusion);
   }
+
+  const cognateTransparency = direction === "english-to-spanish"
+    && candidate.partOfSpeech !== "proper noun"
+    ? cognateTransparencyScore(candidate)
+    : 0;
+  if (!falseCognateMatch && cognateTransparency >= 0.8) {
+    applyPenalty("strong-transparent-cognate", weights.strongTransparentCognatePenalty);
+  } else if (!falseCognateMatch && cognateTransparency >= 0.63) {
+    applyPenalty("moderate-transparent-cognate", weights.moderateTransparentCognatePenalty);
+  }
+
+  const samePartOfSpeech = target.partOfSpeech === candidate.partOfSpeech;
+  const qualityQualified = (
+    (targetIsQuestion && candidateIsQuestion)
+    || (targetIsProperNoun && candidateIsProperNoun)
+    || (target.partOfSpeech === "number" && candidate.partOfSpeech === "number")
+    || lexicalFamilyMatch
+    || falseCognateMatch
+    || learnerConfusionMatch
+    || (samePartOfSpeech && sharedSemanticTags.some((tag) => tag.includes(":")))
+    || (
+      (samePartOfSpeech || (targetIsVerbo && candidateIsVerboFalso))
+      && reasons.some((reason) => reason === "similar-spelling" || reason === "similar-sound")
+    )
+  );
+  const broadSemanticQualified = samePartOfSpeech
+    && sharedSemanticTags.some((tag) => !tag.includes(":"));
 
   return Object.freeze({
     eligible: true,
     weight,
     reasons: Object.freeze(reasons),
-    baseline: reasons.length === 0,
+    qualified: qualityQualified,
+    broadSemanticQualified,
+    fallbackEligible: samePartOfSpeech,
+    cognateTransparency,
   });
 }
 
@@ -323,10 +472,6 @@ function weightedIndex(candidates, random) {
   }
 
   return candidates.length - 1;
-}
-
-function uniformIndex(candidates, random) {
-  return Math.min(candidates.length - 1, Math.floor(random() * candidates.length));
 }
 
 export function selectWeightedDistractors(
@@ -367,28 +512,28 @@ export function selectWeightedDistractors(
 
   const candidates = [...candidatesByAnswer.values()];
   const selected = [];
-  const baselineProbability = options.weights?.baselineSlotProbability
-    ?? DEFAULT_DISTRACTOR_WEIGHTS.baselineSlotProbability;
-
-  if (candidates.length > 0 && random() < baselineProbability) {
-    const [choice] = candidates.splice(uniformIndex(candidates, random), 1);
-    seenAnswers.add(choice.answerText);
-    selected.push({ ...choice, selectionMode: "baseline" });
-  }
-
   while (selected.length < count && candidates.length > 0) {
-    const relatedCandidates = candidates.filter((candidate) => !candidate.score.baseline);
-    const pool = relatedCandidates.length > 0 ? relatedCandidates : candidates;
-    const poolIndex = relatedCandidates.length > 0
-      ? weightedIndex(pool, random)
-      : uniformIndex(pool, random);
+    const qualityCandidates = candidates.filter((candidate) => candidate.score.qualified);
+    const broadSemanticCandidates = candidates.filter(
+      (candidate) => candidate.score.broadSemanticQualified,
+    );
+    const fallbackCandidates = candidates.filter(
+      (candidate) => candidate.score.fallbackEligible,
+    );
+    const pool = qualityCandidates.length > 0
+      ? qualityCandidates
+      : broadSemanticCandidates.length > 0 ? broadSemanticCandidates : fallbackCandidates;
+    if (pool.length === 0) break;
+    const poolIndex = weightedIndex(pool, random);
     const choice = pool[poolIndex];
     const candidateIndex = candidates.indexOf(choice);
     candidates.splice(candidateIndex, 1);
     seenAnswers.add(choice.answerText);
     selected.push({
       ...choice,
-      selectionMode: relatedCandidates.length > 0 ? "related" : "baseline-fallback",
+      selectionMode: qualityCandidates.length > 0
+        ? "quality"
+        : broadSemanticCandidates.length > 0 ? "broad-semantic" : "format-fallback",
     });
   }
 
@@ -401,7 +546,7 @@ export function selectWeightedDistractors(
     answer: choice.answerText,
     weight: choice.score.weight,
     reasons: choice.score.reasons,
-    baseline: choice.selectionMode !== "related",
+    cognateTransparency: choice.score.cognateTransparency,
     selectionMode: choice.selectionMode,
   })));
 }

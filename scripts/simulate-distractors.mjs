@@ -23,15 +23,18 @@ const directions = ["spanish-to-english", "english-to-spanish"];
 const summary = {
   questionCount: 0,
   distractorCount: 0,
-  baselineCount: 0,
+  fallbackCount: 0,
+  broadSemanticCount: 0,
   reasons: {},
   groups: {},
 };
 
 function recordGroup(key, details) {
-  const group = summary.groups[key] ?? { questions: 0, baseline: 0 };
+  const group = summary.groups[key] ?? { questions: 0, fallback: 0 };
   group.questions += 1;
-  group.baseline += details.filter((choice) => choice.baseline).length;
+  group.fallback += details.filter(
+    (choice) => choice.selectionMode === "format-fallback",
+  ).length;
   summary.groups[key] = group;
 }
 
@@ -39,11 +42,17 @@ for (let index = 0; index < requestedQuestions; index += 1) {
   const target = vocabulary[index % vocabulary.length];
   const direction = directions[index % directions.length];
   const details = selectWeightedDistractors(vocabulary, target, direction, 3, random);
-  const baseline = details.filter((choice) => choice.baseline).length;
+  const fallback = details.filter(
+    (choice) => choice.selectionMode === "format-fallback",
+  ).length;
+  const broadSemantic = details.filter(
+    (choice) => choice.selectionMode === "broad-semantic",
+  ).length;
 
   summary.questionCount += 1;
   summary.distractorCount += details.length;
-  summary.baselineCount += baseline;
+  summary.fallbackCount += fallback;
+  summary.broadSemanticCount += broadSemantic;
   recordGroup(`direction:${direction}`, details);
   recordGroup(`tier:${target.tier}`, details);
   recordGroup(`pos:${target.partOfSpeech}`, details);
@@ -55,9 +64,13 @@ for (let index = 0; index < requestedQuestions; index += 1) {
   }
 }
 
-const average = summary.baselineCount / summary.questionCount;
+const average = summary.fallbackCount / summary.questionCount;
 console.log(`Distractor simulation (${summary.questionCount.toLocaleString()} questions)`);
-console.log(`Expected baseline distractors: ${average.toFixed(3)} of 3`);
+console.log(`Format fallback distractors: ${average.toFixed(3)} of 3`);
+console.log(
+  `Broad-semantic backoff distractors: `
+  + `${(summary.broadSemanticCount / summary.questionCount).toFixed(3)} of 3`,
+);
 console.log("Weights:", DEFAULT_DISTRACTOR_WEIGHTS);
 console.log("Reason frequency:");
 for (const [reason, count] of Object.entries(summary.reasons).sort((a, b) => b[1] - a[1])) {
@@ -65,5 +78,5 @@ for (const [reason, count] of Object.entries(summary.reasons).sort((a, b) => b[1
 }
 console.log("Groups:");
 for (const [key, group] of Object.entries(summary.groups).sort()) {
-  console.log(`  ${key}: ${(group.baseline / group.questions).toFixed(3)} (${group.questions})`);
+  console.log(`  ${key}: ${(group.fallback / group.questions).toFixed(3)} (${group.questions})`);
 }

@@ -7,11 +7,21 @@ const vocabulary = JSON.parse(await readFile(vocabularyUrl, "utf8"));
 const metadata = JSON.parse(await readFile(metadataUrl, "utf8"));
 
 const properNouns = new Set([
+  "Argentina",
+  "Bogotá",
+  "Buenos Aires",
   "Canadá",
+  "Caracas",
+  "Ciudad de México",
+  "Ciudad de Panamá",
+  "Colombia",
+  "Costa Rica",
   "Cuba",
   "Ecuador",
+  "El Salvador",
   "España",
   "Estados Unidos",
+  "Estados Unidos (EE.UU.)",
   "Lima",
   "Madrid",
   "México",
@@ -38,6 +48,9 @@ const adjectives = new Set(["mi", "su"]);
 const adverbs = new Set(["de todas partes", "mañana"]);
 
 const conjugatedVerbs = new Set([
+  "ella es",
+  "ellas son",
+  "ellos son",
   "Estudias…",
   "Estudio…",
   "(no) hay",
@@ -47,8 +60,15 @@ const conjugatedVerbs = new Set([
   "tú eres",
   "usted es",
   "ustedes son",
+  "ustedes son",
   "yo soy",
+  "vais",
+  "vamos",
+  "eras",
 ]);
+
+const fixedPhrases = new Set(["El gusto es mío."]);
+const fixedPrepositions = new Set(["antes de"]);
 
 const nounsWithoutArticles = new Set([
   "señor (Sr.); don",
@@ -70,13 +90,16 @@ const verbExpressions = new Set([
 ]);
 
 function inferPartOfSpeech(entry) {
-  if (entry.partOfSpeech !== "unknown") return entry.partOfSpeech;
   if (/^\d+$/.test(entry.english)) return "number";
+  if (properNouns.has(entry.spanish)) return "proper noun";
+  if (conjugatedVerbs.has(entry.spanish)) return "conjugated verb";
+  if (fixedPhrases.has(entry.spanish)) return "phrase";
+  if (fixedPrepositions.has(entry.spanish)) return "preposition";
+  if (entry.partOfSpeech !== "unknown") return entry.partOfSpeech;
   if (properNouns.has(entry.spanish)) return "proper noun";
   if (pronouns.has(entry.spanish)) return "pronoun";
   if (adjectives.has(entry.spanish)) return "adjective";
   if (adverbs.has(entry.spanish)) return "adverb";
-  if (conjugatedVerbs.has(entry.spanish)) return "conjugated verb";
   if (nounsWithoutArticles.has(entry.spanish)) return "noun";
   if (verbsWithoutInfinitives.has(entry.spanish)) return "verb";
   if (laterExpressions.has(entry.spanish)) return "expression";

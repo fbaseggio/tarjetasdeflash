@@ -1,7 +1,7 @@
 import {
   questionFieldText,
   selectWeightedDistractors,
-} from "./distractors.js?v=0.15.0";
+} from "./distractors.js?v=0.16.0";
 
 export const DIRECTIONS = Object.freeze({
   SPANISH_TO_ENGLISH: "spanish-to-english",
@@ -49,6 +49,8 @@ export function buildQuestionForAnswer(
 
   const promptField = isSpanishPrompt ? "spanish" : "english";
   const answerField = isSpanishPrompt ? "english" : "spanish";
+  const quizSpanish = questionFieldText(answer, "spanish", { direction });
+  const quizEnglish = questionFieldText(answer, "english", { direction });
   const correctAnswer = questionFieldText(answer, answerField, { direction });
   const distractorDetails = selectWeightedDistractors(
     vocabulary,
@@ -66,6 +68,9 @@ export function buildQuestionForAnswer(
     answerLanguage: isSpanishPrompt ? "en" : "es",
     prompt: questionFieldText(answer, promptField, { direction }),
     correctAnswer,
+    teachingSpanish: answer.spanish,
+    teachingEnglish: answer.english,
+    hasTeachingVariant: quizSpanish !== answer.spanish || quizEnglish !== answer.english,
     distractors: distractorDetails,
     choices: Object.freeze(shuffle([correctAnswer, ...distractors], random)),
   });
