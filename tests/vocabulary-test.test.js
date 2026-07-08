@@ -10,7 +10,7 @@ const metadata = JSON.parse(
   await readFile(new URL("../assets/vocabulary-official-v1.meta.json", import.meta.url), "utf8"),
 );
 
-assert.equal(officialVocabulary.length, 998);
+assert.equal(officialVocabulary.length, 1523);
 assert.equal(metadata.entryCount, officialVocabulary.length);
 assert.equal(metadata.applicationStatus, "active-official-vocabulary");
 assert.equal(new Set(officialVocabulary.map((entry) => entry.id)).size, officialVocabulary.length);
@@ -22,9 +22,10 @@ assert.equal(
 assert.equal(metadata.transformation.unknownPartOfSpeechCount, 0);
 assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "expression").length, 0);
 assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "question").length, 29);
-assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "phrase").length, 46);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "phrase").length, 73);
 assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "proper noun").length, 28);
 assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "number").length, 31);
+assert.equal(officialVocabulary.filter((entry) => entry.partOfSpeech === "conjunction").length, 10);
 assert.ok(
   officialVocabulary
     .filter((entry) => /[¿?]/.test(entry.spanish))
@@ -47,7 +48,7 @@ const transparentCognates = officialVocabulary.filter((entry) => (
   entry.partOfSpeech !== "proper noun" && cognateTransparencyScore(entry) >= 0.63
 ));
 assert.ok(
-  transparentCognates.length >= 120 && transparentCognates.length <= 160,
+  transparentCognates.length >= 280 && transparentCognates.length <= 320,
   `${transparentCognates.length} transparent cognates`,
 );
 
@@ -55,10 +56,10 @@ const verbos = officialVocabulary.filter((entry) => entry.distractorTraits?.incl
 const verbosFalsos = officialVocabulary.filter(
   (entry) => entry.distractorTraits?.includes("verbo-falso"),
 );
-assert.equal(verbos.length, 129);
+assert.equal(verbos.length, 179);
 assert.deepEqual(
   verbosFalsos.map((entry) => entry.lemma).sort(),
-  ["azúcar", "calamar", "celular", "lugar", "mujer", "suéter"],
+  ["azúcar", "calamar", "celular", "deber", "lugar", "mujer", "porvenir", "suéter", "titular"],
 );
 assert.equal(metadata.transformation.distractorTraits.verboCount, verbos.length);
 assert.equal(metadata.transformation.distractorTraits.verboFalsoCount, verbosFalsos.length);
@@ -74,6 +75,14 @@ assert.equal(
   new Set(officialVocabulary.map((entry) => entry.spanish.toLocaleLowerCase("es"))).size,
   officialVocabulary.length,
 );
+
+assert.equal(officialVocabulary.filter((entry) => entry.year === 1).length, 998);
+assert.equal(officialVocabulary.filter((entry) => entry.year === 2).length, 525);
+assert.equal(officialVocabulary.filter((entry) => entry.years?.includes(2)).length, 544);
+assert.deepEqual(metadata.years.map((year) => year.label), ["Year 1", "Year 2"]);
+assert.equal(metadata.years.find((year) => year.id === 1).entryCount, 998);
+assert.equal(metadata.years.find((year) => year.id === 2).newEntryCount, 525);
+assert.equal(metadata.years.find((year) => year.id === 2).repeatedYear1EntryCount, 19);
 
 for (const tierMetadata of metadata.tiers) {
   assert.equal(
@@ -99,6 +108,8 @@ for (const entry of officialVocabulary) {
 
   assert.ok(Number.isInteger(entry.chapter));
   assert.ok(Array.isArray(entry.chapters) && entry.chapters.includes(entry.chapter));
+  assert.ok(Number.isInteger(entry.year));
+  assert.ok(Array.isArray(entry.years) && entry.years.includes(entry.year));
   assert.ok(Array.isArray(entry.senses) && entry.senses.length > 0);
   assert.ok(Array.isArray(entry.sourceRows) && entry.sourceRows.length > 0);
   assert.equal("doIKnowIt" in entry, false);
@@ -149,4 +160,29 @@ const precioQuestion = buildQuestionForAnswer(
 assert.equal(precioQuestion.prompt, "precio");
 assert.equal(precioQuestion.correctAnswer, "price");
 
-console.log("Validated 998 entries in the official curriculum vocabulary.");
+const tocar = officialVocabulary.find((entry) => entry.spanish === "tocar un instrumento musical");
+const tocarQuestion = buildQuestionForAnswer(
+  officialVocabulary,
+  tocar,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+assert.equal(tocar.year, 2);
+assert.equal(tocarQuestion.correctAnswer, "to play a musical instrument");
+assert.equal(tocarQuestion.teachingEnglish, "to touch; to play a musical instrument");
+assert.equal(tocarQuestion.hasTeachingVariant, true);
+
+const enCaso = officialVocabulary.find((entry) => entry.spanish === "en caso de que");
+const enCasoQuestion = buildQuestionForAnswer(
+  officialVocabulary,
+  enCaso,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+assert.equal(enCasoQuestion.correctAnswer, "in case");
+assert.equal(enCasoQuestion.teachingEnglish, "in case that");
+
+const estacion = officialVocabulary.find((entry) => entry.spanish === "la estación");
+assert.deepEqual(estacion.years, [1, 2]);
+assert.ok(estacion.senses.includes("season"));
+assert.ok(estacion.senses.includes("station"));
+
+console.log("Validated 1,523 entries in the official curriculum vocabulary.");

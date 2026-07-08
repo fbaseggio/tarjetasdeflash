@@ -13,13 +13,14 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
 - Twenty-seven playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
-- An active, versioned 998-entry curriculum vocabulary derived from the project-provided workbook, with chapter order, three chapter-derived bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
+- An active, versioned 1,523-entry curriculum vocabulary derived from the project-provided Year 1 and Spanish II workbooks, with chapter order, year labels, three application bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
 - A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
 - Due-only frontier practice plus sparse below-frontier audits: expanding learners receive one Foundation and one Everyday audit slot when available; Everyday learners receive two Foundation audit slots.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
 - Quality-gated distractors using structural class, part of speech, semantic affinity, Spanish spelling and approximate sound, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic audit and simulation expose every backoff.
 - Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair before automatic advancement; misses still advance quickly without exposing the answer.
+- Active quiz rounds include **Pause** and **Show previous** controls. Pause freezes pending reveal/advance timers; Show previous replays the last feedback snapshot without undoing or changing the recorded answer.
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
@@ -77,7 +78,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## 4. Vocabulary universe
 
-The active vocabulary universe is the 998-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided `Vocab for G.xlsx` workbook. Chapters remain the fine-grained curriculum order; application tiers are derived as Foundation chapters 0–2, Everyday chapters 3–6, and Expanding chapters 7–9. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
+The active vocabulary universe is the 1,523-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided Year 1 `Vocab for G.xlsx` workbook plus the Spanish II `spanishii_vocabulary.xlsx` workbook. Chapters remain the fine-grained curriculum order. Every entry has a `year` of first introduction and a `years` list for repeated prompts; Year 1 covers chapters 0–9 and Spanish II/Year 2 covers chapters 10–18. Application tiers remain Foundation chapters 0–2, Everyday chapters 3–6, and Expanding chapters 7–18 until the level model is refactored beyond three bands. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
 
 ```json
 {
@@ -87,6 +88,8 @@ The active vocabulary universe is the 998-entry curriculum set at [`assets/vocab
   "lemma": "pedir",
   "partOfSpeech": "verb",
   "tier": "everyday",
+  "year": 1,
+  "years": [1],
   "chapter": 4,
   "chapters": [4, 8],
   "category": "chapter-4",
@@ -102,7 +105,7 @@ Requirements:
 - `id` is stable and unique. Historical records refer to this ID, so changing display text must not change the ID.
 - `spanish` and `english` are clean answer text displayed to learners; source notation such as `pedir (e:i)` is represented as `spanish: "pedir"` plus grammar metadata.
 - `lemma` is the canonical lexical identity; `senses` preserves source meanings merged under one unambiguous Spanish prompt.
-- `chapter` is the first curriculum introduction and `chapters` preserves later repetitions. `category` currently records that first chapter.
+- `year` is the first course-year introduction and `years` preserves later repeats. `chapter` is the first curriculum introduction and `chapters` preserves later repetitions. `category` records the source category for later imports and chapter-derived categories for the original Year 1 import.
 - `semanticTags` contains project-authored broad and narrow topic tags adapted from the Instituto Cervantes *Nociones específicas* organization. `distractorTraits` contains exceptional surface-form classes such as `verbo` and `verbo-falso`.
 - Source-row references and alternate source forms remain available for editorial auditing. Personal columns such as individual learners' self-reports are excluded from the shared vocabulary.
 - Automated dataset tests validate required fields, unique IDs and Spanish prompts, tier counts, structured grammar examples, and four-choice generation in both directions. Runtime generation also checks that enough distinct displayed choices can be formed and fails visibly when vocabulary cannot be loaded.
@@ -110,7 +113,83 @@ Requirements:
 
 The vocabulary file remains a static application asset in the MVP. Moving vocabulary into Firestore is unnecessary until browser-based editing or dynamic decks are desired.
 
-The first official import merged 80 repeated source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, and retained 251 entries with structured grammar metadata. Later editorial passes inferred all previously blank parts of speech, corrected geographic names and several conjugated forms, and now classify 28 proper nouns, 31 numbers, 29 questions, and 46 phrases; dataset validation rejects any remaining `unknown` category. The first-pass semantic taxonomy now assigns at least one broad and narrow tag to every entry using bounded word/phrase rules, safe Spanish morphological stems, and reviewed overrides for otherwise untagged curriculum words. It marks 129 bare infinitives as `verbo`, the six longer noun lookalikes—`mujer`, `celular`, `lugar`, `suéter`, `azúcar`, and `calamar`—as `verbo-falso`, and 53 entries in 24 curated lexical families. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
+The first official import merged 80 repeated Year 1 source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, and retained structured grammar metadata. The Spanish II import read 549 rows from chapters 10–18, producing 544 unique Year 2 prompts: 525 brand-new entries, 19 exact repeats merged into existing Year 1 entries, and 5 duplicate Spanish II rows merged internally. Later editorial passes inferred all previously blank parts of speech, corrected geographic names and several conjugated forms, and the enlarged dataset now classifies 28 proper nouns, 31 numbers, 29 questions, 73 phrases, and 10 conjunctions; dataset validation rejects any remaining `unknown` category. The first-pass semantic taxonomy now assigns at least one broad and narrow tag to every entry using bounded word/phrase rules, source-category rules, safe Spanish morphological stems, and reviewed overrides for otherwise untagged curriculum words. It marks 179 bare infinitives as `verbo`, nine noun lookalikes—`mujer`, `celular`, `lugar`, `suéter`, `azúcar`, `calamar`, `deber`, `porvenir`, and `titular`—as `verbo-falso`, and 53 entries in 24 curated lexical families. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
+
+### 4.1 New vocabulary onboarding checklist
+
+Before adding a new batch of vocabulary to the official dataset:
+
+1. **Preserve the source.**
+   - Keep the original file or sheet unchanged.
+   - Record source name, date received, row count, and any source columns intentionally ignored.
+   - Note whether the new words are a supplement to the current dataset or a replacement migration.
+
+2. **Normalize learner-facing text.**
+   - Split source notation such as stem changes, gender variants, or usage notes into structured metadata where practical.
+   - Keep `spanish` and `english` as the full teaching pair shown to learners.
+   - Add `quizSpanish` or `quizEnglish` only when the generated compact form needs a human override.
+   - Preserve accents, `ñ`, opening punctuation, and meaningful articles in teaching text.
+   - Review compact quiz forms for punctuation clues: unmatched `¡`/`¿`, commas, parentheticals, abbreviations, and capitalization should not make one choice stand out unless the punctuation is part of the skill being tested.
+
+3. **Sanity-check translations.**
+   - Verify that each Spanish–English pair is a plausible direct translation in the intended beginner/high-school context.
+   - Flag entries where the English gloss is too broad, too narrow, archaic, regional, slangy, or context-dependent.
+   - Check that multi-sense English glosses do not mix unrelated meanings under one Spanish prompt unless the Spanish really covers them.
+   - Check directionality: a Spanish word may accept an English gloss in recognition while the English prompt may be too ambiguous for production.
+   - Add usage notes or `quizSpanish`/`quizEnglish` overrides when the teaching pair is right but the quiz form would be misleading.
+   - Review suspicious pairs manually before release rather than relying only on automated tests.
+
+4. **Merge and identify entries.**
+   - Merge repeated Spanish prompts only when they are the same teachable word or phrase.
+   - Preserve multiple English senses in `senses`.
+   - Assign stable IDs that will survive small display-text edits.
+   - Mark true replacements or deletions explicitly so existing progress can be migrated or retired intentionally.
+
+5. **Classify grammar and structure.**
+   - Fill `partOfSpeech` for every entry; no `unknown` values are allowed.
+   - Separate questions, phrases, numbers, proper nouns, verbs, adjectives, adverbs, nouns, and other needed categories.
+   - Store grammar hints such as gender, plural-only forms, stem changes, irregular forms, and regional usage as metadata rather than quiz text when possible.
+   - Recompute `verbo` and `verbo-falso` traits after import.
+   - Recount structural classes after import. If the new batch adds many questions, phrases, proper nouns, or numbers, confirm that each class still has enough same-class distractors.
+
+6. **Place entries in the learning path.**
+   - Assign chapter or introduction order.
+   - Derive the application tier: Foundation, Everyday, or Expanding.
+   - For words that should be presumed known for advanced learners, make sure their tier reflects that expectation.
+
+7. **Tag meaning and relationships.**
+   - Assign at least one broad and one narrow `semanticTag` to every entry.
+   - Add or extend lexical-family relationships when related forms could become useful distractors.
+   - Add false-cognate relationships where a tempting wrong answer is pedagogically useful.
+   - Review transparent true cognates so English-to-Spanish distractors do not become too easy. The current chooser downweights transparent Spanish candidates unless they are the correct answer or an explicit false-cognate lure.
+   - Protect useful false-cognate lures from the transparent-cognate penalty; for example, a tempting but wrong lookalike should remain available when it teaches a real confusion.
+   - Review lexical-family relationships separately from cognates. Family affinity should not create grammatical clues or admit a candidate from an incompatible structural class.
+
+8. **Check quiz-display safety.**
+   - Confirm compact quiz text removes accidental clues from parentheses, commas, articles, capitalization, and terminal punctuation.
+   - Make sure questions mostly compete with questions, proper nouns with proper nouns, numbers with numbers, and phrases with compatible phrases.
+   - Spot-check entries whose correct answer differs from the teaching pair, because those should reveal the full pair after a correct answer.
+   - Spot-check English-to-Spanish questions involving very transparent Spanish forms such as near-identical cognates; these should usually be correct answers or low-priority distractors, not giveaway wrong choices.
+   - Spot-check Spanish-to-English questions involving very broad English glosses such as “to go,” “thing,” “kind,” or “place,” because they often need semantic tags or manual sense cleanup to avoid weak distractors.
+
+9. **Run automated validation.**
+   - Run dataset tests for required fields, unique IDs, unique displayed prompts where required, valid part-of-speech values, semantic coverage, and four-choice generation in both directions.
+   - Run distractor calibration and inspect fallback rates.
+   - Run the audit report and review a sample of fallback, broad-semantic, cognate-penalized, false-cognate, lexical-family, question, phrase, proper-noun, `verbo`, and `verbo-falso` cases.
+   - Inspect all or most format-fallback cases after a large import. Fallbacks are not automatically wrong, but each one is a signal that semantic tags, structural classification, or lexical-family metadata may need another pass.
+   - Generate random question samples in both directions after the audit. Human inspection is still the best way to catch “obvious by shape” choices that satisfy formal rules.
+
+10. **Plan history migration.**
+   - Map exact overlapping words and senses from the previous dataset.
+   - Preserve portable mastery for exact semantic matches.
+   - Avoid attaching history to ambiguous overlaps unless reviewed.
+   - Bump dataset metadata and storage/migration code only as much as the change requires.
+
+11. **Release deliberately.**
+    - Update vocabulary metadata with counts and transformation notes.
+    - Update tests whose expected counts changed.
+    - Update the app/cache version when browser assets need a fresh load.
+    - Test locally, then commit the vocabulary, scripts, tests, metadata, and design notes together.
 
 ## 5. Core concepts
 
@@ -220,6 +299,14 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
 Each question first shows only the prompt for a brief recall pause, then reveals the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. Reduced-motion settings shorten the pause.
+
+The interface offers a lightweight pause/review affordance during active quiz and assessment rounds:
+
+- **Pause** clears any pending choice-reveal or post-answer auto-advance timer and shows a paused state.
+- **Resume** redraws the current question or, if the learner paused during answer feedback, shows that feedback again before continuing.
+- **Show previous** becomes available after one answer has been submitted. It replays the immediately previous feedback snapshot, including the selected answer and any full teaching pair that was shown.
+- **Show previous** never undoes an answer, changes score, reopens choices, or edits immutable history.
+- If the learner opens the previous snapshot while post-answer feedback is still pending, the return action continues the pending auto-advance. Otherwise it redraws the current live question.
 
 ### 7.2 Scoring
 
@@ -576,13 +663,14 @@ Question-generation logic should be tested independently from the interface.
 
 Implemented prototype acceptance criteria:
 
-- The active vocabulary loads 998 official curriculum entries in three chapter-derived tiers, validates required fields and unique IDs/prompts, and carries versioned source and transformation metadata.
+- The active vocabulary loads 1,523 official curriculum entries with Year 1/Year 2 labels, three current application tiers, required fields, unique IDs/prompts, and versioned source/transformation metadata.
 - Question generation rejects an asset that cannot produce four distinct displayed choices.
 - A ten-question quiz contains ten distinct vocabulary IDs.
 - A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
 - Each question gives a brief prompt-only recall pause before revealing choices, with a shorter reduced-motion delay.
+- Active quiz screens provide Pause and Show previous controls; Show previous is review-only and cannot change recorded answers.
 - A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed; correct answers reveal the full teaching pair only when it differs from the quiz form, while misses never reveal the answer.
 - No running score is displayed.
 - Review first reverses each missed question, then alternates direction after each miss.
@@ -636,7 +724,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 1B — Local learning sessions (in progress)
 
-- [x] A 998-entry official curriculum vocabulary with chapter order, canonical lemmas, merged senses, structured grammar metadata, source metadata, and validation tests.
+- [x] A 1,523-entry official curriculum vocabulary with chapter order, Year 1/Year 2 labels, canonical lemmas, merged senses, structured grammar metadata, source metadata, and validation tests.
 - [x] One-time 12-core-plus-6-confirmation adaptive onboarding with persisted tentative placement.
 - [x] Activation of the larger vocabulary and frontier-weighted quiz selection with Foundation auditing.
 - [x] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.

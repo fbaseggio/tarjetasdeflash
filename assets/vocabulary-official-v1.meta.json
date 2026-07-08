@@ -2,14 +2,30 @@
   "id": "tarjetas-official-vocabulary-v1",
   "version": 1,
   "createdOn": "2026-07-02",
-  "entryCount": 998,
+  "entryCount": 1523,
   "applicationStatus": "active-official-vocabulary",
   "source": {
-    "id": "vocab-for-g-2026-07-02",
-    "description": "Project-provided high-school Spanish curriculum workbook.",
-    "sourceFile": "Vocab for G.xlsx",
-    "sourceSheet": "Sheet1",
-    "sourceRowCount": 1078,
+    "id": "combined-official-curriculum-2026-07-08",
+    "description": "Project-provided high-school Spanish curriculum workbooks for Year 1 and Spanish II.",
+    "sources": [
+      {
+        "id": "vocab-for-g-2026-07-02",
+        "sourceFile": "Vocab for G.xlsx",
+        "sourceSheet": "Sheet1",
+        "sourceRowCount": 1078
+      },
+      {
+        "id": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRowCount": 549,
+        "chapterRange": [
+          10,
+          18
+        ],
+        "reviewNotes": "Workbook review notes flag chapters 15 and 18 for proofread attention; no obvious OCR errors were found in the focused intake pass."
+      }
+    ],
     "rightsStatus": "Project-provided source material; provenance documentation remains to be finalized."
   },
   "tiers": [
@@ -34,11 +50,20 @@
     },
     {
       "id": "expanding",
-      "entryCount": 262,
+      "entryCount": 787,
       "chapters": [
         7,
         8,
-        9
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
       ]
     }
   ],
@@ -46,24 +71,37 @@
     "duplicateRowsMerged": 80,
     "missingTranslationsSupplied": 1,
     "unknownPartOfSpeechCount": 0,
-    "entriesWithStructuredGrammar": 251,
+    "entriesWithStructuredGrammar": 356,
     "personalAnnotationsExcluded": true,
     "inferredPartOfSpeechCount": 380,
     "reclassifiedQuestionOrPhraseCount": 73,
     "semanticTagging": {
       "taxonomy": "Cervantes-inspired project taxonomy v1",
-      "taggedEntryCount": 998,
+      "taggedEntryCount": 1523,
       "untaggedEntryCount": 0,
-      "broadTagCount": 21,
-      "narrowTagCount": 77
+      "broadTagCount": 22,
+      "narrowTagCount": 98
     },
     "distractorTraits": {
-      "verboCount": 129,
-      "verboFalsoCount": 6
+      "verboCount": 179,
+      "verboFalsoCount": 9
     },
     "lexicalFamilies": {
       "familyCount": 24,
       "taggedEntryCount": 53
+    },
+    "spanishIIImport": {
+      "sourceRows": 549,
+      "uniqueSourcePrompts": 544,
+      "newEntries": 525,
+      "mergedIntoYear1Entries": 19,
+      "internalDuplicateRowsMerged": 5,
+      "existingDuplicateRowsMerged": 19,
+      "quizEnglishOverrides": [
+        "en caso de que",
+        "tocar un instrumento musical"
+      ],
+      "tierAssignment": "Year 2 entries are assigned to the existing expanding tier pending a future level-model refactor."
     }
   },
   "notes": [
@@ -74,6 +112,47 @@
     "The former 1,500-entry testing vocabulary remains in the repository as possible future supplementary material but is no longer active.",
     "Previously blank parts of speech were inferred from articles, infinitive forms, learner-facing glosses, and explicit review of introductory expressions.",
     "Learner-facing interrogatives use the question category; other former expressions use phrase so question distractors can be weighted independently.",
-    "First-pass semantic tags adapt the Instituto Cervantes Nociones específicas organization to this curriculum; tags are project-authored and remain subject to editorial review."
+    "First-pass semantic tags adapt the Instituto Cervantes Nociones específicas organization to this curriculum; tags are project-authored and remain subject to editorial review.",
+    "Every entry has a year label; repeated prompts can carry multiple years while retaining the year of first introduction.",
+    "Spanish II chapters 10–18 are currently assigned to the existing Expanding application tier.",
+    "The source's official Spanish-English teaching text is preserved except for quiz-only overrides used to remove misleading production prompts."
+  ],
+  "years": [
+    {
+      "id": 1,
+      "label": "Year 1",
+      "entryCount": 998,
+      "firstIntroductionChapters": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "id": 2,
+      "label": "Year 2",
+      "sourceRowCount": 549,
+      "sourcePromptCount": 544,
+      "newEntryCount": 525,
+      "repeatedYear1EntryCount": 19,
+      "firstIntroductionChapters": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    }
   ]
 }

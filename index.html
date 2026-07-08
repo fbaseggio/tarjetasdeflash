@@ -6,7 +6,7 @@
     <meta name="description" content="A tiny Spanish vocabulary quiz.">
     <title>Tarjetas de Flash</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=0.16.0">
+    <link rel="stylesheet" href="./styles.css?v=0.17.0">
   </head>
   <body>
     <main class="page-shell">
@@ -179,6 +179,18 @@
 
         <div id="choices" class="choices" aria-label="Answer choices"></div>
         <p id="quiz-error" class="feedback error" aria-live="polite" hidden></p>
+        <div id="quiz-controls" class="quiz-controls" hidden>
+          <button id="pause-quiz-button" class="secondary-button compact-control" type="button">
+            Pause
+          </button>
+          <button id="show-previous-button" class="secondary-button compact-control" type="button" disabled>
+            Show previous
+          </button>
+          <button id="return-current-button" class="next-button compact-control" type="button" hidden>
+            Return to current question
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
       </section>
 
       <section id="placement-panel" class="placement-panel" aria-labelledby="placement-title" hidden>
@@ -331,6 +343,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./src/app.js?v=0.16.0"></script>
+    <script type="module" src="./src/app.js?v=0.17.0"></script>
   </body>
 </html>

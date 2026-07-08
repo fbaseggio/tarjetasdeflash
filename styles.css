@@ -558,6 +558,37 @@ h1 {
   font-size: 0.9rem;
 }
 
+.quiz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.compact-control {
+  min-height: 42px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+.pause-card {
+  margin: 0;
+  padding: 20px 16px;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.pause-card strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
 .next-button {
   display: flex;
   gap: 10px;

@@ -1,40 +1,40 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.16.0";
-import { APP_VERSION } from "./app-version.js?v=0.16.0";
-import { createAssessmentSession } from "./assessment.js?v=0.16.0";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.16.0";
+import { createActivityStorage } from "./activity-storage.js?v=0.17.0";
+import { APP_VERSION } from "./app-version.js?v=0.17.0";
+import { createAssessmentSession } from "./assessment.js?v=0.17.0";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.17.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.16.0";
+} from "./diagnostic-export.js?v=0.17.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.16.0";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.16.0";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.16.0";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.16.0";
-import { createProfileStorage } from "./profile-storage.js?v=0.16.0";
-import { buildQuizFromAnswers } from "./questions.js?v=0.16.0";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.16.0";
-import { createQuizSession } from "./quiz-session.js?v=0.16.0";
-import { initializeRecognition } from "./recognition.js?v=0.16.0";
+} from "./indexed-history.js?v=0.17.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.17.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.17.0";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.17.0";
+import { createProfileStorage } from "./profile-storage.js?v=0.17.0";
+import { buildQuizFromAnswers } from "./questions.js?v=0.17.0";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.17.0";
+import { createQuizSession } from "./quiz-session.js?v=0.17.0";
+import { initializeRecognition } from "./recognition.js?v=0.17.0";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.16.0";
+} from "./review-results.js?v=0.17.0";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   isFirstSessionOfDay,
   shareSessionResults,
-} from "./share-results.js?v=0.16.0";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.16.0";
+} from "./share-results.js?v=0.17.0";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.17.0";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -63,6 +63,10 @@ const presentationSpanishElement = document.querySelector("#presentation-spanish
 const presentationEnglishElement = document.querySelector("#presentation-english");
 const promptElement = document.querySelector("#prompt");
 const choicesElement = document.querySelector("#choices");
+const quizControlsElement = document.querySelector("#quiz-controls");
+const pauseQuizButton = document.querySelector("#pause-quiz-button");
+const showPreviousButton = document.querySelector("#show-previous-button");
+const returnCurrentButton = document.querySelector("#return-current-button");
 const quizTitleElement = document.querySelector("#quiz-title");
 const directionLabelElement = document.querySelector("#direction-label");
 const quizErrorElement = document.querySelector("#quiz-error");
@@ -131,6 +135,11 @@ let allWordsReviewState = [];
 let showingAllWords = false;
 let shareResultsPayload = null;
 let choiceRevealTimer = null;
+let autoAdvanceTimer = null;
+let autoAdvanceCallback = null;
+let lastFeedbackSnapshot = null;
+let quizPaused = false;
+let currentQuizRenderer = null;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -153,6 +162,9 @@ function displayDate(dateKey) {
 
 function hideMainPanels() {
   clearChoiceRevealTimer();
+  clearAutoAdvanceTimer();
+  quizPaused = false;
+  hideQuizControls();
   Object.values(panels).forEach((panel) => { panel.hidden = true; });
 }
 
@@ -167,8 +179,54 @@ function clearChoiceRevealTimer() {
   }
 }
 
+function clearAutoAdvanceTimer({ clearCallback = true } = {}) {
+  if (autoAdvanceTimer) {
+    window.clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = null;
+  }
+  if (clearCallback) {
+    autoAdvanceCallback = null;
+  }
+}
+
+function pauseAutoAdvanceTimer() {
+  clearAutoAdvanceTimer({ clearCallback: false });
+}
+
+function scheduleAutoAdvance(callback, delay) {
+  clearAutoAdvanceTimer();
+  autoAdvanceCallback = callback;
+  autoAdvanceTimer = window.setTimeout(() => {
+    const pendingCallback = autoAdvanceCallback;
+    clearAutoAdvanceTimer();
+    pendingCallback?.();
+  }, delay);
+}
+
+function runPendingAutoAdvance() {
+  const pendingCallback = autoAdvanceCallback;
+  clearAutoAdvanceTimer();
+  pendingCallback?.();
+}
+
 function choiceRevealDelay() {
   return prefersReducedMotion() ? 250 : 1000;
+}
+
+function hideQuizControls() {
+  quizControlsElement.hidden = true;
+}
+
+function updateQuizControls(mode = "question") {
+  quizControlsElement.hidden = false;
+  pauseQuizButton.hidden = mode === "previous";
+  showPreviousButton.hidden = mode === "previous";
+  returnCurrentButton.hidden = mode !== "previous";
+  pauseQuizButton.textContent = quizPaused ? "Resume" : "Pause";
+  showPreviousButton.disabled = !lastFeedbackSnapshot;
+  returnCurrentButton.firstChild.textContent = autoAdvanceCallback
+    ? "Continue "
+    : "Return to current question ";
 }
 
 function renderProgress(state) {
@@ -226,6 +284,50 @@ function scheduleChoiceReveal(currentQuestion, knownWrongAnswers, onAnswer) {
   }, choiceRevealDelay());
 }
 
+function buildFeedbackSnapshot({
+  kind,
+  state,
+  selectedAnswer,
+  correct,
+  repriseReminder = null,
+}) {
+  return Object.freeze({
+    kind,
+    question: state.question,
+    selectedAnswer,
+    correct,
+    repriseReminder,
+    knownWrongAnswers: Object.freeze([...(state.knownWrongAnswers ?? [])]),
+    directionLabel: directionLabelElement.textContent,
+    quizTitle: quizTitleElement.textContent,
+    progress: progressElement.textContent,
+    showsTeaching: correct && state.question.hasTeachingVariant,
+  });
+}
+
+function renderFeedbackSnapshot(snapshot, { previous = false } = {}) {
+  clearChoiceRevealTimer();
+  progressElement.textContent = snapshot.progress;
+  directionLabelElement.textContent = previous
+    ? `Previous · ${snapshot.directionLabel}`
+    : snapshot.directionLabel;
+  quizTitleElement.textContent = previous ? "Previous question" : snapshot.quizTitle;
+  promptElement.textContent = snapshot.question.prompt;
+  promptElement.lang = snapshot.question.promptLanguage;
+  renderChoices(
+    snapshot.question,
+    new Set(snapshot.knownWrongAnswers),
+    () => {},
+  );
+  showAnswerOutcome(
+    snapshot.question,
+    snapshot.selectedAnswer,
+    snapshot.correct,
+    snapshot.repriseReminder,
+  );
+  updateQuizControls(previous ? "previous" : "question");
+}
+
 function showAnswerOutcome(question, selectedAnswer, correct, repriseReminder = null) {
   choicesElement.querySelectorAll("button").forEach((button) => {
     button.disabled = true;
@@ -276,6 +378,9 @@ function feedbackDelay({ hasRepriseReminder = false, showsTeaching = false } = {
 }
 
 function renderQuestion() {
+  currentQuizRenderer = renderQuestion;
+  clearAutoAdvanceTimer();
+  quizPaused = false;
   const state = quizSession.getState();
   const currentQuestion = state.question;
   renderProgress(state);
@@ -291,9 +396,13 @@ function renderQuestion() {
   promptElement.textContent = currentQuestion.prompt;
   promptElement.lang = currentQuestion.promptLanguage;
   scheduleChoiceReveal(currentQuestion, new Set(state.knownWrongAnswers), handleAnswer);
+  updateQuizControls("question");
 }
 
 function renderAssessmentQuestion() {
+  currentQuizRenderer = renderAssessmentQuestion;
+  clearAutoAdvanceTimer();
+  quizPaused = false;
   const state = assessmentSession.getState();
   const currentQuestion = state.question;
   const isSpanishPrompt = state.direction === "spanish-to-english";
@@ -305,6 +414,7 @@ function renderAssessmentQuestion() {
   promptElement.textContent = currentQuestion.prompt;
   promptElement.lang = currentQuestion.promptLanguage;
   scheduleChoiceReveal(currentQuestion, new Set(), handleAssessmentAnswer);
+  updateQuizControls("question");
 }
 
 function attemptFromState(state, correct, source) {
@@ -363,13 +473,15 @@ function handleAnswer(event) {
   if (before.phase === "main") {
     roundFirstAttempts.push(attemptFromState(before, answer.correct, roundKind ?? "extra"));
   }
-  showAnswerOutcome(
-    before.question,
+  lastFeedbackSnapshot = buildFeedbackSnapshot({
+    kind: "quiz",
+    state: before,
     selectedAnswer,
-    answer.correct,
-    answer.repriseReminder,
-  );
-  window.setTimeout(() => {
+    correct: answer.correct,
+    repriseReminder: answer.repriseReminder,
+  });
+  renderFeedbackSnapshot(lastFeedbackSnapshot);
+  scheduleAutoAdvance(() => {
     const state = quizSession.advance();
     if (state.phase === "complete") {
       completeQuizRound(state);
@@ -387,8 +499,14 @@ function handleAssessmentAnswer(event) {
   const selectedAnswer = event.currentTarget.dataset.answer;
   const correct = selectedAnswer === before.question.correctAnswer;
   const state = assessmentSession.submitAnswer(selectedAnswer);
-  showAnswerOutcome(before.question, selectedAnswer, correct);
-  window.setTimeout(() => {
+  lastFeedbackSnapshot = buildFeedbackSnapshot({
+    kind: "assessment",
+    state: before,
+    selectedAnswer,
+    correct,
+  });
+  renderFeedbackSnapshot(lastFeedbackSnapshot);
+  scheduleAutoAdvance(() => {
     if (state.phase === "complete") {
       latestAssessmentResult = assessmentSession.getResult();
       onboardingRecord = onboardingStorage.save(
@@ -402,6 +520,68 @@ function handleAssessmentAnswer(event) {
       renderAssessmentQuestion();
     }
   }, feedbackDelay({ showsTeaching: correct && before.question.hasTeachingVariant }));
+}
+
+function renderPauseCard() {
+  choicesElement.replaceChildren();
+  choicesElement.classList.add("choices-pending");
+  choicesElement.removeAttribute("aria-busy");
+  quizErrorElement.hidden = true;
+  const pauseCard = document.createElement("p");
+  pauseCard.className = "pause-card";
+  const title = document.createElement("strong");
+  title.textContent = "Paused";
+  const note = document.createElement("span");
+  note.textContent = "No answer will be recorded until you choose one.";
+  pauseCard.append(title, note);
+  choicesElement.append(pauseCard);
+}
+
+function toggleQuizPause() {
+  if (quizPaused) {
+    quizPaused = false;
+    if (autoAdvanceCallback && lastFeedbackSnapshot) {
+      renderFeedbackSnapshot(lastFeedbackSnapshot);
+      scheduleAutoAdvance(
+        autoAdvanceCallback,
+        feedbackDelay({
+          hasRepriseReminder: Boolean(lastFeedbackSnapshot.repriseReminder),
+          showsTeaching: lastFeedbackSnapshot.showsTeaching,
+        }),
+      );
+    } else {
+      currentQuizRenderer?.();
+    }
+    return;
+  }
+
+  quizPaused = true;
+  clearChoiceRevealTimer();
+  pauseAutoAdvanceTimer();
+  quizTitleElement.textContent = "Paused";
+  promptElement.textContent = "Paused";
+  promptElement.removeAttribute("lang");
+  renderPauseCard();
+  updateQuizControls("question");
+  pauseQuizButton.focus();
+}
+
+function showPreviousFeedback() {
+  if (!lastFeedbackSnapshot) return;
+  quizPaused = false;
+  clearChoiceRevealTimer();
+  pauseAutoAdvanceTimer();
+  renderFeedbackSnapshot(lastFeedbackSnapshot, { previous: true });
+  returnCurrentButton.focus();
+}
+
+function returnToCurrentQuestion() {
+  quizPaused = false;
+  if (autoAdvanceCallback) {
+    runPendingAutoAdvance();
+  } else {
+    currentQuizRenderer?.();
+  }
 }
 
 function showOnboarding() {
@@ -508,6 +688,7 @@ function startOrResumeSession() {
 function startRound(entries, kind) {
   hideMainPanels();
   panels.quiz.hidden = false;
+  lastFeedbackSnapshot = null;
   roundKind = kind;
   roundEntries = entries;
   roundFirstAttempts = [];
@@ -1026,8 +1207,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.16.0"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.16.0"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.17.0"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.17.0"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -1044,6 +1225,7 @@ async function loadVocabulary() {
 async function startQuiz() {
   hideMainPanels();
   panels.quiz.hidden = false;
+  hideQuizControls();
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
   quizErrorElement.hidden = true;
@@ -1064,6 +1246,7 @@ async function startQuiz() {
 
 function showQuizLoadError(error, message) {
   console.error(error);
+  hideQuizControls();
   promptElement.textContent = "¡Uy!";
   quizErrorElement.textContent = `${message} Please refresh and try again.`;
   quizErrorElement.hidden = false;
@@ -1072,6 +1255,8 @@ function showQuizLoadError(error, message) {
 async function startAssessment() {
   hideMainPanels();
   panels.quiz.hidden = false;
+  lastFeedbackSnapshot = null;
+  hideQuizControls();
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
   quizErrorElement.hidden = true;
@@ -1090,6 +1275,7 @@ async function recognizeProfile(profile) {
   activityStorage.ensureMember(profile.id);
   hideMainPanels();
   panels.quiz.hidden = false;
+  hideQuizControls();
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
   try {
@@ -1113,6 +1299,9 @@ startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 newSessionButton.addEventListener("click", startAnotherSessionToday);
+pauseQuizButton.addEventListener("click", toggleQuizPause);
+showPreviousButton.addEventListener("click", showPreviousFeedback);
+returnCurrentButton.addEventListener("click", returnToCurrentQuestion);
 shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 reviewAssessmentButton.addEventListener("click", () => {

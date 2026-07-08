@@ -198,6 +198,46 @@ const phraseSemanticTags = new Map(
   phraseSemanticGroups.flatMap(([tag, forms]) => forms.map((form) => [normalized(form), tag])),
 );
 
+const categorySemanticTags = new Map([
+  ["el cuerpo", "body:part"],
+  ["la salud", "body:health"],
+  ["verbos", "action:process"],
+  ["adverbios", "language:adverb"],
+  ["la tecnología", "technology:device"],
+  ["la computadora", "technology:computing"],
+  ["el carro", "travel:car"],
+  ["verbos y adjetivos", "technology:device"],
+  ["otras palabras y expresiones", "language:discourse"],
+  ["la vivienda", "home:housing"],
+  ["los cuartos y otros lugares", "home:room"],
+  ["los muebles y otras cosas", "home:furniture"],
+  ["los electrodomésticos", "home:appliance"],
+  ["la mesa", "food:dining"],
+  ["los quehaceres domésticos", "home:chores"],
+  ["verbos y expresiones verbales", "communication:influence"],
+  ["la naturaleza", "nature:landscape"],
+  ["los animales", "nature:animal"],
+  ["el medio ambiente", "nature:environment"],
+  ["las emociones", "emotion:feeling"],
+  ["las dudas y certezas", "action:cognition"],
+  ["conjunciones", "language:conjunction"],
+  ["el bienestar", "body:wellness"],
+  ["en el gimnasio", "leisure:fitness"],
+  ["la nutrición", "food:nutrition"],
+  ["los medios de comunicación / las noticias", "communication:media"],
+  ["la política", "society:politics"],
+  ["las profesiones", "people:profession"],
+  ["la entrevista", "work:job-search"],
+  ["el mundo del trabajo", "work:workplace"],
+  ["las bellas artes", "leisure:arts"],
+  ["los artistas", "people:artist"],
+  ["el cine y la televisión", "communication:entertainment"],
+  ["la artesanía", "leisure:crafts"],
+  ["en la ciudad", "place:city"],
+  ["en el campo", "place:rural"],
+  ["cómo llegar", "travel:directions"],
+].map(([category, tag]) => [normalized(category), tag]));
+
 const lexicalFamilyGroups = {
   arrival: ["llegar", "llegada"],
   breakfast: ["desayunar", "desayuno"],
@@ -278,6 +318,18 @@ for (const entry of vocabulary) {
   }
   for (const curatedTag of curatedSemanticTags.get(normalized(entry.spanish)) ?? []) {
     addTag(tags, curatedTag);
+  }
+  const categoryTag = categorySemanticTags.get(normalized(entry.category));
+  if (categoryTag) {
+    if (normalized(entry.category) === "verbos" && entry.chapter === 10) {
+      addTag(tags, "body:health");
+    } else if (normalized(entry.category) === "verbos" && entry.chapter === 13) {
+      addTag(tags, "nature:environment");
+    } else if (normalized(entry.category) === "verbos") {
+      addTag(tags, "action:process");
+    } else {
+      addTag(tags, categoryTag);
+    }
   }
   const phraseSemanticTag = phraseSemanticTags.get(normalized(entry.spanish));
   if (phraseSemanticTag) {
