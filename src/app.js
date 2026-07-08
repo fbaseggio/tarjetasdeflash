@@ -63,10 +63,7 @@ const presentationSpanishElement = document.querySelector("#presentation-spanish
 const presentationEnglishElement = document.querySelector("#presentation-english");
 const promptElement = document.querySelector("#prompt");
 const choicesElement = document.querySelector("#choices");
-const quizControlsElement = document.querySelector("#quiz-controls");
-const pauseQuizButton = document.querySelector("#pause-quiz-button");
-const showPreviousButton = document.querySelector("#show-previous-button");
-const returnCurrentButton = document.querySelector("#return-current-button");
+const lastResultElement = document.querySelector("#last-result");
 const quizTitleElement = document.querySelector("#quiz-title");
 const directionLabelElement = document.querySelector("#direction-label");
 const quizErrorElement = document.querySelector("#quiz-error");
@@ -136,10 +133,7 @@ let showingAllWords = false;
 let shareResultsPayload = null;
 let choiceRevealTimer = null;
 let autoAdvanceTimer = null;
-let autoAdvanceCallback = null;
 let lastFeedbackSnapshot = null;
-let quizPaused = false;
-let currentQuizRenderer = null;
 
 const tierLabels = Object.freeze({
   foundation: "Foundation",
@@ -163,8 +157,7 @@ function displayDate(dateKey) {
 function hideMainPanels() {
   clearChoiceRevealTimer();
   clearAutoAdvanceTimer();
-  quizPaused = false;
-  hideQuizControls();
+  hideLastResult();
   Object.values(panels).forEach((panel) => { panel.hidden = true; });
 }
 
@@ -179,54 +172,81 @@ function clearChoiceRevealTimer() {
   }
 }
 
-function clearAutoAdvanceTimer({ clearCallback = true } = {}) {
+function clearAutoAdvanceTimer() {
   if (autoAdvanceTimer) {
     window.clearTimeout(autoAdvanceTimer);
     autoAdvanceTimer = null;
   }
-  if (clearCallback) {
-    autoAdvanceCallback = null;
-  }
-}
-
-function pauseAutoAdvanceTimer() {
-  clearAutoAdvanceTimer({ clearCallback: false });
 }
 
 function scheduleAutoAdvance(callback, delay) {
   clearAutoAdvanceTimer();
-  autoAdvanceCallback = callback;
   autoAdvanceTimer = window.setTimeout(() => {
-    const pendingCallback = autoAdvanceCallback;
     clearAutoAdvanceTimer();
-    pendingCallback?.();
+    callback();
   }, delay);
-}
-
-function runPendingAutoAdvance() {
-  const pendingCallback = autoAdvanceCallback;
-  clearAutoAdvanceTimer();
-  pendingCallback?.();
 }
 
 function choiceRevealDelay() {
   return prefersReducedMotion() ? 250 : 1000;
 }
 
-function hideQuizControls() {
-  quizControlsElement.hidden = true;
+function hideLastResult() {
+  lastResultElement.hidden = true;
+  lastResultElement.replaceChildren();
+  lastResultElement.className = "last-result";
 }
 
-function updateQuizControls(mode = "question") {
-  quizControlsElement.hidden = false;
-  pauseQuizButton.hidden = mode === "previous";
-  showPreviousButton.hidden = mode === "previous";
-  returnCurrentButton.hidden = mode !== "previous";
-  pauseQuizButton.textContent = quizPaused ? "Resume" : "Pause";
-  showPreviousButton.disabled = !lastFeedbackSnapshot;
-  returnCurrentButton.firstChild.textContent = autoAdvanceCallback
-    ? "Continue "
-    : "Return to current question ";
+function renderLastResult() {
+  const snapshot = lastFeedbackSnapshot;
+  if (!snapshot) {
+    hideLastResult();
+    return;
+  }
+
+  lastResultElement.replaceChildren();
+  lastResultElement.className = `last-result ${snapshot.correct ? "correct" : "incorrect"}`;
+  const label = document.createElement("strong");
+  label.textContent = snapshot.correct ? "Last: ✓ " : "Last: ✕ ";
+  lastResultElement.append(label);
+
+  if (snapshot.correct) {
+    const prompt = document.createElement("span");
+    prompt.lang = snapshot.question.promptLanguage;
+    prompt.textContent = snapshot.question.prompt;
+    const arrow = document.createTextNode(" → ");
+    const answer = document.createElement("span");
+    answer.lang = snapshot.question.answerLanguage;
+    answer.textContent = snapshot.question.correctAnswer;
+    lastResultElement.append(prompt, arrow, answer);
+
+    if (
+      snapshot.question.hasTeachingVariant
+      && snapshot.question.teachingSpanish
+      && snapshot.question.teachingEnglish
+    ) {
+      const teaching = document.createElement("span");
+      teaching.className = "last-result-teaching";
+      teaching.textContent = ` · learning: ${snapshot.question.teachingSpanish} ↔ ${snapshot.question.teachingEnglish}`;
+      lastResultElement.append(teaching);
+    }
+  } else {
+    const selected = document.createElement("span");
+    selected.lang = snapshot.question.answerLanguage;
+    selected.textContent = snapshot.selectedAnswer;
+    const prompt = document.createElement("span");
+    prompt.lang = snapshot.question.promptLanguage;
+    prompt.textContent = snapshot.question.prompt;
+    lastResultElement.append(
+      document.createTextNode("You chose “"),
+      selected,
+      document.createTextNode("” for “"),
+      prompt,
+      document.createTextNode("”"),
+    );
+  }
+
+  lastResultElement.hidden = false;
 }
 
 function renderProgress(state) {
@@ -305,13 +325,12 @@ function buildFeedbackSnapshot({
   });
 }
 
-function renderFeedbackSnapshot(snapshot, { previous = false } = {}) {
+function renderFeedbackSnapshot(snapshot) {
   clearChoiceRevealTimer();
+  hideLastResult();
   progressElement.textContent = snapshot.progress;
-  directionLabelElement.textContent = previous
-    ? `Previous · ${snapshot.directionLabel}`
-    : snapshot.directionLabel;
-  quizTitleElement.textContent = previous ? "Previous question" : snapshot.quizTitle;
+  directionLabelElement.textContent = snapshot.directionLabel;
+  quizTitleElement.textContent = snapshot.quizTitle;
   promptElement.textContent = snapshot.question.prompt;
   promptElement.lang = snapshot.question.promptLanguage;
   renderChoices(
@@ -325,7 +344,6 @@ function renderFeedbackSnapshot(snapshot, { previous = false } = {}) {
     snapshot.correct,
     snapshot.repriseReminder,
   );
-  updateQuizControls(previous ? "previous" : "question");
 }
 
 function showAnswerOutcome(question, selectedAnswer, correct, repriseReminder = null) {
@@ -378,9 +396,7 @@ function feedbackDelay({ hasRepriseReminder = false, showsTeaching = false } = {
 }
 
 function renderQuestion() {
-  currentQuizRenderer = renderQuestion;
   clearAutoAdvanceTimer();
-  quizPaused = false;
   const state = quizSession.getState();
   const currentQuestion = state.question;
   renderProgress(state);
@@ -395,14 +411,12 @@ function renderQuestion() {
     : "Choose the Spanish translation.";
   promptElement.textContent = currentQuestion.prompt;
   promptElement.lang = currentQuestion.promptLanguage;
+  renderLastResult();
   scheduleChoiceReveal(currentQuestion, new Set(state.knownWrongAnswers), handleAnswer);
-  updateQuizControls("question");
 }
 
 function renderAssessmentQuestion() {
-  currentQuizRenderer = renderAssessmentQuestion;
   clearAutoAdvanceTimer();
-  quizPaused = false;
   const state = assessmentSession.getState();
   const currentQuestion = state.question;
   const isSpanishPrompt = state.direction === "spanish-to-english";
@@ -413,8 +427,8 @@ function renderAssessmentQuestion() {
     : "Choose the Spanish translation.";
   promptElement.textContent = currentQuestion.prompt;
   promptElement.lang = currentQuestion.promptLanguage;
+  renderLastResult();
   scheduleChoiceReveal(currentQuestion, new Set(), handleAssessmentAnswer);
-  updateQuizControls("question");
 }
 
 function attemptFromState(state, correct, source) {
@@ -520,68 +534,6 @@ function handleAssessmentAnswer(event) {
       renderAssessmentQuestion();
     }
   }, feedbackDelay({ showsTeaching: correct && before.question.hasTeachingVariant }));
-}
-
-function renderPauseCard() {
-  choicesElement.replaceChildren();
-  choicesElement.classList.add("choices-pending");
-  choicesElement.removeAttribute("aria-busy");
-  quizErrorElement.hidden = true;
-  const pauseCard = document.createElement("p");
-  pauseCard.className = "pause-card";
-  const title = document.createElement("strong");
-  title.textContent = "Paused";
-  const note = document.createElement("span");
-  note.textContent = "No answer will be recorded until you choose one.";
-  pauseCard.append(title, note);
-  choicesElement.append(pauseCard);
-}
-
-function toggleQuizPause() {
-  if (quizPaused) {
-    quizPaused = false;
-    if (autoAdvanceCallback && lastFeedbackSnapshot) {
-      renderFeedbackSnapshot(lastFeedbackSnapshot);
-      scheduleAutoAdvance(
-        autoAdvanceCallback,
-        feedbackDelay({
-          hasRepriseReminder: Boolean(lastFeedbackSnapshot.repriseReminder),
-          showsTeaching: lastFeedbackSnapshot.showsTeaching,
-        }),
-      );
-    } else {
-      currentQuizRenderer?.();
-    }
-    return;
-  }
-
-  quizPaused = true;
-  clearChoiceRevealTimer();
-  pauseAutoAdvanceTimer();
-  quizTitleElement.textContent = "Paused";
-  promptElement.textContent = "Paused";
-  promptElement.removeAttribute("lang");
-  renderPauseCard();
-  updateQuizControls("question");
-  pauseQuizButton.focus();
-}
-
-function showPreviousFeedback() {
-  if (!lastFeedbackSnapshot) return;
-  quizPaused = false;
-  clearChoiceRevealTimer();
-  pauseAutoAdvanceTimer();
-  renderFeedbackSnapshot(lastFeedbackSnapshot, { previous: true });
-  returnCurrentButton.focus();
-}
-
-function returnToCurrentQuestion() {
-  quizPaused = false;
-  if (autoAdvanceCallback) {
-    runPendingAutoAdvance();
-  } else {
-    currentQuizRenderer?.();
-  }
 }
 
 function showOnboarding() {
@@ -1225,7 +1177,7 @@ async function loadVocabulary() {
 async function startQuiz() {
   hideMainPanels();
   panels.quiz.hidden = false;
-  hideQuizControls();
+  hideLastResult();
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
   quizErrorElement.hidden = true;
@@ -1246,7 +1198,7 @@ async function startQuiz() {
 
 function showQuizLoadError(error, message) {
   console.error(error);
-  hideQuizControls();
+  hideLastResult();
   promptElement.textContent = "¡Uy!";
   quizErrorElement.textContent = `${message} Please refresh and try again.`;
   quizErrorElement.hidden = false;
@@ -1256,7 +1208,7 @@ async function startAssessment() {
   hideMainPanels();
   panels.quiz.hidden = false;
   lastFeedbackSnapshot = null;
-  hideQuizControls();
+  hideLastResult();
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
   quizErrorElement.hidden = true;
@@ -1275,7 +1227,7 @@ async function recognizeProfile(profile) {
   activityStorage.ensureMember(profile.id);
   hideMainPanels();
   panels.quiz.hidden = false;
-  hideQuizControls();
+  hideLastResult();
   promptElement.textContent = "Loading…";
   choicesElement.replaceChildren();
   try {
@@ -1299,9 +1251,6 @@ startPracticeButton.addEventListener("click", prepareDailySession);
 startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 newSessionButton.addEventListener("click", startAnotherSessionToday);
-pauseQuizButton.addEventListener("click", toggleQuizPause);
-showPreviousButton.addEventListener("click", showPreviousFeedback);
-returnCurrentButton.addEventListener("click", returnToCurrentQuestion);
 shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 reviewAssessmentButton.addEventListener("click", () => {

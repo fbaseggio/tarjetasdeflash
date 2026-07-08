@@ -558,35 +558,37 @@ h1 {
   font-size: 0.9rem;
 }
 
-.quiz-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 18px;
-}
-
-.compact-control {
-  min-height: 42px;
-  padding: 10px 14px;
-  font-size: 0.9rem;
-}
-
-.pause-card {
-  margin: 0;
-  padding: 20px 16px;
+.last-result {
+  min-height: 34px;
+  margin: 14px 0 -14px;
+  padding: 8px 11px;
+  overflow: hidden;
   color: var(--muted);
-  background: var(--paper);
-  border: 1px dashed var(--border);
-  border-radius: 14px;
-  text-align: center;
+  background: rgb(255 253 247 / 72%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.86rem;
+  font-weight: 750;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.pause-card strong {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--ink);
-  font-size: 1.05rem;
+.last-result.correct {
+  color: var(--green);
+  background: var(--green-soft);
+  border-color: #b6decf;
+}
+
+.last-result.incorrect {
+  color: var(--red);
+  background: var(--red-soft);
+  border-color: #ecc0c0;
+}
+
+.last-result strong,
+.last-result-teaching {
+  color: inherit;
 }
 
 .next-button {

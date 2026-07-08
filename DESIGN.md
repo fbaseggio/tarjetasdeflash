@@ -20,7 +20,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Four randomized choices with stable answer positions for both direction variants.
 - Quality-gated distractors using structural class, part of speech, semantic affinity, Spanish spelling and approximate sound, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic audit and simulation expose every backoff.
 - Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair before automatic advancement; misses still advance quickly without exposing the answer.
-- Active quiz rounds include **Pause** and **Show previous** controls. Pause freezes pending reveal/advance timers; Show previous replays the last feedback snapshot without undoing or changing the recorded answer.
+- Active quiz rounds show a compact one-line last-result breadcrumb above the current prompt so learners can see what just happened without scrolling backward or pausing.
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
@@ -300,13 +300,7 @@ The current question number is visible during the initial pass, followed by the 
 
 Each question first shows only the prompt for a brief recall pause, then reveals the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. Reduced-motion settings shorten the pause.
 
-The interface offers a lightweight pause/review affordance during active quiz and assessment rounds:
-
-- **Pause** clears any pending choice-reveal or post-answer auto-advance timer and shows a paused state.
-- **Resume** redraws the current question or, if the learner paused during answer feedback, shows that feedback again before continuing.
-- **Show previous** becomes available after one answer has been submitted. It replays the immediately previous feedback snapshot, including the selected answer and any full teaching pair that was shown.
-- **Show previous** never undoes an answer, changes score, reopens choices, or edits immutable history.
-- If the learner opens the previous snapshot while post-answer feedback is still pending, the return action continues the pending auto-advance. Otherwise it redraws the current live question.
+After auto-advancing, the next active quiz or assessment screen keeps a compact one-line summary of the previous answer above the prompt. Correct summaries may show the compact prompt/answer pair and, when quiz text differs from teaching text, the full teaching pair. Wrong summaries show only what the learner chose for the prompt; they do not reveal the correct answer. The breadcrumb clears at the beginning of a new round and is separate from immutable attempt history.
 
 ### 7.2 Scoring
 
@@ -670,7 +664,7 @@ Implemented prototype acceptance criteria:
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
 - Each question gives a brief prompt-only recall pause before revealing choices, with a shorter reduced-motion delay.
-- Active quiz screens provide Pause and Show previous controls; Show previous is review-only and cannot change recorded answers.
+- Active quiz screens keep a compact one-line last-result breadcrumb; wrong-answer breadcrumbs do not reveal the correct answer.
 - A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed; correct answers reveal the full teaching pair only when it differs from the quiz form, while misses never reveal the answer.
 - No running score is displayed.
 - Review first reverses each missed question, then alternates direction after each miss.

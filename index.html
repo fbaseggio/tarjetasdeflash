@@ -172,6 +172,7 @@
           <span id="quiz-progress" class="quiz-progress"></span>
         </div>
         <h1 id="quiz-title">What does this word mean?</h1>
+        <p id="last-result" class="last-result" aria-live="polite" hidden></p>
 
         <div class="word-card">
           <span id="prompt" lang="es">Loading…</span>
@@ -179,18 +180,6 @@
 
         <div id="choices" class="choices" aria-label="Answer choices"></div>
         <p id="quiz-error" class="feedback error" aria-live="polite" hidden></p>
-        <div id="quiz-controls" class="quiz-controls" hidden>
-          <button id="pause-quiz-button" class="secondary-button compact-control" type="button">
-            Pause
-          </button>
-          <button id="show-previous-button" class="secondary-button compact-control" type="button" disabled>
-            Show previous
-          </button>
-          <button id="return-current-button" class="next-button compact-control" type="button" hidden>
-            Return to current question
-            <span aria-hidden="true">→</span>
-          </button>
-        </div>
       </section>
 
       <section id="placement-panel" class="placement-panel" aria-labelledby="placement-title" hidden>
