@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { buildMasteryStats, demonstratedWordCredit } from "../src/mastery-estimate.js";
+import {
+  buildMasteryStats,
+  demonstratedWordCredit,
+  estimatedLevelFromProjectedPercent,
+} from "../src/mastery-estimate.js";
 
 const vocabulary = [
   { id: "f1", tier: "foundation" },
@@ -45,6 +49,8 @@ assert.equal(stats.demonstrated, 2);
 assert.equal(stats.demonstratedToday, 1);
 assert.ok(stats.projectedPercent >= 0);
 assert.ok(stats.projectedPercent <= 100);
+assert.equal(stats.estimatedLevel, estimatedLevelFromProjectedPercent(stats.projectedPercent));
+assert.ok(stats.estimatedLevelLabel);
 assert.equal(stats.tiers.length, 4);
 assert.deepEqual(stats.tiers.map((tier) => tier.tier), [
   "foundation",
@@ -67,5 +73,13 @@ const strongFoundation = buildMasteryStats(
 );
 assert.ok(strongFoundation.tiers[0].projectedRate > 0.9);
 assert.ok(strongFoundation.projectedPercent > 60);
+
+assert.equal(estimatedLevelFromProjectedPercent(0), "foundation");
+assert.equal(estimatedLevelFromProjectedPercent(24), "foundation");
+assert.equal(estimatedLevelFromProjectedPercent(25), "everyday");
+assert.equal(estimatedLevelFromProjectedPercent(49), "everyday");
+assert.equal(estimatedLevelFromProjectedPercent(50), "expanding1");
+assert.equal(estimatedLevelFromProjectedPercent(69), "expanding1");
+assert.equal(estimatedLevelFromProjectedPercent(70), "expanding2");
 
 console.log("Estimated and demonstrated mastery checks passed.");

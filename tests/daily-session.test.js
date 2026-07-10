@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { createDailySessionPlan, getReviewRoundIds } from "../src/daily-session.js";
+import {
+  adaptiveNewWordCount,
+  createDailySessionPlan,
+  getReviewRoundIds,
+  lowerTierHealth,
+} from "../src/daily-session.js";
 
 const vocabulary = JSON.parse(
   await readFile(new URL("../assets/vocabulary-official-v1.json", import.meta.url), "utf8"),
@@ -34,13 +39,13 @@ assert.equal(plan.checkInIds.length, 10);
 assert.equal(plan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length, 1);
 assert.equal(plan.checkInIds.filter((id) => everyday.some((entry) => entry.id === id)).length, 1);
 assert.equal(plan.checkInIds.filter((id) => dueFrontier.some((entry) => entry.id === id)).length, 8);
-assert.equal(plan.newWordIds.length, 15);
-assert.equal(plan.reviewIds.length, 15);
+assert.equal(plan.newWordIds.length, 13);
+assert.equal(plan.reviewIds.length, 13);
 assert.ok(plan.newWordIds.every((id) => expanding.some((entry) => entry.id === id)));
-assert.equal(new Set([...plan.checkInIds, ...plan.newWordIds]).size, 25);
+assert.equal(new Set([...plan.checkInIds, ...plan.newWordIds]).size, 23);
 assert.equal(getReviewRoundIds(plan).length, 10);
 plan.reviewCursor = 10;
-assert.equal(getReviewRoundIds(plan).length, 5);
+assert.equal(getReviewRoundIds(plan).length, 3);
 
 const askedToday = Object.fromEntries(dueFrontier.map((entry) => [entry.id, {
   ...words[entry.id],
@@ -107,8 +112,48 @@ const exp2Plan = createDailySessionPlan(
   "2026-07-02",
   () => 0.41,
 );
+assert.equal(exp2Plan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length, 1);
 assert.equal(exp2Plan.checkInIds.filter((id) => everyday.some((entry) => entry.id === id)).length, 1);
 assert.equal(exp2Plan.checkInIds.filter((id) => expanding.some((entry) => entry.id === id)).length, 1);
 assert.ok(exp2Plan.newWordIds.every((id) => expanding2.some((entry) => entry.id === id)));
 
-console.log("Due-only check-in, tiered audits, same-day retirement, repair, and backlog checks passed.");
+const exp2OddDayPlan = createDailySessionPlan(
+  vocabulary,
+  { knownThrough: "expanding1", learningFrontier: "expanding2" },
+  { words: {} },
+  "2026-07-03",
+  () => 0.41,
+);
+assert.equal(exp2OddDayPlan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length, 0);
+
+const weakFoundationEntries = foundation.slice(0, 4);
+const weakFoundationWords = Object.fromEntries(weakFoundationEntries.map((entry, index) => [entry.id, {
+  tier: "foundation",
+  masteryTrack: "audit",
+  masteryStatus: "presumed-mastered",
+  lastFirstAttemptDate: "2026-07-01",
+  directions: {
+    "spanish-to-english": {
+      correct: index > 1,
+      testedAt: `2026-07-01T12:${String(index).padStart(2, "0")}:00.000Z`,
+    },
+  },
+  schedule: { intervalDays: 60, dueDate: "2026-07-02" },
+}]));
+const health = lowerTierHealth(vocabulary, weakFoundationWords, "foundation");
+assert.equal(health.earlyWarning, true);
+assert.equal(health.weak, true);
+const weakFoundationPlan = createDailySessionPlan(
+  vocabulary,
+  { knownThrough: "expanding1", learningFrontier: "expanding2" },
+  { words: weakFoundationWords },
+  "2026-07-03",
+  () => 0.41,
+);
+assert.ok(weakFoundationPlan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length >= 2);
+
+assert.equal(adaptiveNewWordCount(0), 15);
+assert.equal(adaptiveNewWordCount(8), 13);
+assert.equal(adaptiveNewWordCount(60), 0);
+
+console.log("Due-only check-in, adaptive audits, lower-tier health, same-day retirement, repair, and backlog checks passed.");

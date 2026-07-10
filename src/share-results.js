@@ -40,6 +40,7 @@ export function buildSessionSharePayload({
     demonstratedToday: safeCount(mastery?.demonstratedToday),
     total: safeCount(mastery?.total),
     projectedPercent: safeCount(mastery?.projectedPercent),
+    estimatedLevelLabel: String(mastery?.estimatedLevelLabel ?? "").trim(),
   };
   const card = Object.freeze({
     displayName: name,
@@ -55,11 +56,15 @@ export function buildSessionSharePayload({
   const projectedText = card.mastery.projectedPercent > 0
     ? `Projected ${card.mastery.projectedPercent}%`
     : "Projected still learning";
+  const levelText = card.mastery.estimatedLevelLabel
+    ? `Level ${card.mastery.estimatedLevelLabel}`
+    : null;
   const stats = [
     masteryText,
     projectedText,
+    levelText,
     countLabel(card.retries, "retry", "retries"),
-  ].join(" · ");
+  ].filter(Boolean).join(" · ");
   const text = `🇪🇸 ${name} practiced Spanish today.\n${stats}\nTry it: ${url}`;
   return Object.freeze({
     title: `${name}’s Spanish practice`,

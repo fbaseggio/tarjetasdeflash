@@ -1,4 +1,4 @@
-import { tierIndex } from "./tiers.js?v=0.18.0";
+import { tierIndex } from "./tiers.js?v=0.19.0";
 
 export const MASTERY_SCHEMA_VERSION = 1;
 export const REVIEW_INTERVALS = Object.freeze([1, 3, 7, 14, 30, 60]);

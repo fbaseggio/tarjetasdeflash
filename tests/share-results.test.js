@@ -18,12 +18,13 @@ const payload = buildSessionSharePayload({
     demonstratedToday: 6,
     total: 1523,
     projectedPercent: 85,
+    estimatedLevelLabel: "Expanding 2",
   },
 });
 assert.equal(payload.title, "Franco’s Spanish practice");
 assert.equal(
   payload.text,
-  "🇪🇸 Franco practiced Spanish today.\nMastery 30/1523 (+6) · Projected 85% · 4 retries\nTry it: https://fbaseggio.github.io/tarjetasdeflash/",
+  "🇪🇸 Franco practiced Spanish today.\nMastery 30/1523 (+6) · Projected 85% · Level Expanding 2 · 4 retries\nTry it: https://fbaseggio.github.io/tarjetasdeflash/",
 );
 assert.equal(payload.url, PUBLIC_APP_URL);
 assert.equal(payload.clipboardText, payload.text);

@@ -1,4 +1,4 @@
-import { TIER_ORDER } from "./tiers.js?v=0.18.0";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.19.0";
 
 const GAP_CREDIT = Object.freeze([
   [60, 1],
@@ -33,6 +33,14 @@ export function demonstratedWordCredit(word) {
     : 0;
   const match = GAP_CREDIT.find(([minimumDays]) => intervalDays >= minimumDays);
   return match?.[1] ?? 0.25;
+}
+
+export function estimatedLevelFromProjectedPercent(projectedPercent) {
+  const percent = Number.isFinite(projectedPercent) ? projectedPercent : 0;
+  if (percent < 25) return "foundation";
+  if (percent < 50) return "everyday";
+  if (percent < 70) return "expanding1";
+  return "expanding2";
 }
 
 function conservativeRate({ correct, tested, tier, priorMean }) {
@@ -87,11 +95,16 @@ export function buildMasteryStats(vocabulary, learning, dateKey = null) {
     });
   });
 
+  const projectedPercent = totalWords > 0 ? Math.round((projectedRaw / totalWords) * 100) : 0;
+  const estimatedLevel = estimatedLevelFromProjectedPercent(projectedPercent);
+
   return Object.freeze({
     demonstrated: Math.round(demonstratedRaw),
     demonstratedToday: Math.round(demonstratedTodayRaw),
     total: totalWords,
-    projectedPercent: totalWords > 0 ? Math.round((projectedRaw / totalWords) * 100) : 0,
+    projectedPercent,
+    estimatedLevel,
+    estimatedLevelLabel: TIER_LABELS[estimatedLevel],
     tiers: Object.freeze(tierSummaries),
   });
 }
