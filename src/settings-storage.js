@@ -5,7 +5,7 @@ const CHOICE_REVEAL_DELAYS = Object.freeze({
   normal: 1500,
 });
 
-export const DEFAULT_CHOICE_REVEAL_DELAY = "short";
+export const DEFAULT_CHOICE_REVEAL_DELAY = "normal";
 export const CHOICE_REVEAL_DELAY_OPTIONS = Object.freeze(Object.keys(CHOICE_REVEAL_DELAYS));
 
 function safeParse(rawValue) {

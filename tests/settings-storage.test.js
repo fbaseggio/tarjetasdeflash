@@ -17,7 +17,7 @@ function memoryStorage() {
 }
 
 const storage = createSettingsStorage(memoryStorage());
-assert.deepEqual(storage.getSettings(), { choiceRevealDelay: "short" });
+assert.deepEqual(storage.getSettings(), { choiceRevealDelay: "normal" });
 assert.equal(choiceRevealDelayMs("off"), 0);
 assert.equal(choiceRevealDelayMs("short"), 1000);
 assert.equal(choiceRevealDelayMs("normal"), 1500);
@@ -26,8 +26,8 @@ storage.setChoiceRevealDelay("normal");
 assert.deepEqual(storage.getSettings(), { choiceRevealDelay: "normal" });
 
 storage.setChoiceRevealDelay("wildly annoying");
-assert.deepEqual(storage.getSettings(), { choiceRevealDelay: "short" });
-assert.equal(choiceRevealDelayMs("wildly annoying"), 1000);
+assert.deepEqual(storage.getSettings(), { choiceRevealDelay: "normal" });
+assert.equal(choiceRevealDelayMs("wildly annoying"), 1500);
 
 const unavailable = createSettingsStorage({
   getItem() {
@@ -37,7 +37,7 @@ const unavailable = createSettingsStorage({
     throw new Error("blocked");
   },
 });
-assert.deepEqual(unavailable.getSettings(), { choiceRevealDelay: "short" });
-assert.deepEqual(unavailable.setChoiceRevealDelay("off"), { choiceRevealDelay: "short" });
+assert.deepEqual(unavailable.getSettings(), { choiceRevealDelay: "normal" });
+assert.deepEqual(unavailable.setChoiceRevealDelay("off"), { choiceRevealDelay: "normal" });
 
 console.log("Choice reveal delay settings checks passed.");

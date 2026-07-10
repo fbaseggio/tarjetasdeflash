@@ -21,7 +21,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Quality-gated distractors using structural class, part of speech, semantic affinity, Spanish spelling and approximate sound, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic audit and simulation expose every backoff.
 - Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair; misses still advance quickly without exposing the answer.
 - Active quiz rounds carry the same post-answer information into a compact last-result breadcrumb above the next prompt so learners can see what just happened without scrolling backward or pausing. When the quiz form was shortened, the full flashcard/teaching version is shown as a small secondary line on phones.
-- Browser-local **Answer delay** setting with Off, Short, and Normal choices. Short is the default/current one-second pause; Normal is 1.5 seconds.
+- Browser-local **Answer delay** setting with Off, Short, and Normal choices. Normal is the default 1.5-second pause; Short is one second.
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
@@ -299,7 +299,7 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
-Each question can first show only the prompt for a brief recall pause, then reveal the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. The browser-local **Answer delay** setting controls this pause: Off reveals choices immediately, Short uses the current one-second pause, and Normal uses 1.5 seconds.
+Each question can first show only the prompt for a brief recall pause, then reveal the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. The browser-local **Answer delay** setting controls this pause: Off reveals choices immediately, Short uses a one-second pause, and Normal uses the default 1.5 seconds.
 
 After auto-advancing, the next active quiz or assessment screen keeps a compact summary of the previous answer above the prompt. Correct summaries may show the compact prompt/answer pair, reprise reminders, and—when quiz text differs from teaching text—the full flashcard/teaching pair with a small card cue. On narrow screens, secondary details move to their own lines to keep the main result readable. Wrong summaries show only what the learner chose for the prompt; they do not reveal the correct answer. The breadcrumb clears at the beginning of a new round and is separate from immutable attempt history.
 
