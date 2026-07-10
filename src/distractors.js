@@ -1,4 +1,4 @@
-import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.19.0";
+import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.21.0";
 
 export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   baseWeight: 1,
@@ -31,6 +31,17 @@ const EDITORIAL_TRANSPARENT_COGNATES = new Set([
   "profesora",
   "programador",
 ]);
+
+export const COGNATE_TRANSPARENCY = Object.freeze({
+  STRONG: "strong",
+  MODERATE: "moderate",
+  NONE: "none",
+});
+
+export const COGNATE_TRANSPARENCY_THRESHOLDS = Object.freeze({
+  strong: 0.8,
+  moderate: 0.63,
+});
 
 const similarityCache = new Map();
 
@@ -165,8 +176,20 @@ function sameLexicalFamily(left, right) {
 }
 
 function lowercaseInitial(value) {
-  if (!value || /^I(?:\b|')/.test(value)) return value;
+  if (!value || /^I(?:\b|')/.test(value) || /^[A-Z]{2}(?:\b|$)/.test(value)) return value;
   return `${value[0].toLocaleLowerCase()}${value.slice(1)}`;
+}
+
+function firstTopLevelSemicolonSegment(value) {
+  let depth = 0;
+  let result = "";
+  for (const character of String(value ?? "")) {
+    if (character === "(") depth += 1;
+    if (character === ")" && depth > 0) depth -= 1;
+    if (character === ";" && depth === 0) break;
+    result += character;
+  }
+  return result;
 }
 
 function removeParentheticalText(value) {
@@ -182,6 +205,69 @@ function removeParentheticalText(value) {
     }
   }
   return result;
+}
+
+function shouldDropEnglishAnswerParenthetical(content) {
+  const normalized = normalizeText(content);
+  if (!normalized) return true;
+  if (/^(form|fam|sing|adj)$/.test(normalized)) return true;
+  if (/^(plural|all female group|in spain)$/.test(normalized)) return true;
+  if (/^used to\b/.test(normalized)) return true;
+  if (/^[eo]\s+(i|ie|ue)$/.test(normalized)) return true;
+  if (/\binf\b/.test(normalized) || /\badj\b/.test(normalized)) return true;
+  if (content.includes(";")) return true;
+
+  return new Set([
+    "garlic mayonnaise",
+    "squid",
+    "water",
+    "round trip",
+    "sun",
+    "open air",
+    "mineral",
+    "pork",
+    "fruit",
+    "toasted",
+    "fried",
+    "main",
+    "roast",
+    "iced",
+    "white red",
+    "wedding",
+    "chocolate",
+    "caramel",
+  ]).has(normalized);
+}
+
+function foldEnglishAnswerParentheticals(value) {
+  let result = "";
+  let index = 0;
+  while (index < value.length) {
+    const open = value.indexOf("(", index);
+    if (open < 0) {
+      result += value.slice(index);
+      break;
+    }
+
+    result += value.slice(index, open);
+    let depth = 1;
+    let close = open + 1;
+    while (close < value.length && depth > 0) {
+      if (value[close] === "(") depth += 1;
+      else if (value[close] === ")") depth -= 1;
+      close += 1;
+    }
+
+    const content = value.slice(open + 1, close - 1).trim();
+    if (!shouldDropEnglishAnswerParenthetical(content)) {
+      result += ` ${content} `;
+    }
+    index = close;
+  }
+  return result
+    .replace(/\s+([.,;:!?])/gu, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function normalizeSlashAlternative(value, originalToken) {
@@ -217,17 +303,25 @@ function firstSlashAlternative(value) {
     .trim();
 }
 
-function compactQuizText(entry, field) {
+function compactQuizText(entry, field, role = "answer") {
   const overrideField = field === "spanish"
     ? "quizSpanish"
     : field === "english" ? "quizEnglish" : null;
+  const roleOverrideField = field === "english"
+    ? role === "prompt" ? "quizEnglishPrompt" : "quizEnglishAnswer"
+    : null;
+  const roleOverride = roleOverrideField ? entry[roleOverrideField] : null;
+  if (roleOverride) return roleOverride;
   const override = overrideField ? entry[overrideField] : null;
   if (override) return override;
 
-  let value = removeParentheticalText(String(entry[field] ?? ""))
-    .split(";")[0]
-    .replace(/\s+/g, " ")
-    .trim();
+  const firstSense = firstTopLevelSemicolonSegment(String(entry[field] ?? ""));
+  let value = field === "english" && role === "prompt"
+    ? firstSense
+    : field === "english"
+      ? foldEnglishAnswerParentheticals(firstSense)
+      : removeParentheticalText(firstSense);
+  value = value.replace(/\s+/g, " ").trim();
 
   value = firstSlashAlternative(value);
 
@@ -272,14 +366,29 @@ export function cognateTransparencyScore(entry) {
   return score;
 }
 
+export function cognateTransparencyLevel(entry) {
+  if (entry?.partOfSpeech === "proper noun") return COGNATE_TRANSPARENCY.NONE;
+  if (hasDistractorTrait(entry, "false-cognate") || hasDistractorTrait(entry, "deceptive-cognate")) {
+    return COGNATE_TRANSPARENCY.NONE;
+  }
+  const score = cognateTransparencyScore(entry);
+  if (score >= COGNATE_TRANSPARENCY_THRESHOLDS.strong) {
+    return COGNATE_TRANSPARENCY.STRONG;
+  }
+  if (score >= COGNATE_TRANSPARENCY_THRESHOLDS.moderate) {
+    return COGNATE_TRANSPARENCY.MODERATE;
+  }
+  return COGNATE_TRANSPARENCY.NONE;
+}
+
 export function questionFieldText(
   entry,
   field,
-  { target = null, direction = null, isCandidate = false } = {},
+  { target = null, direction = null, isCandidate = false, role = "answer" } = {},
 ) {
-  if (field !== "spanish") return compactQuizText(entry, field);
-  if (hasDistractorTrait(entry, "verbo-falso")) return compactQuizText(entry, "lemma");
-  const quizText = compactQuizText(entry, field);
+  if (field !== "spanish") return compactQuizText(entry, field, role);
+  if (hasDistractorTrait(entry, "verbo-falso")) return compactQuizText(entry, "lemma", role);
+  const quizText = compactQuizText(entry, field, role);
   if (entry.partOfSpeech === "noun") {
     return quizText.replace(/^(el|la|los|las)(\/la)?\s+/i, "");
   }
@@ -329,8 +438,9 @@ export function scoreDistractorCandidate(
     target,
     direction,
     isCandidate: true,
+    role: "answer",
   });
-  const correctText = questionFieldText(target, resolvedAnswerField, { direction });
+  const correctText = questionFieldText(target, resolvedAnswerField, { direction, role: "answer" });
 
   const sameLemma = target.lemma && candidate.lemma
     && normalizeText(target.lemma) === normalizeText(candidate.lemma);
@@ -366,7 +476,8 @@ export function scoreDistractorCandidate(
       target,
       direction,
       isCandidate: true,
-    }) === questionFieldText(target, resolvedPromptField, { direction })
+      role: "prompt",
+    }) === questionFieldText(target, resolvedPromptField, { direction, role: "prompt" })
     || answerText === correctText
     || sameLemma
     || overlappingSenses
@@ -463,9 +574,9 @@ export function scoreDistractorCandidate(
     && candidate.partOfSpeech !== "proper noun"
     ? cognateTransparencyScore(candidate)
     : 0;
-  if (!falseCognateMatch && cognateTransparency >= 0.8) {
+  if (!falseCognateMatch && cognateTransparency >= COGNATE_TRANSPARENCY_THRESHOLDS.strong) {
     applyPenalty("strong-transparent-cognate", weights.strongTransparentCognatePenalty);
-  } else if (!falseCognateMatch && cognateTransparency >= 0.63) {
+  } else if (!falseCognateMatch && cognateTransparency >= COGNATE_TRANSPARENCY_THRESHOLDS.moderate) {
     applyPenalty("moderate-transparent-cognate", weights.moderateTransparentCognatePenalty);
   }
 
@@ -520,7 +631,7 @@ export function selectWeightedDistractors(
   const isSpanishPrompt = direction === "spanish-to-english";
   const promptField = isSpanishPrompt ? "spanish" : "english";
   const answerField = isSpanishPrompt ? "english" : "spanish";
-  const correctAnswer = questionFieldText(target, answerField, { direction });
+  const correctAnswer = questionFieldText(target, answerField, { direction, role: "answer" });
   const seenAnswers = new Set([correctAnswer]);
   const candidatesByAnswer = new Map();
 
@@ -529,6 +640,7 @@ export function selectWeightedDistractors(
       target,
       direction,
       isCandidate: true,
+      role: "answer",
     });
     if (seenAnswers.has(answerText)) continue;
 

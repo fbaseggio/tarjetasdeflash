@@ -1,7 +1,7 @@
 import {
   questionFieldText,
   selectWeightedDistractors,
-} from "./distractors.js?v=0.19.0";
+} from "./distractors.js?v=0.21.0";
 
 export const DIRECTIONS = Object.freeze({
   SPANISH_TO_ENGLISH: "spanish-to-english",
@@ -49,9 +49,10 @@ export function buildQuestionForAnswer(
 
   const promptField = isSpanishPrompt ? "spanish" : "english";
   const answerField = isSpanishPrompt ? "english" : "spanish";
-  const quizSpanish = questionFieldText(answer, "spanish", { direction });
-  const quizEnglish = questionFieldText(answer, "english", { direction });
-  const correctAnswer = questionFieldText(answer, answerField, { direction });
+  const quizSpanish = questionFieldText(answer, "spanish", { direction, role: "answer" });
+  const quizEnglishPrompt = questionFieldText(answer, "english", { direction, role: "prompt" });
+  const quizEnglishAnswer = questionFieldText(answer, "english", { direction, role: "answer" });
+  const correctAnswer = questionFieldText(answer, answerField, { direction, role: "answer" });
   const distractorDetails = selectWeightedDistractors(
     vocabulary,
     answer,
@@ -66,11 +67,13 @@ export function buildQuestionForAnswer(
     direction,
     promptLanguage: isSpanishPrompt ? "es" : "en",
     answerLanguage: isSpanishPrompt ? "en" : "es",
-    prompt: questionFieldText(answer, promptField, { direction }),
+    prompt: questionFieldText(answer, promptField, { direction, role: "prompt" }),
     correctAnswer,
     teachingSpanish: answer.spanish,
     teachingEnglish: answer.english,
-    hasTeachingVariant: quizSpanish !== answer.spanish || quizEnglish !== answer.english,
+    hasTeachingVariant: quizSpanish !== answer.spanish
+      || quizEnglishPrompt !== answer.english
+      || quizEnglishAnswer !== answer.english,
     distractors: distractorDetails,
     choices: Object.freeze(shuffle([correctAnswer, ...distractors], random)),
   });

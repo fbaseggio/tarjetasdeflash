@@ -1,10 +1,41 @@
 import assert from "node:assert/strict";
 import { APP_VERSION } from "../src/app-version.js";
 import {
+  buildCognateTransparencySummary,
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
 } from "../src/diagnostic-export.js";
+
+const transparency = buildCognateTransparencySummary([
+  {
+    id: "menu",
+    tier: "foundation",
+    spanish: "el menú",
+    lemma: "menú",
+    english: "menu",
+    partOfSpeech: "noun",
+  },
+  {
+    id: "universidad",
+    tier: "foundation",
+    spanish: "la universidad",
+    lemma: "universidad",
+    english: "university",
+    partOfSpeech: "noun",
+  },
+  {
+    id: "zapato",
+    tier: "everyday",
+    spanish: "zapato",
+    lemma: "zapato",
+    english: "shoe",
+    partOfSpeech: "noun",
+  },
+]);
+assert.equal(transparency.byTier.find((tier) => tier.tier === "foundation").strong, 1);
+assert.equal(transparency.byTier.find((tier) => tier.tier === "foundation").moderate, 1);
+assert.equal(transparency.byTier.find((tier) => tier.tier === "everyday").none, 1);
 
 const payload = buildDiagnosticExport({
   exportedAt: "2026-07-02T20:00:00.000Z",
@@ -22,6 +53,7 @@ const payload = buildDiagnosticExport({
   history: { practiceSessions: [], quizRounds: [], attempts: [] },
   storageStatus: { available: true, state: "ready", schemaVersion: 1 },
   environment: { timezone: "America/New_York", locale: "en-US" },
+  vocabularyTransparency: transparency,
 });
 
 assert.equal(payload.exportType, "tarjetas-diagnostic");
@@ -29,6 +61,7 @@ assert.equal(payload.application.version, APP_VERSION);
 assert.deepEqual(payload.profile, { id: "franco", displayName: "Franco" });
 assert.equal(payload.vocabulary.version, 2);
 assert.equal(payload.diagnostics.storage.schemaVersion, 1);
+assert.equal(payload.diagnostics.vocabularyTransparency.byTier[0].strong, 1);
 assert.equal(payload.mastery.schemaVersion, 1);
 assert.equal(payload.profile.privateValue, undefined);
 assert.match(

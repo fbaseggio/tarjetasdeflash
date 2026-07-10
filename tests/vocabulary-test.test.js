@@ -160,6 +160,34 @@ const precioQuestion = buildQuestionForAnswer(
 assert.equal(precioQuestion.prompt, "precio");
 assert.equal(precioQuestion.correctAnswer, "price");
 
+const salirCon = officialVocabulary.find((entry) => entry.spanish === "salir con");
+const salirSpanishToEnglish = buildQuestionForAnswer(
+  officialVocabulary,
+  salirCon,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+const salirEnglishToSpanish = buildQuestionForAnswer(
+  officialVocabulary,
+  salirCon,
+  DIRECTIONS.ENGLISH_TO_SPANISH,
+);
+assert.equal(salirSpanishToEnglish.correctAnswer, "to go out with");
+assert.equal(salirEnglishToSpanish.prompt, "to go out (with)");
+
+const desdeHace = officialVocabulary.find((entry) => entry.spanish === "desde hace");
+const desdeHaceSpanishToEnglish = buildQuestionForAnswer(
+  officialVocabulary,
+  desdeHace,
+  DIRECTIONS.SPANISH_TO_ENGLISH,
+);
+const desdeHaceEnglishToSpanish = buildQuestionForAnswer(
+  officialVocabulary,
+  desdeHace,
+  DIRECTIONS.ENGLISH_TO_SPANISH,
+);
+assert.equal(desdeHaceSpanishToEnglish.correctAnswer, "for a period of time");
+assert.equal(desdeHaceEnglishToSpanish.prompt, "for (a period of time)");
+
 const tocar = officialVocabulary.find((entry) => entry.spanish === "tocar un instrumento musical");
 const tocarQuestion = buildQuestionForAnswer(
   officialVocabulary,

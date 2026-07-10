@@ -1,4 +1,5 @@
-import { tierIndex } from "./tiers.js?v=0.19.0";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.21.0";
+import { tierIndex } from "./tiers.js?v=0.21.0";
 
 export const MASTERY_SCHEMA_VERSION = 1;
 export const REVIEW_INTERVALS = Object.freeze([1, 3, 7, 14, 30, 60]);
@@ -38,10 +39,27 @@ export function eligibleForOrdinaryQuestion(word, date) {
   return word.lastFirstAttemptDate !== date && word.schedule?.dueDate <= date;
 }
 
-function nextFrontierGap(priorDays) {
-  if (!Number.isInteger(priorDays) || priorDays <= 1) return 3;
+function frontierAdvanceSteps(attempt) {
+  const transparency = cognateTransparencyLevel(attempt);
+  if (transparency === COGNATE_TRANSPARENCY.STRONG) {
+    return attempt.direction === "english-to-spanish" ? 3 : 2;
+  }
+  if (
+    transparency === COGNATE_TRANSPARENCY.MODERATE
+    && attempt.direction === "english-to-spanish"
+  ) {
+    return 2;
+  }
+  return 1;
+}
+
+function nextFrontierGap(priorDays, steps = 1) {
+  const advanceSteps = Number.isInteger(steps) && steps > 0 ? steps : 1;
+  if (!Number.isInteger(priorDays) || priorDays <= 1) {
+    return REVIEW_INTERVALS[Math.min(advanceSteps, REVIEW_INTERVALS.length - 1)];
+  }
   const index = REVIEW_INTERVALS.indexOf(priorDays);
-  return REVIEW_INTERVALS[Math.min(Math.max(1, index + 1), REVIEW_INTERVALS.length - 1)];
+  return REVIEW_INTERVALS[Math.min(Math.max(1, index + advanceSteps), REVIEW_INTERVALS.length - 1)];
 }
 
 export function masteryAfterAttempt(word, attempt, effectiveDate, placement) {
@@ -82,7 +100,7 @@ export function masteryAfterAttempt(word, attempt, effectiveDate, placement) {
   } else if (sameDay) {
     intervalDays = Number.isInteger(priorGap) && priorGap > 0 ? priorGap : 3;
   } else {
-    intervalDays = nextFrontierGap(priorGap);
+    intervalDays = nextFrontierGap(priorGap, frontierAdvanceSteps(attempt));
   }
 
   return Object.freeze({

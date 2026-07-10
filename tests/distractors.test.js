@@ -290,6 +290,65 @@ assert.equal(
 );
 assert.equal(
   questionFieldText(
+    { english: "to go out (with); to date", partOfSpeech: "verb" },
+    "english",
+  ),
+  "to go out with",
+);
+assert.equal(
+  questionFieldText(
+    { english: "to go out (with); to date", partOfSpeech: "verb" },
+    "english",
+    { role: "prompt", direction: "english-to-spanish" },
+  ),
+  "to go out (with)",
+);
+assert.equal(
+  questionFieldText(
+    { english: "for (a period of time)", partOfSpeech: "adverb" },
+    "english",
+  ),
+  "for a period of time",
+);
+assert.equal(
+  questionFieldText(
+    { english: "for (a period of time)", partOfSpeech: "adverb" },
+    "english",
+    { role: "prompt", direction: "english-to-spanish" },
+  ),
+  "for (a period of time)",
+);
+assert.equal(
+  questionFieldText(
+    { english: "to listen (to) the radio/music", partOfSpeech: "verb" },
+    "english",
+  ),
+  "to listen to the radio",
+);
+assert.equal(
+  questionFieldText(
+    { english: "What’s your name? (form.)", partOfSpeech: "question" },
+    "english",
+    { role: "prompt", direction: "english-to-spanish" },
+  ),
+  "What’s your name? (form.)",
+);
+assert.equal(
+  questionFieldText(
+    { english: "What’s your name? (form.)", partOfSpeech: "question" },
+    "english",
+  ),
+  "What’s your name?",
+);
+assert.equal(
+  questionFieldText(
+    { english: "OK (in Spain)", partOfSpeech: "phrase" },
+    "english",
+  ),
+  "OK",
+);
+assert.equal(
+  questionFieldText(
     { spanish: "Adiós.", partOfSpeech: "phrase" },
     "spanish",
   ),

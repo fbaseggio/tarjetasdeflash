@@ -5,6 +5,7 @@ import {
   createDailySessionPlan,
   getReviewRoundIds,
   lowerTierHealth,
+  newWordSelectionWeight,
 } from "../src/daily-session.js";
 
 const vocabulary = JSON.parse(
@@ -155,5 +156,23 @@ assert.ok(weakFoundationPlan.checkInIds.filter((id) => foundation.some((entry) =
 assert.equal(adaptiveNewWordCount(0), 15);
 assert.equal(adaptiveNewWordCount(8), 13);
 assert.equal(adaptiveNewWordCount(60), 0);
+assert.equal(newWordSelectionWeight({
+  spanish: "zapato",
+  lemma: "zapato",
+  english: "shoe",
+  partOfSpeech: "noun",
+}), 1);
+assert.equal(newWordSelectionWeight({
+  spanish: "la universidad",
+  lemma: "universidad",
+  english: "university",
+  partOfSpeech: "noun",
+}), 0.6);
+assert.equal(newWordSelectionWeight({
+  spanish: "el menú",
+  lemma: "menú",
+  english: "menu",
+  partOfSpeech: "noun",
+}), 0.35);
 
 console.log("Due-only check-in, adaptive audits, lower-tier health, same-day retirement, repair, and backlog checks passed.");

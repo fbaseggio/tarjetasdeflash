@@ -1,5 +1,5 @@
-import { shuffle } from "./questions.js?v=0.19.0";
-import { lowerTiers } from "./tiers.js?v=0.19.0";
+import { shuffle } from "./questions.js?v=0.21.0";
+import { lowerTiers } from "./tiers.js?v=0.21.0";
 
 export function selectQuizVocabulary(
   vocabulary,

@@ -17,6 +17,12 @@ const everyday = {
 const frontier = {
   id: "recurso", spanish: "recurso", english: "resource", partOfSpeech: "noun", tier: "expanding1",
 };
+const strongCognate = {
+  id: "menu", spanish: "el menú", lemma: "menú", english: "menu", partOfSpeech: "noun", tier: "expanding1",
+};
+const moderateCognate = {
+  id: "universidad", spanish: "la universidad", lemma: "universidad", english: "university", partOfSpeech: "noun", tier: "expanding1",
+};
 
 assert.equal(auditGapDays("foundation"), 60);
 assert.equal(auditGapDays("everyday"), 30);
@@ -42,6 +48,42 @@ result = masteryAfterAttempt({
   schedule: { intervalDays: 3 },
 }, {
   ...frontier, vocabularyId: frontier.id, correct: true, source: "check-in",
+}, "2026-07-01", placement);
+assert.equal(result.intervalDays, 3);
+
+result = masteryAfterAttempt({}, {
+  ...strongCognate,
+  vocabularyId: strongCognate.id,
+  direction: "english-to-spanish",
+  correct: true,
+  source: "review",
+}, "2026-07-01", placement);
+assert.equal(result.intervalDays, 14);
+
+result = masteryAfterAttempt({}, {
+  ...strongCognate,
+  vocabularyId: strongCognate.id,
+  direction: "spanish-to-english",
+  correct: true,
+  source: "review",
+}, "2026-07-01", placement);
+assert.equal(result.intervalDays, 7);
+
+result = masteryAfterAttempt({}, {
+  ...moderateCognate,
+  vocabularyId: moderateCognate.id,
+  direction: "english-to-spanish",
+  correct: true,
+  source: "review",
+}, "2026-07-01", placement);
+assert.equal(result.intervalDays, 7);
+
+result = masteryAfterAttempt({}, {
+  ...moderateCognate,
+  vocabularyId: moderateCognate.id,
+  direction: "spanish-to-english",
+  correct: true,
+  source: "review",
 }, "2026-07-01", placement);
 assert.equal(result.intervalDays, 3);
 

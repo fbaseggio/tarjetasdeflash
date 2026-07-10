@@ -1,9 +1,15 @@
-import { shuffle } from "./questions.js?v=0.19.0";
-import { lowerTiers } from "./tiers.js?v=0.19.0";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.21.0";
+import { shuffle } from "./questions.js?v=0.21.0";
+import { lowerTiers } from "./tiers.js?v=0.21.0";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;
 const BACKLOG_WORDS_PER_NEW_WORD_REDUCTION = 4;
+const NEW_WORD_TRANSPARENCY_WEIGHTS = Object.freeze({
+  [COGNATE_TRANSPARENCY.NONE]: 1,
+  [COGNATE_TRANSPARENCY.MODERATE]: 0.6,
+  [COGNATE_TRANSPARENCY.STRONG]: 0.35,
+});
 
 function latestResult(word) {
   return Object.values(word?.directions ?? {})
@@ -106,6 +112,38 @@ function auditTierCandidates(vocabulary, words, tier, date, random) {
   return [...untested, ...due];
 }
 
+function weightedSampleWithoutReplacement(entries, count, weightForEntry, random) {
+  const candidates = entries.map((entry) => ({
+    entry,
+    weight: Math.max(0, Number(weightForEntry(entry)) || 0),
+  }));
+  const selected = [];
+
+  while (selected.length < count && candidates.length > 0) {
+    const totalWeight = candidates.reduce((sum, candidate) => sum + candidate.weight, 0);
+    let threshold = random() * (totalWeight > 0 ? totalWeight : candidates.length);
+    let selectedIndex = candidates.length - 1;
+
+    for (let index = 0; index < candidates.length; index += 1) {
+      threshold -= totalWeight > 0 ? candidates[index].weight : 1;
+      if (threshold < 0) {
+        selectedIndex = index;
+        break;
+      }
+    }
+
+    selected.push(candidates[selectedIndex].entry);
+    candidates.splice(selectedIndex, 1);
+  }
+
+  return selected;
+}
+
+export function newWordSelectionWeight(entry) {
+  return NEW_WORD_TRANSPARENCY_WEIGHTS[cognateTransparencyLevel(entry)]
+    ?? NEW_WORD_TRANSPARENCY_WEIGHTS[COGNATE_TRANSPARENCY.NONE];
+}
+
 function auditCandidates(vocabulary, words, placement, date, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
   const auditTiers = lowerTiers(frontier);
@@ -183,11 +221,17 @@ export function createDailySessionPlan(
   });
   const newWordCount = adaptiveNewWordCount(totalDueBacklog);
   const frontier = placement?.learningFrontier ?? "foundation";
-  const newWords = shuffle(vocabulary.filter((entry) => (
+  const newWordPool = vocabulary.filter((entry) => (
     entry.tier === frontier
     && !words[entry.id]
     && !checkInIds.has(entry.id)
-  )), random).slice(0, newWordCount);
+  ));
+  const newWords = weightedSampleWithoutReplacement(
+    newWordPool,
+    newWordCount,
+    newWordSelectionWeight,
+    random,
+  );
   const reviewIds = [...new Set([...due, ...newWords].map((entry) => entry.id))];
 
   return {
