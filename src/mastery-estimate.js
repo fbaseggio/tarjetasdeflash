@@ -1,4 +1,4 @@
-import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.23.0";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.0";
 
 const GAP_CREDIT = Object.freeze([
   [60, 1],
@@ -11,11 +11,13 @@ const GAP_CREDIT = Object.freeze([
 ]);
 
 const PROJECTED_PRIORS = Object.freeze({
-  foundation: { mean: 0.35, strength: 2, spillover: 0.45 },
-  everyday: { mean: 0.15, strength: 6, spillover: 0.35 },
-  expanding1: { mean: 0.05, strength: 10, spillover: 0.25 },
-  expanding2: { mean: 0.02, strength: 14, spillover: 0 },
+  foundation: { mean: 0.35, strength: 2 },
+  everyday: { mean: 0.15, strength: 6 },
+  expanding1: { mean: 0.05, strength: 10 },
+  expanding2: { mean: 0.02, strength: 14 },
 });
+
+const DOWNWARD_TRANSFER_BY_DISTANCE = Object.freeze([0, 0.98, 0.94, 0.9]);
 
 function latestResult(word) {
   return Object.values(word?.directions ?? {})
@@ -51,12 +53,40 @@ export function placementFrontierFromScore(score) {
   return "foundation";
 }
 
-function conservativeRate({ correct, tested, tier, priorMean }) {
+function conservativeRate({ correct, tested, tier }) {
   const prior = PROJECTED_PRIORS[tier] ?? { mean: 0.05, strength: 10 };
   const strength = prior.strength;
-  const posterior = (correct + priorMean * strength) / (tested + strength);
+  const posterior = (correct + prior.mean * strength) / (tested + strength);
   const standardError = Math.sqrt((posterior * (1 - posterior)) / Math.max(1, tested + strength));
   return Math.max(0, Math.min(1, posterior - 0.35 * standardError));
+}
+
+function conservativeEvidenceRate({ correct, tested }) {
+  if (!tested) return 0;
+  const strength = 2;
+  const posterior = (correct + 0.5 * strength) / (tested + strength);
+  const standardError = Math.sqrt((posterior * (1 - posterior)) / (tested + strength));
+  return Math.max(0, Math.min(1, posterior - 0.35 * standardError));
+}
+
+function capFromDirectMisses({ correct, tested }) {
+  const misses = tested - correct;
+  if (misses <= 0) return 1;
+  const observedRate = correct / tested;
+  return Math.max(0, Math.min(0.98, observedRate + 0.2 / Math.sqrt(misses)));
+}
+
+function downwardProjectedRate(tierSummary, higherTierSummaries) {
+  const targetIndex = TIER_ORDER.indexOf(tierSummary.tier);
+  const directRate = tierSummary.directProjectedRate;
+  const downwardRate = higherTierSummaries.reduce((best, higherTierSummary) => {
+    const higherIndex = TIER_ORDER.indexOf(higherTierSummary.tier);
+    const distance = higherIndex - targetIndex;
+    const transfer = DOWNWARD_TRANSFER_BY_DISTANCE[distance] ?? 0;
+    return Math.max(best, higherTierSummary.evidenceRate * transfer);
+  }, 0);
+  const supportedRate = Math.max(directRate, downwardRate);
+  return Math.min(supportedRate, capFromDirectMisses(tierSummary));
 }
 
 export function buildMasteryStats(vocabulary, learning, dateKey = null) {
@@ -65,7 +95,6 @@ export function buildMasteryStats(vocabulary, learning, dateKey = null) {
   let demonstratedRaw = 0;
   let demonstratedTodayRaw = 0;
   let projectedRaw = 0;
-  let priorMean = PROJECTED_PRIORS.foundation.mean;
 
   const tierSummaries = TIER_ORDER.map((tier) => {
     const entries = vocabulary.filter((entry) => entry.tier === tier);
@@ -88,24 +117,34 @@ export function buildMasteryStats(vocabulary, learning, dateKey = null) {
       }
     });
 
-    priorMean = Math.max(priorMean, PROJECTED_PRIORS[tier].mean);
-    const projectedRate = conservativeRate({ correct, tested, tier, priorMean });
-    projectedRaw += entries.length * projectedRate;
-    priorMean = Math.max(PROJECTED_PRIORS[tier].mean, projectedRate * PROJECTED_PRIORS[tier].spillover);
-
     return Object.freeze({
       tier,
       total: entries.length,
       tested,
       correct,
       demonstrated: Math.round(demonstrated),
+      directProjectedRate: conservativeRate({ correct, tested, tier }),
+      evidenceRate: conservativeEvidenceRate({ correct, tested }),
+    });
+  });
+
+  const projectedTierSummaries = tierSummaries.map((tierSummary, index) => {
+    const higherTierSummaries = tierSummaries.slice(index + 1);
+    const projectedRate = downwardProjectedRate(tierSummary, higherTierSummaries);
+    projectedRaw += tierSummary.total * projectedRate;
+    return Object.freeze({
+      tier: tierSummary.tier,
+      total: tierSummary.total,
+      tested: tierSummary.tested,
+      correct: tierSummary.correct,
+      demonstrated: tierSummary.demonstrated,
       projectedRate,
     });
   });
 
   const projectedPercent = totalWords > 0 ? Math.round((projectedRaw / totalWords) * 100) : 0;
   const estimatedLevel = estimatedLevelFromProjectedPercent(projectedPercent);
-  const lowerTierStrength = tierSummaries
+  const lowerTierStrength = projectedTierSummaries
     .filter(({ tier }) => tier !== "expanding2")
     .reduce((sum, tier) => sum + tier.projectedRate, 0);
   const placementScore = Math.round(Math.min(4, 1 + lowerTierStrength) * 10) / 10;
@@ -121,6 +160,6 @@ export function buildMasteryStats(vocabulary, learning, dateKey = null) {
     placementScore,
     placementFrontier,
     placementFrontierLabel: TIER_LABELS[placementFrontier],
-    tiers: Object.freeze(tierSummaries),
+    tiers: Object.freeze(projectedTierSummaries),
   });
 }

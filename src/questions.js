@@ -1,7 +1,7 @@
 import {
   questionFieldText,
   selectWeightedDistractors,
-} from "./distractors.js?v=0.23.0";
+} from "./distractors.js?v=0.24.0";
 
 export const DIRECTIONS = Object.freeze({
   SPANISH_TO_ENGLISH: "spanish-to-english",

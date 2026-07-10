@@ -79,6 +79,45 @@ const strongFoundation = buildMasteryStats(
 assert.ok(strongFoundation.tiers[0].projectedRate > 0.9);
 assert.ok(strongFoundation.projectedPercent > 60);
 
+const highTierSuccess = buildMasteryStats(
+  [
+    ...Array.from({ length: 5 }, (_, index) => ({ id: `foundation-${index}`, tier: "foundation" })),
+    ...Array.from({ length: 5 }, (_, index) => ({ id: `everyday-${index}`, tier: "everyday" })),
+    ...Array.from({ length: 5 }, (_, index) => ({ id: `expanding1-${index}`, tier: "expanding1" })),
+    ...Array.from({ length: 12 }, (_, index) => ({ id: `expanding2-${index}`, tier: "expanding2" })),
+  ],
+  {
+    words: Object.fromEntries(Array.from({ length: 12 }, (_, index) => [`expanding2-${index}`, {
+      directions: { "spanish-to-english": { correct: true, testedAt: `2026-07-01T11:${String(index).padStart(2, "0")}:00Z` } },
+      schedule: { intervalDays: 30 },
+    }])),
+  },
+);
+assert.ok(highTierSuccess.tiers[0].projectedRate > 0.75);
+assert.ok(highTierSuccess.tiers[1].projectedRate > 0.8);
+assert.ok(highTierSuccess.tiers[2].projectedRate > 0.85);
+assert.ok(highTierSuccess.placementScore >= 3.4);
+
+const lowerTierMissOverridesHighTierSuccess = buildMasteryStats(
+  [
+    { id: "foundation-gap", tier: "foundation" },
+    ...Array.from({ length: 12 }, (_, index) => ({ id: `expanding2-override-${index}`, tier: "expanding2" })),
+  ],
+  {
+    words: {
+      "foundation-gap": {
+        directions: { "spanish-to-english": { correct: false, testedAt: "2026-07-01T10:00:00Z" } },
+        schedule: { intervalDays: 1 },
+      },
+      ...Object.fromEntries(Array.from({ length: 12 }, (_, index) => [`expanding2-override-${index}`, {
+        directions: { "spanish-to-english": { correct: true, testedAt: `2026-07-01T11:${String(index).padStart(2, "0")}:00Z` } },
+        schedule: { intervalDays: 30 },
+      }])),
+    },
+  },
+);
+assert.ok(lowerTierMissOverridesHighTierSuccess.tiers[0].projectedRate <= 0.2);
+
 assert.equal(estimatedLevelFromProjectedPercent(0), "foundation");
 assert.equal(estimatedLevelFromProjectedPercent(24), "foundation");
 assert.equal(estimatedLevelFromProjectedPercent(25), "everyday");
