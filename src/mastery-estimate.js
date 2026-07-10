@@ -1,4 +1,4 @@
-import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.22.0";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.23.0";
 
 const GAP_CREDIT = Object.freeze([
   [60, 1],
@@ -41,6 +41,14 @@ export function estimatedLevelFromProjectedPercent(projectedPercent) {
   if (percent < 50) return "everyday";
   if (percent < 70) return "expanding1";
   return "expanding2";
+}
+
+export function placementFrontierFromScore(score) {
+  const value = Number.isFinite(score) ? score : 1;
+  if (value >= 3.5) return "expanding2";
+  if (value >= 2.5) return "expanding1";
+  if (value >= 1.5) return "everyday";
+  return "foundation";
 }
 
 function conservativeRate({ correct, tested, tier, priorMean }) {
@@ -97,6 +105,11 @@ export function buildMasteryStats(vocabulary, learning, dateKey = null) {
 
   const projectedPercent = totalWords > 0 ? Math.round((projectedRaw / totalWords) * 100) : 0;
   const estimatedLevel = estimatedLevelFromProjectedPercent(projectedPercent);
+  const lowerTierStrength = tierSummaries
+    .filter(({ tier }) => tier !== "expanding2")
+    .reduce((sum, tier) => sum + tier.projectedRate, 0);
+  const placementScore = Math.round(Math.min(4, 1 + lowerTierStrength) * 10) / 10;
+  const placementFrontier = placementFrontierFromScore(placementScore);
 
   return Object.freeze({
     demonstrated: Math.round(demonstratedRaw),
@@ -105,6 +118,9 @@ export function buildMasteryStats(vocabulary, learning, dateKey = null) {
     projectedPercent,
     estimatedLevel,
     estimatedLevelLabel: TIER_LABELS[estimatedLevel],
+    placementScore,
+    placementFrontier,
+    placementFrontierLabel: TIER_LABELS[placementFrontier],
     tiers: Object.freeze(tierSummaries),
   });
 }

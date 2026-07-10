@@ -1,6 +1,6 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.22.0";
-import { shuffle } from "./questions.js?v=0.22.0";
-import { lowerTiers } from "./tiers.js?v=0.22.0";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.23.0";
+import { shuffle } from "./questions.js?v=0.23.0";
+import { lowerTiers } from "./tiers.js?v=0.23.0";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;

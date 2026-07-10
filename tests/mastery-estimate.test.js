@@ -3,6 +3,7 @@ import {
   buildMasteryStats,
   demonstratedWordCredit,
   estimatedLevelFromProjectedPercent,
+  placementFrontierFromScore,
 } from "../src/mastery-estimate.js";
 
 const vocabulary = [
@@ -51,6 +52,10 @@ assert.ok(stats.projectedPercent >= 0);
 assert.ok(stats.projectedPercent <= 100);
 assert.equal(stats.estimatedLevel, estimatedLevelFromProjectedPercent(stats.projectedPercent));
 assert.ok(stats.estimatedLevelLabel);
+assert.ok(stats.placementScore >= 1);
+assert.ok(stats.placementScore <= 4);
+assert.equal(stats.placementFrontier, placementFrontierFromScore(stats.placementScore));
+assert.ok(stats.placementFrontierLabel);
 assert.equal(stats.tiers.length, 4);
 assert.deepEqual(stats.tiers.map((tier) => tier.tier), [
   "foundation",
@@ -81,5 +86,9 @@ assert.equal(estimatedLevelFromProjectedPercent(49), "everyday");
 assert.equal(estimatedLevelFromProjectedPercent(50), "expanding1");
 assert.equal(estimatedLevelFromProjectedPercent(69), "expanding1");
 assert.equal(estimatedLevelFromProjectedPercent(70), "expanding2");
+assert.equal(placementFrontierFromScore(1.4), "foundation");
+assert.equal(placementFrontierFromScore(1.5), "everyday");
+assert.equal(placementFrontierFromScore(2.5), "expanding1");
+assert.equal(placementFrontierFromScore(3.5), "expanding2");
 
 console.log("Estimated and demonstrated mastery checks passed.");
