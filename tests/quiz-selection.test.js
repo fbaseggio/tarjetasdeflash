@@ -26,12 +26,22 @@ assert.ok(foundationQuiz.every((entry) => entry.tier === "foundation"));
 
 const expandingQuiz = selectQuizVocabulary(
   vocabulary,
-  { learningFrontier: "expanding" },
+  { learningFrontier: "expanding1" },
   10,
   () => 0.41,
 );
-assert.equal(expandingQuiz.filter((entry) => entry.tier === "expanding").length, 8);
+assert.equal(expandingQuiz.filter((entry) => entry.tier === "expanding1").length, 8);
 assert.equal(expandingQuiz.filter((entry) => entry.tier === "foundation").length, 1);
 assert.equal(expandingQuiz.filter((entry) => entry.tier === "everyday").length, 1);
+
+const expanding2Quiz = selectQuizVocabulary(
+  vocabulary,
+  { learningFrontier: "expanding2" },
+  10,
+  () => 0.41,
+);
+assert.equal(expanding2Quiz.filter((entry) => entry.tier === "expanding2").length, 8);
+assert.equal(expanding2Quiz.filter((entry) => entry.tier === "expanding1").length, 1);
+assert.equal(expanding2Quiz.filter((entry) => entry.tier === "everyday").length, 1);
 
 console.log("Frontier-weighted quiz selection checks passed.");

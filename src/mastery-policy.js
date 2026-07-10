@@ -1,7 +1,7 @@
+import { tierIndex } from "./tiers.js?v=0.18.0";
+
 export const MASTERY_SCHEMA_VERSION = 1;
 export const REVIEW_INTERVALS = Object.freeze([1, 3, 7, 14, 30, 60]);
-
-const TIER_ORDER = Object.freeze(["foundation", "everyday", "expanding"]);
 
 function normalizedConceptPart(value) {
   return String(value ?? "")
@@ -19,12 +19,13 @@ export function conceptKey(entry) {
 
 export function isBelowFrontier(tier, placement) {
   const frontier = placement?.learningFrontier ?? "foundation";
-  return TIER_ORDER.indexOf(tier) < TIER_ORDER.indexOf(frontier);
+  return tierIndex(tier) < tierIndex(frontier);
 }
 
 export function auditGapDays(tier) {
   if (tier === "foundation") return 60;
   if (tier === "everyday") return 30;
+  if (tier === "expanding1") return 30;
   return null;
 }
 

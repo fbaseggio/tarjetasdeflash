@@ -22,13 +22,14 @@ const saved = storage.save("franco", dataset, {
   knownThrough: "foundation",
   learningFrontier: "everyday",
   confidence: "low",
-  assessedCount: 18,
+  assessedCount: 22,
   presumedKnownTiers: ["foundation"],
   confirmationTier: "everyday",
   scores: {
     foundation: { correct: 4, total: 4 },
     everyday: { correct: 4, total: 10 },
-    expanding: { correct: 1, total: 4 },
+    expanding1: { correct: 1, total: 4 },
+    expanding2: { correct: 0, total: 4 },
   },
   attempts: [{
     vocabularyId: "agua",

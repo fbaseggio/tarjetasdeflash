@@ -1,4 +1,4 @@
-import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.17.0";
+import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.18.0";
 
 export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   baseWeight: 1,
@@ -184,6 +184,39 @@ function removeParentheticalText(value) {
   return result;
 }
 
+function normalizeSlashAlternative(value, originalToken) {
+  let normalized = value
+    .replace(/\((?:a|as|o|os|s)\)/giu, "")
+    .replace(/[.,;:!?¿¡]+$/u, "")
+    .trim();
+
+  if (originalToken.startsWith("¿") && !normalized.startsWith("¿")) {
+    normalized = `¿${normalized}`;
+  }
+  if (originalToken.endsWith("?") && !normalized.endsWith("?")) {
+    normalized = `${normalized}?`;
+  }
+  if (originalToken.startsWith("¡") && !normalized.startsWith("¡")) {
+    normalized = `¡${normalized}`;
+  }
+  if (originalToken.endsWith("!") && !normalized.endsWith("!")) {
+    normalized = `${normalized}!`;
+  }
+
+  return normalized;
+}
+
+function firstSlashAlternative(value) {
+  return value
+    .replace(/\b((?!(?:el|la|los|las)\b)[^\s/]+)\/(?:el|la|los|las)\s+[^\s/]+/giu, "$1")
+    .replace(/[^\s]+\/[^\s]+/gu, (token) => {
+      const [first] = token.split("/");
+      return normalizeSlashAlternative(first, token);
+    })
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function compactQuizText(entry, field) {
   const overrideField = field === "spanish"
     ? "quizSpanish"
@@ -195,6 +228,8 @@ function compactQuizText(entry, field) {
     .split(";")[0]
     .replace(/\s+/g, " ")
     .trim();
+
+  value = firstSlashAlternative(value);
 
   if (entry.partOfSpeech !== "question") {
     value = value.split(/\.\s+/u)[0];

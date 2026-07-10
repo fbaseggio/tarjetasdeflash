@@ -23284,7 +23284,7 @@
     "english": "to bore",
     "lemma": "aburrir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23319,7 +23319,7 @@
     "english": "to remember",
     "lemma": "acordarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23357,7 +23357,7 @@
     "english": "to go to bed",
     "lemma": "acostarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23398,7 +23398,7 @@
     "english": "to shave",
     "lemma": "afeitarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23430,7 +23430,7 @@
     "english": "alarm",
     "lemma": "alarma",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23459,7 +23459,7 @@
     "english": "something; anything",
     "lemma": "algo",
     "partOfSpeech": "pronoun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23489,7 +23489,7 @@
     "english": "someone; somebody; anyone",
     "lemma": "alguien",
     "partOfSpeech": "pronoun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23520,7 +23520,7 @@
     "english": "some; any",
     "lemma": "alguno/a(s), algún",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23553,7 +23553,7 @@
     "english": "before",
     "lemma": "antes",
     "partOfSpeech": "preposition",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23588,7 +23588,7 @@
     "english": "spider",
     "lemma": "araña",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23617,7 +23617,7 @@
     "english": "help",
     "lemma": "ayuda",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23647,7 +23647,7 @@
     "english": "to bathe; to take a bath",
     "lemma": "bañarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23680,7 +23680,7 @@
     "english": "bathroom",
     "lemma": "baño, el cuarto de baño",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23709,7 +23709,7 @@
     "english": "to brush one’s hair",
     "lemma": "cepillarse el pelo",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23742,7 +23742,7 @@
     "english": "to brush one's teeth",
     "lemma": "cepillarse los dientes",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23775,7 +23775,7 @@
     "english": "brush",
     "lemma": "cepillo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23804,7 +23804,7 @@
     "english": "shampoo",
     "lemma": "champú",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23833,7 +23833,7 @@
     "english": "shaving cream",
     "lemma": "crema de afeitar",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23862,7 +23862,7 @@
     "english": "when",
     "lemma": "cuando",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7,
@@ -23904,7 +23904,7 @@
     "english": "for (a period of time)",
     "lemma": "desde hace",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23933,7 +23933,7 @@
     "english": "mess",
     "lemma": "desorden",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23962,7 +23962,7 @@
     "english": "alarm clock",
     "lemma": "despertador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -23993,7 +23993,7 @@
     "english": "to wake up",
     "lemma": "despertarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24030,7 +24030,7 @@
     "english": "afterwards; then",
     "lemma": "después",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24060,7 +24060,7 @@
     "english": "after",
     "lemma": "después",
     "partOfSpeech": "preposition",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24095,7 +24095,7 @@
     "english": "to go to sleep; to fall asleep",
     "lemma": "dormirse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24135,7 +24135,7 @@
     "english": "shower",
     "lemma": "ducha",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24166,7 +24166,7 @@
     "english": "to shower; to take a shower",
     "lemma": "ducharse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24201,7 +24201,7 @@
     "english": "during",
     "lemma": "durante",
     "partOfSpeech": "preposition",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24230,7 +24230,7 @@
     "english": "Really?",
     "lemma": "en serio",
     "partOfSpeech": "question",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24259,7 +24259,7 @@
     "english": "to like very much; to love (inanimate objects)",
     "lemma": "encantar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24295,7 +24295,7 @@
     "english": "to get angry (with)",
     "lemma": "enojarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24331,7 +24331,7 @@
     "english": "then",
     "lemma": "entonces",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24360,7 +24360,7 @@
     "english": "mirror",
     "lemma": "espejo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24389,7 +24389,7 @@
     "english": "to lack; to need",
     "lemma": "faltar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24425,7 +24425,7 @@
     "english": "to fascinate; to like very much",
     "lemma": "fascinar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24461,7 +24461,7 @@
     "english": "funny",
     "lemma": "gracioso",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24493,7 +24493,7 @@
     "english": "to scream",
     "lemma": "gritar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24525,7 +24525,7 @@
     "english": "to be important to; to matter",
     "lemma": "importar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24561,7 +24561,7 @@
     "english": "toilet",
     "lemma": "inodoro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24590,7 +24590,7 @@
     "english": "to be interesting to; to interest",
     "lemma": "interesar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24626,7 +24626,7 @@
     "english": "to go away; to leave",
     "lemma": "irse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24659,7 +24659,7 @@
     "english": "soap",
     "lemma": "jabón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24688,7 +24688,7 @@
     "english": "never; not ever",
     "lemma": "jamás",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24718,7 +24718,7 @@
     "english": "sink",
     "lemma": "lavabo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24747,7 +24747,7 @@
     "english": "to wash one’s face",
     "lemma": "lavarse la cara",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24780,7 +24780,7 @@
     "english": "to wash one's hands",
     "lemma": "lavarse las manos",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24812,7 +24812,7 @@
     "english": "to get up",
     "lemma": "levantarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24844,7 +24844,7 @@
     "english": "to call",
     "lemma": "llamar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7,
@@ -24889,7 +24889,7 @@
     "english": "to be called; to be named",
     "lemma": "llamarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24924,7 +24924,7 @@
     "english": "then",
     "lemma": "luego",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24953,7 +24953,7 @@
     "english": "makeup",
     "lemma": "maquillaje",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -24982,7 +24982,7 @@
     "english": "to put on makeup",
     "lemma": "maquillarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25014,7 +25014,7 @@
     "english": "later (on)",
     "lemma": "más tarde",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25043,7 +25043,7 @@
     "english": "to bother; to annoy",
     "lemma": "molestar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25079,7 +25079,7 @@
     "english": "no one; nobody; not anyone",
     "lemma": "nadie",
     "partOfSpeech": "pronoun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25110,7 +25110,7 @@
     "english": "neither… nor",
     "lemma": "ni… ni",
     "partOfSpeech": "pronoun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25139,7 +25139,7 @@
     "english": "no; none; not any",
     "lemma": "ninguno/a, ningún",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25173,7 +25173,7 @@
     "english": "never; not ever",
     "lemma": "nunca",
     "partOfSpeech": "pronoun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25203,7 +25203,7 @@
     "english": "either… or",
     "lemma": "o… o",
     "partOfSpeech": "pronoun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25232,7 +25232,7 @@
     "english": "slippers",
     "lemma": "pantuflas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25261,7 +25261,7 @@
     "english": "toothpaste",
     "lemma": "pasta de dientes",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25291,7 +25291,7 @@
     "english": "to comb one's hair",
     "lemma": "peinarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25324,7 +25324,7 @@
     "english": "to put on; to become (+ adj.)",
     "lemma": "ponerse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25363,7 +25363,7 @@
     "english": "that’s why; therefore",
     "lemma": "por eso",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7,
@@ -25406,7 +25406,7 @@
     "english": "in the morning",
     "lemma": "por la mañana",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25437,7 +25437,7 @@
     "english": "at night",
     "lemma": "por la noche",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25466,7 +25466,7 @@
     "english": "in the afternoon; in the evening",
     "lemma": "por la tarde",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25496,7 +25496,7 @@
     "english": "finally",
     "lemma": "por último",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25525,7 +25525,7 @@
     "english": "to worry (about)",
     "lemma": "preocuparse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25561,7 +25561,7 @@
     "english": "to try on",
     "lemma": "probarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25598,7 +25598,7 @@
     "english": "to be left over; to fit (clothing); to be located",
     "lemma": "quedar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7,
@@ -25650,7 +25650,7 @@
     "english": "to stay; to remain",
     "lemma": "quedarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25683,7 +25683,7 @@
     "english": "to take off",
     "lemma": "quitarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25715,7 +25715,7 @@
     "english": "daily routine",
     "lemma": "rutina diaria",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25744,7 +25744,7 @@
     "english": "to dry oneself",
     "lemma": "secarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25776,7 +25776,7 @@
     "english": "to sit down",
     "lemma": "sentarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25813,7 +25813,7 @@
     "english": "to feel",
     "lemma": "sentirse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25850,7 +25850,7 @@
     "english": "always",
     "lemma": "siempre",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25879,7 +25879,7 @@
     "english": "neither; not either",
     "lemma": "tampoco",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25909,7 +25909,7 @@
     "english": "towel",
     "lemma": "toalla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25938,7 +25938,7 @@
     "english": "to get dressed",
     "lemma": "vestirse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 7,
     "chapters": [
       7
@@ -25975,7 +25975,7 @@
     "english": "oil",
     "lemma": "aceite",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26004,7 +26004,7 @@
     "english": "olives",
     "lemma": "aceitunas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26033,7 +26033,7 @@
     "english": "(mineral) water",
     "lemma": "agua (mineral)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26062,7 +26062,7 @@
     "english": "to choke",
     "lemma": "ahogarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26094,7 +26094,7 @@
     "english": "garlic",
     "lemma": "ajo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26123,7 +26123,7 @@
     "english": "aioli (garlic mayonnaise)",
     "lemma": "alioli",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26154,7 +26154,7 @@
     "english": "rice",
     "lemma": "arroz",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26183,7 +26183,7 @@
     "english": "peas",
     "lemma": "arvejas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26212,7 +26212,7 @@
     "english": "tuna",
     "lemma": "atún",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26241,7 +26241,7 @@
     "english": "sugar",
     "lemma": "azúcar",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26273,7 +26273,7 @@
     "english": "banana",
     "lemma": "banana",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26302,7 +26302,7 @@
     "english": "drink",
     "lemma": "bebida",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26331,7 +26331,7 @@
     "english": "steak",
     "lemma": "bistec",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26360,7 +26360,7 @@
     "english": "anchovy",
     "lemma": "boquerón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26389,7 +26389,7 @@
     "english": "Enjoy your meal!",
     "lemma": "buen provecho",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26418,7 +26418,7 @@
     "english": "calamari (squid)",
     "lemma": "calamar",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26450,7 +26450,7 @@
     "english": "waiter/waitress",
     "lemma": "camarero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26484,7 +26484,7 @@
     "english": "shrimp",
     "lemma": "camarones",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26513,7 +26513,7 @@
     "english": "meat",
     "lemma": "carne",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26542,7 +26542,7 @@
     "english": "beef",
     "lemma": "carne de res",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26571,7 +26571,7 @@
     "english": "onion",
     "lemma": "cebolla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26600,7 +26600,7 @@
     "english": "dinner",
     "lemma": "cena",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26630,7 +26630,7 @@
     "english": "cereal; grains",
     "lemma": "cereales",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26660,7 +26660,7 @@
     "english": "beer",
     "lemma": "cerveza",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26689,7 +26689,7 @@
     "english": "mushroom",
     "lemma": "champiñón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26718,7 +26718,7 @@
     "english": "(pork) chop",
     "lemma": "chuleta (de cerdo)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26747,7 +26747,7 @@
     "english": "food; meal",
     "lemma": "comida",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26777,7 +26777,7 @@
     "english": "like; as",
     "lemma": "como",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26807,7 +26807,7 @@
     "english": "croquette",
     "lemma": "croqueta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26836,7 +26836,7 @@
     "english": "delicious",
     "lemma": "delicioso",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26868,7 +26868,7 @@
     "english": "owner",
     "lemma": "dueño",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26900,7 +26900,7 @@
     "english": "salad",
     "lemma": "ensalada",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26929,7 +26929,7 @@
     "english": "hors d'oeuvres; appetizers",
     "lemma": "entremeses",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26959,7 +26959,7 @@
     "english": "to choose",
     "lemma": "escoger",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -26991,7 +26991,7 @@
     "english": "asparagus",
     "lemma": "espárragos",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27020,7 +27020,7 @@
     "english": "beans",
     "lemma": "frijoles",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27049,7 +27049,7 @@
     "english": "fruit",
     "lemma": "frutas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27078,7 +27078,7 @@
     "english": "cold tomato soup",
     "lemma": "gazpacho",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27108,7 +27108,7 @@
     "english": "hamburger",
     "lemma": "hamburguesa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27137,7 +27137,7 @@
     "english": "egg",
     "lemma": "huevo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27166,7 +27166,7 @@
     "english": "ham",
     "lemma": "jamón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27195,7 +27195,7 @@
     "english": "(fruit) juice",
     "lemma": "jugo (de fruta)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27225,7 +27225,7 @@
     "english": "lobster",
     "lemma": "langosta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27254,7 +27254,7 @@
     "english": "milk",
     "lemma": "leche",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27283,7 +27283,7 @@
     "english": "lettuce",
     "lemma": "lechuga",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27312,7 +27312,7 @@
     "english": "lemon",
     "lemma": "limón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27341,7 +27341,7 @@
     "english": "corn",
     "lemma": "maíz",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27370,7 +27370,7 @@
     "english": "Heimlich maneuver",
     "lemma": "maniobra de heimlich",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27399,7 +27399,7 @@
     "english": "butter",
     "lemma": "mantequilla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27428,7 +27428,7 @@
     "english": "apple",
     "lemma": "manzana",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27457,7 +27457,7 @@
     "english": "margarine",
     "lemma": "margarina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27486,7 +27486,7 @@
     "english": "shellfish",
     "lemma": "mariscos",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27515,7 +27515,7 @@
     "english": "more than",
     "lemma": "más de",
     "partOfSpeech": "preposition",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27547,7 +27547,7 @@
     "english": "more… than",
     "lemma": "más… que",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27576,7 +27576,7 @@
     "english": "mayonnaise",
     "lemma": "mayonesa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27605,7 +27605,7 @@
     "english": "the oldest",
     "lemma": "mayor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27637,7 +27637,7 @@
     "english": "better",
     "lemma": "mejor",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27668,7 +27668,7 @@
     "english": "peach",
     "lemma": "melocotón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27697,7 +27697,7 @@
     "english": "the youngest",
     "lemma": "menor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27729,7 +27729,7 @@
     "english": "fewer than",
     "lemma": "menos de",
     "partOfSpeech": "preposition",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27761,7 +27761,7 @@
     "english": "less… than",
     "lemma": "menos… que",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27790,7 +27790,7 @@
     "english": "menu",
     "lemma": "menú",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27819,7 +27819,7 @@
     "english": "to snack",
     "lemma": "merendar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27857,7 +27857,7 @@
     "english": "to die",
     "lemma": "morir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27897,7 +27897,7 @@
     "english": "orange",
     "lemma": "naranja",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27928,7 +27928,7 @@
     "english": "(toasted) bread",
     "lemma": "pan (tostado)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27957,7 +27957,7 @@
     "english": "(fried) potatoes; French fries",
     "lemma": "papas/patatas (fritas)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -27987,7 +27987,7 @@
     "english": "turkey",
     "lemma": "pavo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28016,7 +28016,7 @@
     "english": "the worst",
     "lemma": "peor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28048,7 +28048,7 @@
     "english": "worse",
     "lemma": "peor",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28077,7 +28077,7 @@
     "english": "pear",
     "lemma": "pera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28106,7 +28106,7 @@
     "english": "fish",
     "lemma": "pescado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28138,7 +28138,7 @@
     "english": "black pepper",
     "lemma": "pimienta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28169,7 +28169,7 @@
     "english": "(main) dish",
     "lemma": "plato (principal)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28198,7 +28198,7 @@
     "english": "(roast) chicken",
     "lemma": "pollo (asado)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28227,7 +28227,7 @@
     "english": "to taste; to try",
     "lemma": "probar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28266,7 +28266,7 @@
     "english": "cheese",
     "lemma": "queso",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28295,7 +28295,7 @@
     "english": "to recommend",
     "lemma": "recomendar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28333,7 +28333,7 @@
     "english": "soft drink; soda",
     "lemma": "refresco",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28363,7 +28363,7 @@
     "english": "to taste (like)",
     "lemma": "saber",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28401,7 +28401,7 @@
     "english": "tasty; delicious",
     "lemma": "sabroso",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28434,7 +28434,7 @@
     "english": "salt",
     "lemma": "sal",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28463,7 +28463,7 @@
     "english": "sausage",
     "lemma": "salchicha",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28492,7 +28492,7 @@
     "english": "salmon",
     "lemma": "salmón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28521,7 +28521,7 @@
     "english": "sandwich",
     "lemma": "sándwich",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28550,7 +28550,7 @@
     "english": "(non) smoking section",
     "lemma": "sección de (no) fumar",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28579,7 +28579,7 @@
     "english": "to serve",
     "lemma": "servir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28619,7 +28619,7 @@
     "english": "soup",
     "lemma": "sopa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28648,7 +28648,7 @@
     "english": "as… as",
     "lemma": "tan… como",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28677,7 +28677,7 @@
     "english": "as much… as",
     "lemma": "tanto… como",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28706,7 +28706,7 @@
     "english": "as many… as",
     "lemma": "tantos/as… como",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28735,7 +28735,7 @@
     "english": "(iced) tea",
     "lemma": "té (helado)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28765,7 +28765,7 @@
     "english": "to throw",
     "lemma": "tirar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28797,7 +28797,7 @@
     "english": "tomato",
     "lemma": "tomate",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28826,7 +28826,7 @@
     "english": "omelet (in Spain)",
     "lemma": "tortilla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28855,7 +28855,7 @@
     "english": "grape",
     "lemma": "uva",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28884,7 +28884,7 @@
     "english": "vegetables",
     "lemma": "verduras",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28913,7 +28913,7 @@
     "english": "vinegar",
     "lemma": "vinagre",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28942,7 +28942,7 @@
     "english": "(white/red) wine",
     "lemma": "vino (blanco/tinto)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -28973,7 +28973,7 @@
     "english": "display case/window",
     "lemma": "vitrina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -29002,7 +29002,7 @@
     "english": "yogurt",
     "lemma": "yogur",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -29031,7 +29031,7 @@
     "english": "carrot",
     "lemma": "zanahoria",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 8,
     "chapters": [
       8
@@ -29060,7 +29060,7 @@
     "english": "adolescence",
     "lemma": "adolescencia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29089,7 +29089,7 @@
     "english": "happiness",
     "lemma": "alegría",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29118,7 +29118,7 @@
     "english": "friendship",
     "lemma": "amistad",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29147,7 +29147,7 @@
     "english": "love",
     "lemma": "amor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29178,7 +29178,7 @@
     "english": "(wedding) anniversary",
     "lemma": "aniversario (de bodas)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29211,7 +29211,7 @@
     "english": "kiss",
     "lemma": "beso",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29240,7 +29240,7 @@
     "english": "wedding",
     "lemma": "boda",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29271,7 +29271,7 @@
     "english": "bottle (of wine)",
     "lemma": "botella (de vino)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29300,7 +29300,7 @@
     "english": "to toast (drink)",
     "lemma": "brindar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29332,7 +29332,7 @@
     "english": "to change",
     "lemma": "cambiar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29367,7 +29367,7 @@
     "english": "married",
     "lemma": "casado",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29400,7 +29400,7 @@
     "english": "to get married (to)",
     "lemma": "casarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29437,7 +29437,7 @@
     "english": "to celebrate",
     "lemma": "celebrar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29469,7 +29469,7 @@
     "english": "champagne",
     "lemma": "champán",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29500,7 +29500,7 @@
     "english": "to get engaged (to)",
     "lemma": "comprometerse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29538,7 +29538,7 @@
     "english": "with me",
     "lemma": "conmigo",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29567,7 +29567,7 @@
     "english": "with you",
     "lemma": "contigo",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29596,7 +29596,7 @@
     "english": "birthday",
     "lemma": "cumpleaños",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29627,7 +29627,7 @@
     "english": "holiday",
     "lemma": "día de fiesta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29660,7 +29660,7 @@
     "english": "to have fun",
     "lemma": "divertirse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29700,7 +29700,7 @@
     "english": "divorced",
     "lemma": "divorciado",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29733,7 +29733,7 @@
     "english": "to get divorced (from)",
     "lemma": "divorciarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29770,7 +29770,7 @@
     "english": "divorce",
     "lemma": "divorcio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29800,7 +29800,7 @@
     "english": "sweets; candy",
     "lemma": "dulces",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29830,7 +29830,7 @@
     "english": "age",
     "lemma": "edad",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29859,7 +29859,7 @@
     "english": "to fall in love (with)",
     "lemma": "enamorarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29897,7 +29897,7 @@
     "english": "to hand over; to deliver",
     "lemma": "entregar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29930,7 +29930,7 @@
     "english": "to send",
     "lemma": "enviar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29962,7 +29962,7 @@
     "english": "were",
     "lemma": "eras",
     "partOfSpeech": "conjugated verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -29991,7 +29991,7 @@
     "english": "marital status",
     "lemma": "estado civil",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30020,7 +30020,7 @@
     "english": "the stages of life",
     "lemma": "etapas de la vida",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30049,7 +30049,7 @@
     "english": "party",
     "lemma": "fiesta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30078,7 +30078,7 @@
     "english": "baked (caramel) custard",
     "lemma": "flan (de caramelo)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30107,7 +30107,7 @@
     "english": "flowers",
     "lemma": "flores",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30136,7 +30136,7 @@
     "english": "cookie",
     "lemma": "galleta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30165,7 +30165,7 @@
     "english": "balloon",
     "lemma": "globo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30194,7 +30194,7 @@
     "english": "to graduate (from/in)",
     "lemma": "graduarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30230,7 +30230,7 @@
     "english": "ice cream",
     "lemma": "helado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30259,7 +30259,7 @@
     "english": "guest",
     "lemma": "invitado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30294,7 +30294,7 @@
     "english": "to invite",
     "lemma": "invitar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30327,7 +30327,7 @@
     "english": "to retire (from work)",
     "lemma": "jubilarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30361,7 +30361,7 @@
     "english": "musical chairs",
     "lemma": "juego de las sillas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30390,7 +30390,7 @@
     "english": "together",
     "lemma": "juntos/as",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30419,7 +30419,7 @@
     "english": "youth",
     "lemma": "juventud",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30448,7 +30448,7 @@
     "english": "to get along well/badly (with)",
     "lemma": "llevarse bien/mal",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30484,7 +30484,7 @@
     "english": "maturity; middle age",
     "lemma": "madurez",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30516,7 +30516,7 @@
     "english": "marriage",
     "lemma": "matrimonio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30545,7 +30545,7 @@
     "english": "messenger",
     "lemma": "mensajero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30577,7 +30577,7 @@
     "english": "death",
     "lemma": "muerte",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30609,7 +30609,7 @@
     "english": "to be born",
     "lemma": "nacer",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30642,7 +30642,7 @@
     "english": "birth",
     "lemma": "nacimiento",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30672,7 +30672,7 @@
     "english": "Christmas",
     "lemma": "navidad",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30701,7 +30701,7 @@
     "english": "childhood",
     "lemma": "niñez",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30730,7 +30730,7 @@
     "english": "to hate",
     "lemma": "odiar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30762,7 +30762,7 @@
     "english": "(married) couple; partner",
     "lemma": "pareja",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30792,7 +30792,7 @@
     "english": "to have a good/bad time",
     "lemma": "pasarlo bien/mal",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30821,7 +30821,7 @@
     "english": "(chocolate) cake; pie",
     "lemma": "pastel (de chocolate)",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30851,7 +30851,7 @@
     "english": "order",
     "lemma": "pedido",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30881,7 +30881,7 @@
     "english": "a type of appetizer (in Spain)",
     "lemma": "pincho",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30910,7 +30910,7 @@
     "english": "dessert",
     "lemma": "postre",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30939,7 +30939,7 @@
     "english": "young woman celebrating her fifteenth birthday",
     "lemma": "quinceañera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -30974,7 +30974,7 @@
     "english": "newlywed",
     "lemma": "recién casado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31007,7 +31007,7 @@
     "english": "to give (a gift)",
     "lemma": "regalar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31040,7 +31040,7 @@
     "english": "to laugh",
     "lemma": "reírse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31077,7 +31077,7 @@
     "english": "to relax",
     "lemma": "relajarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31109,7 +31109,7 @@
     "english": "to break up (with)",
     "lemma": "romper",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31144,7 +31144,7 @@
     "english": "to go out (with); to date",
     "lemma": "salir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31183,7 +31183,7 @@
     "english": "separated",
     "lemma": "separado",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31215,7 +31215,7 @@
     "english": "to separate (from)",
     "lemma": "separarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31251,7 +31251,7 @@
     "english": "only",
     "lemma": "sólo",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31280,7 +31280,7 @@
     "english": "single",
     "lemma": "soltero",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31312,7 +31312,7 @@
     "english": "to smile",
     "lemma": "sonreír",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31351,7 +31351,7 @@
     "english": "to surprise",
     "lemma": "sorprender",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31384,7 +31384,7 @@
     "english": "surprise",
     "lemma": "sorpresa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31414,7 +31414,7 @@
     "english": "to have a date; to have an appointment",
     "lemma": "tener una cita",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31444,7 +31444,7 @@
     "english": "to run into",
     "lemma": "tropezarse con",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31476,7 +31476,7 @@
     "english": "old age",
     "lemma": "vejez",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31509,7 +31509,7 @@
     "english": "widower/widow",
     "lemma": "viudo",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding1",
     "chapter": 9,
     "chapters": [
       9
@@ -31541,7 +31541,7 @@
     "english": "mouth",
     "lemma": "boca",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31578,7 +31578,7 @@
     "english": "arm",
     "lemma": "brazo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31615,7 +31615,7 @@
     "english": "head",
     "lemma": "cabeza",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31652,7 +31652,7 @@
     "english": "heart",
     "lemma": "corazón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31689,7 +31689,7 @@
     "english": "neck",
     "lemma": "cuello",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31726,7 +31726,7 @@
     "english": "body",
     "lemma": "cuerpo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31763,7 +31763,7 @@
     "english": "finger",
     "lemma": "dedo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31800,7 +31800,7 @@
     "english": "toe",
     "lemma": "dedo del pie",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31839,7 +31839,7 @@
     "english": "stomach",
     "lemma": "estómago",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31876,7 +31876,7 @@
     "english": "throat",
     "lemma": "garganta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31913,7 +31913,7 @@
     "english": "bone",
     "lemma": "hueso",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31950,7 +31950,7 @@
     "english": "sense of hearing; inner ear",
     "lemma": "oído",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -31988,7 +31988,7 @@
     "english": "eye",
     "lemma": "ojo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32025,7 +32025,7 @@
     "english": "outer ear",
     "lemma": "oreja",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32062,7 +32062,7 @@
     "english": "foot",
     "lemma": "pie",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32101,7 +32101,7 @@
     "english": "leg",
     "lemma": "pierna",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32138,7 +32138,7 @@
     "english": "knee",
     "lemma": "rodilla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32175,7 +32175,7 @@
     "english": "ankle",
     "lemma": "tobillo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32212,7 +32212,7 @@
     "english": "accident",
     "lemma": "accidente",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32249,7 +32249,7 @@
     "english": "antibiotic",
     "lemma": "antibiótico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32286,7 +32286,7 @@
     "english": "aspirin",
     "lemma": "aspirina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32323,7 +32323,7 @@
     "english": "doctor’s office",
     "lemma": "consultorio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32364,7 +32364,7 @@
     "english": "doctor",
     "lemma": "doctor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32407,7 +32407,7 @@
     "english": "headache; pain",
     "lemma": "dolor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32445,7 +32445,7 @@
     "english": "nurse",
     "lemma": "enfermero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32486,7 +32486,7 @@
     "english": "physical exam",
     "lemma": "examen médico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32525,7 +32525,7 @@
     "english": "pharmacy",
     "lemma": "farmacia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32562,7 +32562,7 @@
     "english": "flu",
     "lemma": "gripe",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32599,7 +32599,7 @@
     "english": "hospital",
     "lemma": "hospital",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32636,7 +32636,7 @@
     "english": "infection",
     "lemma": "infección",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32673,7 +32673,7 @@
     "english": "medication",
     "lemma": "medicamento",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32710,7 +32710,7 @@
     "english": "pill; tablet",
     "lemma": "pastilla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32748,7 +32748,7 @@
     "english": "X-ray",
     "lemma": "radiografía",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32785,7 +32785,7 @@
     "english": "prescription",
     "lemma": "receta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32822,7 +32822,7 @@
     "english": "cold; illness",
     "lemma": "resfriado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32860,7 +32860,7 @@
     "english": "emergency room",
     "lemma": "sala de emergencia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32899,7 +32899,7 @@
     "english": "health",
     "lemma": "salud",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32936,7 +32936,7 @@
     "english": "symptom",
     "lemma": "síntoma",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -32973,7 +32973,7 @@
     "english": "to fall down",
     "lemma": "caerse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33013,7 +33013,7 @@
     "english": "to damage; to break down",
     "lemma": "dañar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33054,7 +33054,7 @@
     "english": "to bump into; to run into",
     "lemma": "darse con",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33097,7 +33097,7 @@
     "english": "to hurt",
     "lemma": "doler",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33137,7 +33137,7 @@
     "english": "to get sick",
     "lemma": "enfermarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33177,7 +33177,7 @@
     "english": "to be sick",
     "lemma": "estar enfermo",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33219,7 +33219,7 @@
     "english": "to sneeze",
     "lemma": "estornudar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33259,7 +33259,7 @@
     "english": "to injure one’s foot",
     "lemma": "lastimarse",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33301,7 +33301,7 @@
     "english": "to forget",
     "lemma": "olvidar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33341,7 +33341,7 @@
     "english": "to give an injection",
     "lemma": "poner una inyección",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33378,7 +33378,7 @@
     "english": "to prohibit",
     "lemma": "prohibir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33418,7 +33418,7 @@
     "english": "to prescribe",
     "lemma": "recetar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33458,7 +33458,7 @@
     "english": "to break",
     "lemma": "romper",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33498,7 +33498,7 @@
     "english": "to break one’s leg",
     "lemma": "romperse",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33538,7 +33538,7 @@
     "english": "to have a tooth removed",
     "lemma": "sacar un diente",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33575,7 +33575,7 @@
     "english": "to be allergic (to)",
     "lemma": "ser alérgico",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33617,7 +33617,7 @@
     "english": "to suffer an illness",
     "lemma": "sufrir una enfermedad",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33654,7 +33654,7 @@
     "english": "to have pain",
     "lemma": "tener dolor",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33691,7 +33691,7 @@
     "english": "to have a fever",
     "lemma": "tener fiebre",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33728,7 +33728,7 @@
     "english": "to take someone’s temperature",
     "lemma": "tomar la temperatura",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33765,7 +33765,7 @@
     "english": "to sprain one’s ankle",
     "lemma": "torcerse",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33806,7 +33806,7 @@
     "english": "to cough",
     "lemma": "toser",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33843,7 +33843,7 @@
     "english": "often",
     "lemma": "a menudo",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33880,7 +33880,7 @@
     "english": "on time",
     "lemma": "a tiempo",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33917,7 +33917,7 @@
     "english": "sometimes",
     "lemma": "a veces",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33954,7 +33954,7 @@
     "english": "furthermore; besides",
     "lemma": "además",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -33992,7 +33992,7 @@
     "english": "hardly; scarcely",
     "lemma": "apenas",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34030,7 +34030,7 @@
     "english": "like this; so",
     "lemma": "así",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34068,7 +34068,7 @@
     "english": "enough; rather",
     "lemma": "bastante",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34106,7 +34106,7 @@
     "english": "almost",
     "lemma": "casi",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34143,7 +34143,7 @@
     "english": "frequently",
     "lemma": "con frecuencia",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34180,7 +34180,7 @@
     "english": "as a child",
     "lemma": "de niño",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34224,7 +34224,7 @@
     "english": "from time to time",
     "lemma": "de vez en cuando",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34261,7 +34261,7 @@
     "english": "slowly",
     "lemma": "despacio",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34298,7 +34298,7 @@
     "english": "less",
     "lemma": "menos",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34335,7 +34335,7 @@
     "english": "a lot; many times",
     "lemma": "muchas veces",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34373,7 +34373,7 @@
     "english": "little",
     "lemma": "poco",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34410,7 +34410,7 @@
     "english": "at least",
     "lemma": "por lo menos",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34447,7 +34447,7 @@
     "english": "soon",
     "lemma": "pronto",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34484,7 +34484,7 @@
     "english": "quickly",
     "lemma": "rápido",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34521,7 +34521,7 @@
     "english": "every day",
     "lemma": "todos los días",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34561,7 +34561,7 @@
     "english": "congested; stuffed-up",
     "lemma": "congestionado",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34604,7 +34604,7 @@
     "english": "pregnant",
     "lemma": "embarazada",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34641,7 +34641,7 @@
     "english": "grave; serious",
     "lemma": "grave",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34679,7 +34679,7 @@
     "english": "dizzy; nauseated",
     "lemma": "mareado",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34722,7 +34722,7 @@
     "english": "medical",
     "lemma": "médico",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34764,7 +34764,7 @@
     "english": "healthy",
     "lemma": "saludable",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34801,7 +34801,7 @@
     "english": "healthy",
     "lemma": "sano",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34843,7 +34843,7 @@
     "english": "application",
     "lemma": "aplicación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34880,7 +34880,7 @@
     "english": "digital/video camera",
     "lemma": "cámara digital",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34919,7 +34919,7 @@
     "english": "TV channel",
     "lemma": "canal",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -34967,7 +34967,7 @@
     "english": "charger",
     "lemma": "cargador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35004,7 +35004,7 @@
     "english": "cybercafé",
     "lemma": "cibercafé",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35041,7 +35041,7 @@
     "english": "remote control",
     "lemma": "control remoto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35078,7 +35078,7 @@
     "english": "voice mail",
     "lemma": "correo de voz",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35115,7 +35115,7 @@
     "english": "stereo",
     "lemma": "estéreo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35152,7 +35152,7 @@
     "english": "touch screen",
     "lemma": "pantalla táctil",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35189,7 +35189,7 @@
     "english": "radio set",
     "lemma": "radio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35228,7 +35228,7 @@
     "english": "cell phone",
     "lemma": "teléfono celular",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35267,7 +35267,7 @@
     "english": "tablet computer",
     "lemma": "tableta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35305,7 +35305,7 @@
     "english": "television set",
     "lemma": "televisor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35344,7 +35344,7 @@
     "english": "file",
     "lemma": "archivo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35381,7 +35381,7 @@
     "english": "@ symbol",
     "lemma": "arroba",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35418,7 +35418,7 @@
     "english": "blog",
     "lemma": "blog",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35455,7 +35455,7 @@
     "english": "browser/search engine",
     "lemma": "buscador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35492,7 +35492,7 @@
     "english": "portable computer; laptop",
     "lemma": "computadora portátil",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35530,7 +35530,7 @@
     "english": "wireless connection",
     "lemma": "conexión inalámbrica",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35567,7 +35567,7 @@
     "english": "e-mail address",
     "lemma": "dirección electrónica",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35606,7 +35606,7 @@
     "english": "Internet",
     "lemma": "Internet",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35643,7 +35643,7 @@
     "english": "text message",
     "lemma": "mensaje de texto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35682,7 +35682,7 @@
     "english": "computer monitor",
     "lemma": "monitor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35719,7 +35719,7 @@
     "english": "home page",
     "lemma": "página principal",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35762,7 +35762,7 @@
     "english": "software",
     "lemma": "programa de computación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35799,7 +35799,7 @@
     "english": "mouse",
     "lemma": "ratón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35836,7 +35836,7 @@
     "english": "network; Web",
     "lemma": "red",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35876,7 +35876,7 @@
     "english": "website",
     "lemma": "sitio web",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35913,7 +35913,7 @@
     "english": "to erase",
     "lemma": "borrar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35953,7 +35953,7 @@
     "english": "to chat",
     "lemma": "chatear",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -35993,7 +35993,7 @@
     "english": "to download",
     "lemma": "descargar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36033,7 +36033,7 @@
     "english": "to record",
     "lemma": "grabar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36073,7 +36073,7 @@
     "english": "to print",
     "lemma": "imprimir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36113,7 +36113,7 @@
     "english": "hood",
     "lemma": "capó",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36150,7 +36150,7 @@
     "english": "car",
     "lemma": "carro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36192,7 +36192,7 @@
     "english": "driver",
     "lemma": "conductor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36236,7 +36236,7 @@
     "english": "garage; mechanic’s repair shop",
     "lemma": "garaje",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36280,7 +36280,7 @@
     "english": "gasoline",
     "lemma": "gasolina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36317,7 +36317,7 @@
     "english": "gas station",
     "lemma": "gasolinera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36356,7 +36356,7 @@
     "english": "driver’s license",
     "lemma": "licencia de conducir",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36398,7 +36398,7 @@
     "english": "fine",
     "lemma": "multa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36435,7 +36435,7 @@
     "english": "windshield",
     "lemma": "parabrisas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36472,7 +36472,7 @@
     "english": "police force",
     "lemma": "policía",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36509,7 +36509,7 @@
     "english": "speed limit",
     "lemma": "velocidad máxima",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36546,7 +36546,7 @@
     "english": "steering wheel",
     "lemma": "volante",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36583,7 +36583,7 @@
     "english": "to work",
     "lemma": "funcionar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36625,7 +36625,7 @@
     "english": "to turn on",
     "lemma": "poner",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36666,7 +36666,7 @@
     "english": "to ring",
     "lemma": "sonar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36706,7 +36706,7 @@
     "english": "not working; out of order",
     "lemma": "descompuesto",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36749,7 +36749,7 @@
     "english": "slow",
     "lemma": "lento",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36791,7 +36791,7 @@
     "english": "to fix; to arrange; to neaten",
     "lemma": "arreglar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36843,7 +36843,7 @@
     "english": "to get off/out of a vehicle",
     "lemma": "bajar de",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36880,7 +36880,7 @@
     "english": "to fill the tank",
     "lemma": "llenar el tanque",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36917,7 +36917,7 @@
     "english": "to check the oil",
     "lemma": "revisar el aceite",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36956,7 +36956,7 @@
     "english": "to get on/into",
     "lemma": "subir a",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -36993,7 +36993,7 @@
     "english": "around here",
     "lemma": "por aquí",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37032,7 +37032,7 @@
     "english": "for example",
     "lemma": "por ejemplo",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37069,7 +37069,7 @@
     "english": "suburbs; outskirts",
     "lemma": "afueras",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37107,7 +37107,7 @@
     "english": "housekeeper; caretaker",
     "lemma": "ama de casa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37145,7 +37145,7 @@
     "english": "neighborhood",
     "lemma": "barrio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37182,7 +37182,7 @@
     "english": "apartment building",
     "lemma": "edificio de apartamentos",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37219,7 +37219,7 @@
     "english": "housing",
     "lemma": "vivienda",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37256,7 +37256,7 @@
     "english": "to rent",
     "lemma": "alquilar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37296,7 +37296,7 @@
     "english": "to move from one house to another",
     "lemma": "mudarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37336,7 +37336,7 @@
     "english": "attic",
     "lemma": "altillo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37373,7 +37373,7 @@
     "english": "balcony",
     "lemma": "balcón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37410,7 +37410,7 @@
     "english": "kitchen",
     "lemma": "cocina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37447,7 +37447,7 @@
     "english": "dining room",
     "lemma": "comedor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37485,7 +37485,7 @@
     "english": "bedroom",
     "lemma": "dormitorio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37522,7 +37522,7 @@
     "english": "stairs; stairway",
     "lemma": "escalera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37560,7 +37560,7 @@
     "english": "garage",
     "lemma": "garaje",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37597,7 +37597,7 @@
     "english": "garden; yard",
     "lemma": "jardín",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37635,7 +37635,7 @@
     "english": "office",
     "lemma": "oficina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37674,7 +37674,7 @@
     "english": "hallway",
     "lemma": "pasillo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37711,7 +37711,7 @@
     "english": "patio; yard",
     "lemma": "patio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37749,7 +37749,7 @@
     "english": "living room",
     "lemma": "sala",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37787,7 +37787,7 @@
     "english": "basement; cellar",
     "lemma": "sótano",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37825,7 +37825,7 @@
     "english": "carpet",
     "lemma": "alfombra",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37862,7 +37862,7 @@
     "english": "closet",
     "lemma": "armario",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37899,7 +37899,7 @@
     "english": "poster",
     "lemma": "cartel",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37936,7 +37936,7 @@
     "english": "chest of drawers",
     "lemma": "cómoda",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -37973,7 +37973,7 @@
     "english": "picture",
     "lemma": "cuadro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38010,7 +38010,7 @@
     "english": "lamp",
     "lemma": "lámpara",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38047,7 +38047,7 @@
     "english": "blanket",
     "lemma": "manta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38084,7 +38084,7 @@
     "english": "night stand",
     "lemma": "mesita de noche",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38123,7 +38123,7 @@
     "english": "furniture",
     "lemma": "muebles",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38160,7 +38160,7 @@
     "english": "wall",
     "lemma": "pared",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38197,7 +38197,7 @@
     "english": "painting; picture",
     "lemma": "pintura",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38245,7 +38245,7 @@
     "english": "armchair",
     "lemma": "sillón",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38282,7 +38282,7 @@
     "english": "couch; sofa",
     "lemma": "sofá",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38320,7 +38320,7 @@
     "english": "coffee maker",
     "lemma": "cafetera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38359,7 +38359,7 @@
     "english": "stove",
     "lemma": "cocina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38400,7 +38400,7 @@
     "english": "freezer",
     "lemma": "congelador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38437,7 +38437,7 @@
     "english": "electric appliance",
     "lemma": "electrodoméstico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38474,7 +38474,7 @@
     "english": "microwave oven",
     "lemma": "horno de microondas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38511,7 +38511,7 @@
     "english": "refrigerator",
     "lemma": "refrigerador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38548,7 +38548,7 @@
     "english": "clothes dryer",
     "lemma": "secadora",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38585,7 +38585,7 @@
     "english": "toaster",
     "lemma": "tostadora",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38622,7 +38622,7 @@
     "english": "wineglass",
     "lemma": "copa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38659,7 +38659,7 @@
     "english": "spoon",
     "lemma": "cuchara",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38696,7 +38696,7 @@
     "english": "plate",
     "lemma": "plato",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38734,7 +38734,7 @@
     "english": "napkin",
     "lemma": "servilleta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38771,7 +38771,7 @@
     "english": "cup",
     "lemma": "taza",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38808,7 +38808,7 @@
     "english": "fork",
     "lemma": "tenedor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38845,7 +38845,7 @@
     "english": "glass",
     "lemma": "vaso",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38882,7 +38882,7 @@
     "english": "to sweep the floor",
     "lemma": "barrer el suelo",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38920,7 +38920,7 @@
     "english": "to cook",
     "lemma": "cocinar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38960,7 +38960,7 @@
     "english": "to make the bed",
     "lemma": "hacer la cama",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -38998,7 +38998,7 @@
     "english": "to do household chores",
     "lemma": "hacer quehaceres domésticos",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39035,7 +39035,7 @@
     "english": "to wash the floor, the dishes",
     "lemma": "lavar el suelo",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39079,7 +39079,7 @@
     "english": "to clean the house",
     "lemma": "limpiar la casa",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39119,7 +39119,7 @@
     "english": "to vacuum",
     "lemma": "pasar la aspiradora",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39156,7 +39156,7 @@
     "english": "to iron the clothes",
     "lemma": "planchar la ropa",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39195,7 +39195,7 @@
     "english": "to set the table",
     "lemma": "poner la mesa",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39233,7 +39233,7 @@
     "english": "to clear the table",
     "lemma": "quitar la mesa",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39271,7 +39271,7 @@
     "english": "to dust",
     "lemma": "quitar el polvo",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39308,7 +39308,7 @@
     "english": "to take out the trash",
     "lemma": "sacar la basura",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39345,7 +39345,7 @@
     "english": "to dust the furniture",
     "lemma": "sacudir los muebles",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39382,7 +39382,7 @@
     "english": "to advise",
     "lemma": "aconsejar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39422,7 +39422,7 @@
     "english": "to insist on",
     "lemma": "insistir en",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39459,7 +39459,7 @@
     "english": "to order",
     "lemma": "mandar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39499,7 +39499,7 @@
     "english": "to recommend",
     "lemma": "recomendar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39539,7 +39539,7 @@
     "english": "to beg",
     "lemma": "rogar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39579,7 +39579,7 @@
     "english": "to suggest",
     "lemma": "sugerir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39619,7 +39619,7 @@
     "english": "It’s good that...",
     "lemma": "Es bueno que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39658,7 +39658,7 @@
     "english": "It’s important that...",
     "lemma": "Es importante que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39697,7 +39697,7 @@
     "english": "It’s bad that...",
     "lemma": "Es malo que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39736,7 +39736,7 @@
     "english": "It’s better that...",
     "lemma": "Es mejor que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39777,7 +39777,7 @@
     "english": "It’s necessary that...",
     "lemma": "Es necesario que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39814,7 +39814,7 @@
     "english": "forest",
     "lemma": "bosque",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39851,7 +39851,7 @@
     "english": "desert",
     "lemma": "desierto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39888,7 +39888,7 @@
     "english": "flower",
     "lemma": "flor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39926,7 +39926,7 @@
     "english": "grass",
     "lemma": "hierba",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -39963,7 +39963,7 @@
     "english": "lake",
     "lemma": "lago",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40000,7 +40000,7 @@
     "english": "moon",
     "lemma": "luna",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40037,7 +40037,7 @@
     "english": "nature",
     "lemma": "naturaleza",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40074,7 +40074,7 @@
     "english": "cloud",
     "lemma": "nube",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40111,7 +40111,7 @@
     "english": "stone",
     "lemma": "piedra",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40148,7 +40148,7 @@
     "english": "plant",
     "lemma": "planta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40185,7 +40185,7 @@
     "english": "river",
     "lemma": "río",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40222,7 +40222,7 @@
     "english": "jungle",
     "lemma": "selva",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40263,7 +40263,7 @@
     "english": "trail; path",
     "lemma": "sendero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40301,7 +40301,7 @@
     "english": "land; soil",
     "lemma": "tierra",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40339,7 +40339,7 @@
     "english": "valley",
     "lemma": "valle",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40386,7 +40386,7 @@
     "english": "animal",
     "lemma": "animal",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40423,7 +40423,7 @@
     "english": "bird",
     "lemma": "ave",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40464,7 +40464,7 @@
     "english": "cat",
     "lemma": "gato",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40501,7 +40501,7 @@
     "english": "dog",
     "lemma": "perro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40538,7 +40538,7 @@
     "english": "fish",
     "lemma": "pez",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40583,7 +40583,7 @@
     "english": "cow",
     "lemma": "vaca",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40620,7 +40620,7 @@
     "english": "global warming",
     "lemma": "calentamiento global",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40657,7 +40657,7 @@
     "english": "conservation",
     "lemma": "conservación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40694,7 +40694,7 @@
     "english": "pollution",
     "lemma": "contaminación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40731,7 +40731,7 @@
     "english": "deforestation",
     "lemma": "deforestación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40768,7 +40768,7 @@
     "english": "ecology",
     "lemma": "ecología",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40805,7 +40805,7 @@
     "english": "ecologist",
     "lemma": "ecologista",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40846,7 +40846,7 @@
     "english": "ecotourism",
     "lemma": "ecoturismo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40883,7 +40883,7 @@
     "english": "nuclear, solar energy",
     "lemma": "energía nuclear",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40924,7 +40924,7 @@
     "english": "container",
     "lemma": "envase",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -40964,7 +40964,7 @@
     "english": "extinction",
     "lemma": "extinción",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41001,7 +41001,7 @@
     "english": "factory",
     "lemma": "fábrica",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41038,7 +41038,7 @@
     "english": "government",
     "lemma": "gobierno",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41075,7 +41075,7 @@
     "english": "tin can",
     "lemma": "lata",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41112,7 +41112,7 @@
     "english": "law",
     "lemma": "ley",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41149,7 +41149,7 @@
     "english": "environment",
     "lemma": "medio ambiente",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41186,7 +41186,7 @@
     "english": "danger",
     "lemma": "peligro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41223,7 +41223,7 @@
     "english": "overpopulation",
     "lemma": "sobrepoblación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41260,7 +41260,7 @@
     "english": "recycling",
     "lemma": "reciclaje",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41297,7 +41297,7 @@
     "english": "natural resource",
     "lemma": "recurso natural",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41334,7 +41334,7 @@
     "english": "solution",
     "lemma": "solución",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41371,7 +41371,7 @@
     "english": "to hunt",
     "lemma": "cazar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41411,7 +41411,7 @@
     "english": "to conserve",
     "lemma": "conservar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41451,7 +41451,7 @@
     "english": "to pollute",
     "lemma": "contaminar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41491,7 +41491,7 @@
     "english": "to control",
     "lemma": "controlar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41531,7 +41531,7 @@
     "english": "to take care of",
     "lemma": "cuidar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41571,7 +41571,7 @@
     "english": "to stop doing something",
     "lemma": "dejar de",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41608,7 +41608,7 @@
     "english": "to develop",
     "lemma": "desarrollar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41648,7 +41648,7 @@
     "english": "to discover",
     "lemma": "descubrir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41688,7 +41688,7 @@
     "english": "to destroy",
     "lemma": "destruir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41728,7 +41728,7 @@
     "english": "to be affected by",
     "lemma": "estar afectado",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41770,7 +41770,7 @@
     "english": "to be polluted",
     "lemma": "estar contaminado",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41812,7 +41812,7 @@
     "english": "to improve",
     "lemma": "mejorar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41852,7 +41852,7 @@
     "english": "to protect",
     "lemma": "proteger",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41892,7 +41892,7 @@
     "english": "to recycle",
     "lemma": "reciclar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41932,7 +41932,7 @@
     "english": "to reduce",
     "lemma": "reducir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -41972,7 +41972,7 @@
     "english": "to resolve; to solve",
     "lemma": "resolver",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42013,7 +42013,7 @@
     "english": "to breathe",
     "lemma": "respirar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42053,7 +42053,7 @@
     "english": "made of aluminum",
     "lemma": "de aluminio",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42090,7 +42090,7 @@
     "english": "made of plastic",
     "lemma": "de plástico",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42127,7 +42127,7 @@
     "english": "made of glass",
     "lemma": "de vidrio",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42164,7 +42164,7 @@
     "english": "ecological",
     "lemma": "ecologista",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42201,7 +42201,7 @@
     "english": "renewable",
     "lemma": "renovable",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42238,7 +42238,7 @@
     "english": "to be happy",
     "lemma": "alegrarse de",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42278,7 +42278,7 @@
     "english": "to fear; to be afraid",
     "lemma": "tener miedo",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42316,7 +42316,7 @@
     "english": "it’s strange",
     "lemma": "es extraño",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42353,7 +42353,7 @@
     "english": "it’s a shame",
     "lemma": "es una lástima",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42390,7 +42390,7 @@
     "english": "it’s ridiculous",
     "lemma": "es ridículo",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42427,7 +42427,7 @@
     "english": "it’s terrible",
     "lemma": "es terrible",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42464,7 +42464,7 @@
     "english": "it’s sad",
     "lemma": "es triste",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42501,7 +42501,7 @@
     "english": "I hope that; I wish that",
     "lemma": "ojalá que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42539,7 +42539,7 @@
     "english": "not to believe",
     "lemma": "no creer",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42576,7 +42576,7 @@
     "english": "not to doubt",
     "lemma": "no dudar",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42613,7 +42613,7 @@
     "english": "not to deny",
     "lemma": "no negar",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42650,7 +42650,7 @@
     "english": "it’s impossible",
     "lemma": "es imposible",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42687,7 +42687,7 @@
     "english": "it’s improbable",
     "lemma": "es improbable",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42724,7 +42724,7 @@
     "english": "it’s obvious",
     "lemma": "es obvio",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42761,7 +42761,7 @@
     "english": "there is no doubt that",
     "lemma": "no cabe duda de que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42800,7 +42800,7 @@
     "english": "there is no doubt that",
     "lemma": "no hay duda de que",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42839,7 +42839,7 @@
     "english": "it’s not certain",
     "lemma": "no es cierto",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42876,7 +42876,7 @@
     "english": "it’s not possible",
     "lemma": "no es posible",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42913,7 +42913,7 @@
     "english": "it’s not probable",
     "lemma": "no es probable",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42950,7 +42950,7 @@
     "english": "it’s not certain",
     "lemma": "no es seguro",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -42989,7 +42989,7 @@
     "english": "it’s not true",
     "lemma": "no es verdad",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43026,7 +43026,7 @@
     "english": "unless",
     "lemma": "a menos que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43065,7 +43065,7 @@
     "english": "before",
     "lemma": "antes de que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43104,7 +43104,7 @@
     "english": "provided that",
     "lemma": "con tal de que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43141,7 +43141,7 @@
     "english": "after",
     "lemma": "después de que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43180,7 +43180,7 @@
     "english": "in case that",
     "lemma": "en caso de que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43218,7 +43218,7 @@
     "english": "as soon as",
     "lemma": "en cuanto",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43255,7 +43255,7 @@
     "english": "until",
     "lemma": "hasta que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43294,7 +43294,7 @@
     "english": "so that",
     "lemma": "para que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43331,7 +43331,7 @@
     "english": "without",
     "lemma": "sin que",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43368,7 +43368,7 @@
     "english": "as soon as",
     "lemma": "tan pronto como",
     "partOfSpeech": "conjunction",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43407,7 +43407,7 @@
     "english": "drug",
     "lemma": "droga",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43444,7 +43444,7 @@
     "english": "massage",
     "lemma": "masaje",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43481,7 +43481,7 @@
     "english": "couch potato",
     "lemma": "teleadicto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43524,7 +43524,7 @@
     "english": "to lose weight; to slim down",
     "lemma": "adelgazar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43565,7 +43565,7 @@
     "english": "to reduce stress",
     "lemma": "aliviar el estrés",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43602,7 +43602,7 @@
     "english": "to reduce tension",
     "lemma": "aliviar la tensión",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43639,7 +43639,7 @@
     "english": "to hurry; to rush",
     "lemma": "apurarse",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43682,7 +43682,7 @@
     "english": "to gain weight",
     "lemma": "aumentar de peso",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43723,7 +43723,7 @@
     "english": "to enjoy; to reap the benefits of",
     "lemma": "disfrutar de",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43761,7 +43761,7 @@
     "english": "to be on a diet",
     "lemma": "estar a dieta",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43798,7 +43798,7 @@
     "english": "lifestyle",
     "lemma": "estilo de vida",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43835,7 +43835,7 @@
     "english": "to be under a lot of pressure",
     "lemma": "sufrir muchas presiones",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43874,7 +43874,7 @@
     "english": "to try to do something",
     "lemma": "tratar de",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43911,7 +43911,7 @@
     "english": "weak",
     "lemma": "débil",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43948,7 +43948,7 @@
     "english": "in excess",
     "lemma": "en exceso",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -43985,7 +43985,7 @@
     "english": "sedentary",
     "lemma": "sedentario",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44027,7 +44027,7 @@
     "english": "calm; quiet",
     "lemma": "tranquilo",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44070,7 +44070,7 @@
     "english": "aerobics class",
     "lemma": "clase de aerobics",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44112,7 +44112,7 @@
     "english": "trainer",
     "lemma": "entrenador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44153,7 +44153,7 @@
     "english": "muscle",
     "lemma": "músculo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44190,7 +44190,7 @@
     "english": "to warm up",
     "lemma": "calentarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44231,7 +44231,7 @@
     "english": "to train",
     "lemma": "entrenarse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44271,7 +44271,7 @@
     "english": "to be in good shape",
     "lemma": "estar en buena forma",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44310,7 +44310,7 @@
     "english": "to exercise",
     "lemma": "hacer ejercicio",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44347,7 +44347,7 @@
     "english": "to do aerobics",
     "lemma": "hacer ejercicios aeróbicos",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44384,7 +44384,7 @@
     "english": "to do stretching exercises",
     "lemma": "hacer ejercicios de estiramiento",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44421,7 +44421,7 @@
     "english": "to work out",
     "lemma": "hacer gimnasia",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44460,7 +44460,7 @@
     "english": "to lift weights",
     "lemma": "levantar pesas",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44499,7 +44499,7 @@
     "english": "to sweat",
     "lemma": "sudar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44539,7 +44539,7 @@
     "english": "calorie",
     "lemma": "caloría",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44576,7 +44576,7 @@
     "english": "cholesterol",
     "lemma": "colesterol",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44613,7 +44613,7 @@
     "english": "fat",
     "lemma": "grasa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44652,7 +44652,7 @@
     "english": "afternoon snack",
     "lemma": "merienda",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44692,7 +44692,7 @@
     "english": "mineral",
     "lemma": "mineral",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44729,7 +44729,7 @@
     "english": "nutrition",
     "lemma": "nutrición",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44766,7 +44766,7 @@
     "english": "nutritionist",
     "lemma": "nutricionista",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44807,7 +44807,7 @@
     "english": "protein",
     "lemma": "proteína",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44844,7 +44844,7 @@
     "english": "vitamin",
     "lemma": "vitamina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44881,7 +44881,7 @@
     "english": "to eat a balanced diet",
     "lemma": "comer una dieta equilibrada",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44918,7 +44918,7 @@
     "english": "decaffeinated",
     "lemma": "descafeinado",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44960,7 +44960,7 @@
     "english": "media; means of communication",
     "lemma": "medios de comunicación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -44998,7 +44998,7 @@
     "english": "article",
     "lemma": "artículo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45035,7 +45035,7 @@
     "english": "news item",
     "lemma": "noticia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45072,7 +45072,7 @@
     "english": "newspaper",
     "lemma": "periódico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45109,7 +45109,7 @@
     "english": "press",
     "lemma": "prensa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45146,7 +45146,7 @@
     "english": "reporter",
     "lemma": "reportero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45197,7 +45197,7 @@
     "english": "magazine",
     "lemma": "revista",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45234,7 +45234,7 @@
     "english": "headline",
     "lemma": "titular",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45274,7 +45274,7 @@
     "english": "radio",
     "lemma": "radio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45311,7 +45311,7 @@
     "english": "television",
     "lemma": "televisión",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45348,7 +45348,7 @@
     "english": "natural disaster",
     "lemma": "desastre natural",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45385,7 +45385,7 @@
     "english": "investigation",
     "lemma": "investigación",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45422,7 +45422,7 @@
     "english": "hurricane",
     "lemma": "huracán",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45459,7 +45459,7 @@
     "english": "fire",
     "lemma": "incendio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45496,7 +45496,7 @@
     "english": "earthquake",
     "lemma": "terremoto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45533,7 +45533,7 @@
     "english": "storm",
     "lemma": "tormenta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45570,7 +45570,7 @@
     "english": "violence",
     "lemma": "violencia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45607,7 +45607,7 @@
     "english": "responsibility; obligation",
     "lemma": "deber",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45648,7 +45648,7 @@
     "english": "dictatorship",
     "lemma": "dictadura",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45685,7 +45685,7 @@
     "english": "elections",
     "lemma": "elecciones",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45722,7 +45722,7 @@
     "english": "tax",
     "lemma": "impuesto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45759,7 +45759,7 @@
     "english": "representative",
     "lemma": "representante",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45800,7 +45800,7 @@
     "english": "soldier",
     "lemma": "soldado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45841,7 +45841,7 @@
     "english": "to declare",
     "lemma": "declarar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45881,7 +45881,7 @@
     "english": "to elect",
     "lemma": "elegir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45921,7 +45921,7 @@
     "english": "to campaign",
     "lemma": "hacer campaña",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45958,7 +45958,7 @@
     "english": "to obey",
     "lemma": "obedecer",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -45998,7 +45998,7 @@
     "english": "political",
     "lemma": "político",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46040,7 +46040,7 @@
     "english": "lawyer",
     "lemma": "abogado",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46081,7 +46081,7 @@
     "english": "actor",
     "lemma": "actor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46123,7 +46123,7 @@
     "english": "archaeologist",
     "lemma": "arqueólogo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46164,7 +46164,7 @@
     "english": "architect",
     "lemma": "arquitecto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46205,7 +46205,7 @@
     "english": "firefighter",
     "lemma": "bombero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46246,7 +46246,7 @@
     "english": "carpenter",
     "lemma": "carpintero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46287,7 +46287,7 @@
     "english": "scientist",
     "lemma": "científico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46328,7 +46328,7 @@
     "english": "cook; chef",
     "lemma": "cocinero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46370,7 +46370,7 @@
     "english": "counselor; advisor",
     "lemma": "consejero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46412,7 +46412,7 @@
     "english": "accountant",
     "lemma": "contador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46453,7 +46453,7 @@
     "english": "stockbroker",
     "lemma": "corredor de bolsa",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46494,7 +46494,7 @@
     "english": "electrician",
     "lemma": "electricista",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46535,7 +46535,7 @@
     "english": "businessperson",
     "lemma": "empresario",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46576,7 +46576,7 @@
     "english": "teacher",
     "lemma": "maestro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46619,7 +46619,7 @@
     "english": "hairdresser",
     "lemma": "peluquero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46660,7 +46660,7 @@
     "english": "painter",
     "lemma": "pintor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46701,7 +46701,7 @@
     "english": "politician",
     "lemma": "político",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46742,7 +46742,7 @@
     "english": "psychologist",
     "lemma": "psicólogo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46783,7 +46783,7 @@
     "english": "secretary",
     "lemma": "secretario",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46824,7 +46824,7 @@
     "english": "technician",
     "lemma": "técnico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46865,7 +46865,7 @@
     "english": "advertisement",
     "lemma": "anuncio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46902,7 +46902,7 @@
     "english": "candidate; applicant",
     "lemma": "aspirante",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46944,7 +46944,7 @@
     "english": "benefits",
     "lemma": "beneficios",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -46981,7 +46981,7 @@
     "english": "résumé",
     "lemma": "currículum",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47018,7 +47018,7 @@
     "english": "interview",
     "lemma": "entrevista",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47055,7 +47055,7 @@
     "english": "interviewer",
     "lemma": "entrevistador",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47096,7 +47096,7 @@
     "english": "salary",
     "lemma": "salario",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47137,7 +47137,7 @@
     "english": "job application",
     "lemma": "solicitud de trabajo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47174,7 +47174,7 @@
     "english": "to hire",
     "lemma": "contratar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47214,7 +47214,7 @@
     "english": "to interview",
     "lemma": "entrevistar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47254,7 +47254,7 @@
     "english": "to obtain; to get",
     "lemma": "obtener",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47295,7 +47295,7 @@
     "english": "to apply for a job",
     "lemma": "solicitar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47335,7 +47335,7 @@
     "english": "career",
     "lemma": "carrera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47372,7 +47372,7 @@
     "english": "company; firm",
     "lemma": "compañía",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47414,7 +47414,7 @@
     "english": "job; employment",
     "lemma": "empleo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47452,7 +47452,7 @@
     "english": "manager",
     "lemma": "gerente",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47493,7 +47493,7 @@
     "english": "boss",
     "lemma": "jefe",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47534,7 +47534,7 @@
     "english": "business; commerce",
     "lemma": "negocios",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47572,7 +47572,7 @@
     "english": "trade",
     "lemma": "oficio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47609,7 +47609,7 @@
     "english": "profession",
     "lemma": "profesión",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47646,7 +47646,7 @@
     "english": "meeting",
     "lemma": "reunión",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47683,7 +47683,7 @@
     "english": "videoconference",
     "lemma": "videoconferencia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47720,7 +47720,7 @@
     "english": "to quit; to leave behind",
     "lemma": "dejar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47765,7 +47765,7 @@
     "english": "to fire",
     "lemma": "despedir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47805,7 +47805,7 @@
     "english": "to invest",
     "lemma": "invertir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47845,7 +47845,7 @@
     "english": "to resign from",
     "lemma": "renunciar a",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47882,7 +47882,7 @@
     "english": "to be successful",
     "lemma": "tener éxito",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47919,7 +47919,7 @@
     "english": "commercial; business-related",
     "lemma": "comercial",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47957,7 +47957,7 @@
     "english": "within ten years",
     "lemma": "dentro de diez años",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -47994,7 +47994,7 @@
     "english": "in the future",
     "lemma": "en el futuro",
     "partOfSpeech": "adverb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48031,7 +48031,7 @@
     "english": "the future",
     "lemma": "porvenir",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48071,7 +48071,7 @@
     "english": "dance",
     "lemma": "baile",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48112,7 +48112,7 @@
     "english": "band",
     "lemma": "banda",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48149,7 +48149,7 @@
     "english": "ticket",
     "lemma": "boleto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48186,7 +48186,7 @@
     "english": "song",
     "lemma": "canción",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48223,7 +48223,7 @@
     "english": "comedy; play",
     "lemma": "comedia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48261,7 +48261,7 @@
     "english": "concert",
     "lemma": "concierto",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48298,7 +48298,7 @@
     "english": "short story",
     "lemma": "cuento",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48335,7 +48335,7 @@
     "english": "culture",
     "lemma": "cultura",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48372,7 +48372,7 @@
     "english": "drama; play",
     "lemma": "drama",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48410,7 +48410,7 @@
     "english": "sculpture",
     "lemma": "escultura",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48447,7 +48447,7 @@
     "english": "show",
     "lemma": "espectáculo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48484,7 +48484,7 @@
     "english": "statue",
     "lemma": "estatua",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48521,7 +48521,7 @@
     "english": "festival",
     "lemma": "festival",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48558,7 +48558,7 @@
     "english": "work of art; music, etc.",
     "lemma": "obra",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48600,7 +48600,7 @@
     "english": "masterpiece",
     "lemma": "obra maestra",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48637,7 +48637,7 @@
     "english": "opera",
     "lemma": "ópera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48674,7 +48674,7 @@
     "english": "orchestra",
     "lemma": "orquesta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48711,7 +48711,7 @@
     "english": "main character",
     "lemma": "personaje principal",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48748,7 +48748,7 @@
     "english": "poem",
     "lemma": "poema",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48785,7 +48785,7 @@
     "english": "poetry",
     "lemma": "poesía",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48822,7 +48822,7 @@
     "english": "audience",
     "lemma": "público",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48859,7 +48859,7 @@
     "english": "theater",
     "lemma": "teatro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48896,7 +48896,7 @@
     "english": "tragedy",
     "lemma": "tragedia",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48933,7 +48933,7 @@
     "english": "to get bored",
     "lemma": "aburrirse",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -48975,7 +48975,7 @@
     "english": "to applaud",
     "lemma": "aplaudir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49015,7 +49015,7 @@
     "english": "to appreciate",
     "lemma": "apreciar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49055,7 +49055,7 @@
     "english": "to direct",
     "lemma": "dirigir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49095,7 +49095,7 @@
     "english": "to sculpt",
     "lemma": "esculpir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49135,7 +49135,7 @@
     "english": "to play the role of",
     "lemma": "hacer el papel de",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49172,7 +49172,7 @@
     "english": "to paint",
     "lemma": "pintar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49212,7 +49212,7 @@
     "english": "to present; to put on a performance",
     "lemma": "presentar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49255,7 +49255,7 @@
     "english": "to publish",
     "lemma": "publicar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49295,7 +49295,7 @@
     "english": "to touch; to play a musical instrument",
     "lemma": "tocar un instrumento musical",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49334,7 +49334,7 @@
     "english": "artistic",
     "lemma": "artístico",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49376,7 +49376,7 @@
     "english": "classical",
     "lemma": "clásico",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49418,7 +49418,7 @@
     "english": "dramatic",
     "lemma": "dramático",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49460,7 +49460,7 @@
     "english": "foreign",
     "lemma": "extranjero",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49502,7 +49502,7 @@
     "english": "folk",
     "lemma": "folclórico",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49544,7 +49544,7 @@
     "english": "modern",
     "lemma": "moderno",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49586,7 +49586,7 @@
     "english": "musical",
     "lemma": "musical",
     "partOfSpeech": "phrase",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49623,7 +49623,7 @@
     "english": "romantic",
     "lemma": "romántico",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49665,7 +49665,7 @@
     "english": "talented",
     "lemma": "talentoso",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49707,7 +49707,7 @@
     "english": "dancer",
     "lemma": "bailarín",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49749,7 +49749,7 @@
     "english": "singer",
     "lemma": "cantante",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49790,7 +49790,7 @@
     "english": "composer",
     "lemma": "compositor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49831,7 +49831,7 @@
     "english": "director; musical conductor",
     "lemma": "director",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49874,7 +49874,7 @@
     "english": "playwright",
     "lemma": "dramaturgo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49915,7 +49915,7 @@
     "english": "writer",
     "lemma": "escritor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49956,7 +49956,7 @@
     "english": "sculptor",
     "lemma": "escultor",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -49997,7 +49997,7 @@
     "english": "movie star",
     "lemma": "estrella de cine",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50038,7 +50038,7 @@
     "english": "musician",
     "lemma": "músico",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50079,7 +50079,7 @@
     "english": "poet",
     "lemma": "poeta",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50120,7 +50120,7 @@
     "english": "game show; contest",
     "lemma": "concurso",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50160,7 +50160,7 @@
     "english": "cartoons",
     "lemma": "dibujos animados",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50197,7 +50197,7 @@
     "english": "documentary",
     "lemma": "documental",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50234,7 +50234,7 @@
     "english": "prize; award",
     "lemma": "premio",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50272,7 +50272,7 @@
     "english": "talk/reality show",
     "lemma": "programa de entrevistas",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50313,7 +50313,7 @@
     "english": "soap opera",
     "lemma": "telenovela",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50352,7 +50352,7 @@
     "english": "action",
     "lemma": "de acción",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50389,7 +50389,7 @@
     "english": "adventure",
     "lemma": "de aventuras",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50426,7 +50426,7 @@
     "english": "science fiction",
     "lemma": "de ciencia ficción",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50465,7 +50465,7 @@
     "english": "horror",
     "lemma": "de horror",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50502,7 +50502,7 @@
     "english": "western",
     "lemma": "de vaqueros",
     "partOfSpeech": "adjective",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50539,7 +50539,7 @@
     "english": "craftsmanship; crafts",
     "lemma": "artesanía",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50577,7 +50577,7 @@
     "english": "pottery",
     "lemma": "cerámica",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50614,7 +50614,7 @@
     "english": "weaving",
     "lemma": "tejido",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50651,7 +50651,7 @@
     "english": "bank",
     "lemma": "banco",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50688,7 +50688,7 @@
     "english": "street",
     "lemma": "calle",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50725,7 +50725,7 @@
     "english": "road",
     "lemma": "camino",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50762,7 +50762,7 @@
     "english": "crossing; intersection",
     "lemma": "cruce",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50800,7 +50800,7 @@
     "english": "parking lot",
     "lemma": "estacionamiento",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50837,7 +50837,7 @@
     "english": "ice cream shop",
     "lemma": "heladería",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50878,7 +50878,7 @@
     "english": "bakery",
     "lemma": "panadería",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50915,7 +50915,7 @@
     "english": "pastry shop",
     "lemma": "pastelería",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50954,7 +50954,7 @@
     "english": "newsstand",
     "lemma": "puesto de periódicos",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -50991,7 +50991,7 @@
     "english": "skyscraper",
     "lemma": "rascacielos",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51028,7 +51028,7 @@
     "english": "sign",
     "lemma": "señal",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51065,7 +51065,7 @@
     "english": "traffic light",
     "lemma": "semáforo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51102,7 +51102,7 @@
     "english": "restrooms",
     "lemma": "servicios",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51139,7 +51139,7 @@
     "english": "ticket window",
     "lemma": "taquilla",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51178,7 +51178,7 @@
     "english": "brook",
     "lemma": "arroyo",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51215,7 +51215,7 @@
     "english": "hill",
     "lemma": "cerro",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51252,7 +51252,7 @@
     "english": "road; highway",
     "lemma": "carretera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51290,7 +51290,7 @@
     "english": "farm",
     "lemma": "granja",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51327,7 +51327,7 @@
     "english": "meadow",
     "lemma": "pradera",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51364,7 +51364,7 @@
     "english": "farmer",
     "lemma": "granjero",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51405,7 +51405,7 @@
     "english": "block",
     "lemma": "cuadra",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51442,7 +51442,7 @@
     "english": "address",
     "lemma": "dirección",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51479,7 +51479,7 @@
     "english": "corner",
     "lemma": "esquina",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51516,7 +51516,7 @@
     "english": "arrow",
     "lemma": "flecha",
     "partOfSpeech": "noun",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51553,7 +51553,7 @@
     "english": "to cross",
     "lemma": "cruzar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51593,7 +51593,7 @@
     "english": "to turn",
     "lemma": "doblar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51633,7 +51633,7 @@
     "english": "to keep going straight",
     "lemma": "seguir todo derecho",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51672,7 +51672,7 @@
     "english": "to go by",
     "lemma": "pasar por",
     "partOfSpeech": "verb expression",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51711,7 +51711,7 @@
     "english": "to follow",
     "lemma": "seguir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51753,7 +51753,7 @@
     "english": "to go up",
     "lemma": "subir",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2
@@ -51795,7 +51795,7 @@
     "english": "to go down",
     "lemma": "bajar",
     "partOfSpeech": "verb",
-    "tier": "expanding",
+    "tier": "expanding2",
     "year": 2,
     "years": [
       2

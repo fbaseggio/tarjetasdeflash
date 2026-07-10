@@ -1,40 +1,46 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.17.0";
-import { APP_VERSION } from "./app-version.js?v=0.17.0";
-import { createAssessmentSession } from "./assessment.js?v=0.17.0";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.17.0";
+import { createActivityStorage } from "./activity-storage.js?v=0.18.0";
+import { APP_VERSION } from "./app-version.js?v=0.18.0";
+import { createAssessmentSession } from "./assessment.js?v=0.18.0";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.18.0";
 import {
   buildDiagnosticExport,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.17.0";
+} from "./diagnostic-export.js?v=0.18.0";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.17.0";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.17.0";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.17.0";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.17.0";
-import { createProfileStorage } from "./profile-storage.js?v=0.17.0";
-import { buildQuizFromAnswers } from "./questions.js?v=0.17.0";
-import { selectQuizVocabulary } from "./quiz-selection.js?v=0.17.0";
-import { createQuizSession } from "./quiz-session.js?v=0.17.0";
-import { initializeRecognition } from "./recognition.js?v=0.17.0";
+} from "./indexed-history.js?v=0.18.0";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.18.0";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.18.0";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.18.0";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.18.0";
+import { createProfileStorage } from "./profile-storage.js?v=0.18.0";
+import { buildQuizFromAnswers } from "./questions.js?v=0.18.0";
+import { selectQuizVocabulary } from "./quiz-selection.js?v=0.18.0";
+import { createQuizSession } from "./quiz-session.js?v=0.18.0";
+import { initializeRecognition } from "./recognition.js?v=0.18.0";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.17.0";
+} from "./review-results.js?v=0.18.0";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   isFirstSessionOfDay,
   shareSessionResults,
-} from "./share-results.js?v=0.17.0";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.17.0";
+} from "./share-results.js?v=0.18.0";
+import {
+  choiceRevealDelayMs,
+  createSettingsStorage,
+} from "./settings-storage.js?v=0.18.0";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.18.0";
+import { TIER_LABELS } from "./tiers.js?v=0.18.0";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -75,6 +81,9 @@ const resultsTitleElement = document.querySelector("#results-title");
 const resultsIntroElement = document.querySelector("#results-intro");
 const finalRightElement = document.querySelector("#final-right");
 const finalWrongElement = document.querySelector("#final-wrong");
+const masteryDemonstratedElement = document.querySelector("#mastery-demonstrated");
+const masteryGainElement = document.querySelector("#mastery-gain");
+const masteryProjectedElement = document.querySelector("#mastery-projected");
 const dailyCreditElement = document.querySelector("#daily-credit");
 const streakElement = document.querySelector("#stat-streak");
 const membershipDaysElement = document.querySelector("#stat-membership-days");
@@ -96,6 +105,7 @@ const reviewAllWordsButton = document.querySelector("#review-all-words-button");
 const backFromReviewButton = document.querySelector("#back-from-review-button");
 const exportButton = document.querySelector("#export-diagnostics");
 const exportStatusElement = document.querySelector("#export-status");
+const answerDelaySelect = document.querySelector("#answer-delay");
 
 await ensureCurrentStorageGeneration(window.localStorage, window.indexedDB);
 
@@ -103,6 +113,7 @@ const activityStorage = createActivityStorage(window.localStorage);
 const onboardingStorage = createOnboardingStorage(window.localStorage);
 const learningStorage = createLearningStorage(window.localStorage);
 const historyStorage = createIndexedHistory(window.indexedDB);
+const settingsStorage = createSettingsStorage(window.localStorage);
 const percentFormatter = new Intl.NumberFormat(undefined, {
   style: "percent",
   maximumFractionDigits: 1,
@@ -136,12 +147,6 @@ let choiceRevealTimer = null;
 let autoAdvanceTimer = null;
 let lastFeedbackSnapshot = null;
 let pendingRoundCompletion = null;
-
-const tierLabels = Object.freeze({
-  foundation: "Foundation",
-  everyday: "Everyday",
-  expanding: "Expanding",
-});
 
 function dateFromKey(dateKey) {
   const [year, month, day] = dateKey.split("-").map(Number);
@@ -191,7 +196,16 @@ function scheduleAutoAdvance(callback, delay) {
 }
 
 function choiceRevealDelay() {
-  return prefersReducedMotion() ? 250 : 1000;
+  return choiceRevealDelayMs(settingsStorage.getSettings().choiceRevealDelay);
+}
+
+function renderSettings() {
+  answerDelaySelect.value = settingsStorage.getSettings().choiceRevealDelay;
+}
+
+function updateAnswerDelaySetting() {
+  settingsStorage.setChoiceRevealDelay(answerDelaySelect.value);
+  renderSettings();
 }
 
 function hideLastResult() {
@@ -321,6 +335,12 @@ function renderChoices(currentQuestion, knownWrongAnswers, onAnswer) {
 
 function scheduleChoiceReveal(currentQuestion, knownWrongAnswers, onAnswer) {
   clearChoiceRevealTimer();
+  const delay = choiceRevealDelay();
+  if (delay <= 0) {
+    renderChoices(currentQuestion, knownWrongAnswers, onAnswer);
+    return;
+  }
+
   choicesElement.replaceChildren();
   choicesElement.classList.add("choices-pending");
   choicesElement.setAttribute("aria-busy", "true");
@@ -335,7 +355,7 @@ function scheduleChoiceReveal(currentQuestion, knownWrongAnswers, onAnswer) {
     choiceRevealTimer = null;
     renderChoices(currentQuestion, knownWrongAnswers, onAnswer);
     choicesElement.querySelector("button:not(:disabled)")?.focus({ preventScroll: true });
-  }, choiceRevealDelay());
+  }, delay);
 }
 
 function buildFeedbackSnapshot({
@@ -457,7 +477,7 @@ function renderAssessmentQuestion() {
   const currentQuestion = state.question;
   const isSpanishPrompt = state.direction === "spanish-to-english";
   progressElement.textContent = `Starting point ${state.position} of ${state.totalQuestions}`;
-  directionLabelElement.textContent = `${tierLabels[state.tier]} · ${isSpanishPrompt ? "Spanish → English" : "English → Spanish"}`;
+  directionLabelElement.textContent = `${TIER_LABELS[state.tier]} · ${isSpanishPrompt ? "Spanish → English" : "English → Spanish"}`;
   quizTitleElement.textContent = isSpanishPrompt
     ? "Choose the English translation."
     : "Choose the Spanish translation.";
@@ -638,14 +658,14 @@ function showOnboarding() {
 function showPlacement(placement) {
   hideMainPanels();
   panels.placement.hidden = false;
-  const frontierLabel = tierLabels[placement.learningFrontier];
+  const frontierLabel = TIER_LABELS[placement.learningFrontier];
   placementLevelElement.textContent = frontierLabel;
   if (!placement.knownThrough) {
     placementSummaryElement.textContent = "We found a few Foundation gaps, so we’ll strengthen those first.";
-  } else if (placement.knownThrough === "expanding") {
+  } else if (placement.knownThrough === "expanding2") {
     placementSummaryElement.textContent = "Expanding vocabulary already looks familiar. We’ll keep testing the edges and adjust.";
   } else {
-    placementSummaryElement.textContent = `${tierLabels[placement.knownThrough]} vocabulary looks familiar. We’ll begin around ${frontierLabel} and keep adjusting.`;
+    placementSummaryElement.textContent = `${TIER_LABELS[placement.knownThrough]} vocabulary looks familiar. We’ll begin around ${frontierLabel} and keep adjusting.`;
   }
   reviewAssessmentButton.hidden = !latestAssessmentResult;
   startPracticeButton.focus();
@@ -888,10 +908,24 @@ function renderActivity(summary) {
   overallErrorElement.textContent = percentFormatter.format(summary.overallErrorRate ?? 0);
 }
 
+function currentMasteryStats(dateKey = dailySession?.date ?? localDateKey(new Date())) {
+  return buildMasteryStats(
+    vocabulary,
+    learningStorage.getSnapshot(activeProfileId, datasetMetadata),
+    dateKey,
+  );
+}
+
+function renderMastery(stats) {
+  masteryDemonstratedElement.textContent = `${stats.demonstrated} / ${stats.total}`;
+  masteryGainElement.textContent = `+${stats.demonstratedToday} today`;
+  masteryProjectedElement.textContent = `${stats.projectedPercent}%`;
+}
+
 function renderCoverage() {
   const coverage = learningStorage.getCoverage(activeProfileId, datasetMetadata);
   coverageRowsElement.replaceChildren();
-  Object.entries(tierLabels).forEach(([tier, label]) => {
+  Object.entries(TIER_LABELS).forEach(([tier, label]) => {
     const row = document.createElement("div");
     row.className = "coverage-row";
     const total = vocabulary.filter((entry) => entry.tier === tier).length;
@@ -1059,6 +1093,7 @@ function showResultsBase(correctCount, wrongCount, summary) {
   panels.results.hidden = false;
   finalRightElement.textContent = correctCount;
   finalWrongElement.textContent = wrongCount;
+  renderMastery(currentMasteryStats());
   renderActivity(summary);
   renderCoverage();
   newQuizButton.focus();
@@ -1077,6 +1112,7 @@ function showSessionResults() {
     activeProfileId,
     dateFromKey(dailySession.date),
   );
+  const masteryStats = currentMasteryStats(dailySession.date);
   shareResultsStatusElement.textContent = "";
   shareResultsButton.hidden = !isFirstSessionOfDay(dailySession);
   shareResultsPayload = shareResultsButton.hidden ? null : buildSessionSharePayload({
@@ -1085,12 +1121,13 @@ function showSessionResults() {
     newWords: dailySession.newWordIds.length,
     retries: dailySession.wrongCount,
     streak: activitySummary.currentStreak,
+    mastery: masteryStats,
   });
   shareCardPreviewElement.hidden = !shareResultsPayload;
   if (shareResultsPayload) {
     const svg = buildShareCardSvg(shareResultsPayload);
     shareCardImageElement.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-    shareCardImageElement.alt = `${activeProfile.displayName}’s Spanish practice results: ${sessionWordIds(dailySession).length} words practiced, ${dailySession.newWordIds.length} new words, ${dailySession.wrongCount} retries, ${activitySummary.currentStreak}-day streak.`;
+    shareCardImageElement.alt = `${activeProfile.displayName}’s Spanish practice results: ${sessionWordIds(dailySession).length} words practiced, ${dailySession.newWordIds.length} new words, mastery ${masteryStats.demonstrated} out of ${masteryStats.total}, projected ${masteryStats.projectedPercent} percent, ${dailySession.wrongCount} retries.`;
   } else {
     shareCardImageElement.removeAttribute("src");
   }
@@ -1252,8 +1289,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.17.0"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.17.0"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.18.0"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.18.0"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -1337,6 +1374,7 @@ async function recognizeProfile(profile) {
 }
 
 brandTitleElement.textContent = `Tarjetas de Flash (${APP_VERSION})`;
+renderSettings();
 
 newQuizButton.addEventListener("click", startQuiz);
 startAssessmentButton.addEventListener("click", startAssessment);
@@ -1347,6 +1385,7 @@ newSessionButton.addEventListener("click", startAnotherSessionToday);
 roundCompleteButton.addEventListener("click", continueAfterRoundCompletion);
 shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
+answerDelaySelect.addEventListener("change", updateAnswerDelaySetting);
 reviewAssessmentButton.addEventListener("click", () => {
   reviewContext = {
     type: "assessment",

@@ -13,20 +13,26 @@ const payload = buildSessionSharePayload({
   newWords: 15,
   retries: 4,
   streak: 3,
+  mastery: {
+    demonstrated: 30,
+    demonstratedToday: 6,
+    total: 1523,
+    projectedPercent: 85,
+  },
 });
 assert.equal(payload.title, "Franco’s Spanish practice");
 assert.equal(
   payload.text,
-  "🇪🇸 Franco finished today’s Tarjetas de Flash session!\n27 words practiced · 15 new words · 4 retries · 3-day streak",
+  "🇪🇸 Franco practiced Spanish today.\nMastery 30/1523 (+6) · Projected 85% · 4 retries\nTry it: https://fbaseggio.github.io/tarjetasdeflash/",
 );
 assert.equal(payload.url, PUBLIC_APP_URL);
-assert.match(payload.clipboardText, /Try it: https:\/\/fbaseggio\.github\.io\/tarjetasdeflash\/$/);
+assert.equal(payload.clipboardText, payload.text);
 const svg = buildShareCardSvg(payload);
 assert.match(svg, /width="1200" height="630"/);
 assert.match(svg, />Franco practiced Spanish today</);
 assert.match(svg, />27<\/text>/);
 assert.match(svg, />15<\/text>/);
-assert.match(svg, />4<\/text>/);
+assert.match(svg, />\+6<\/text>/);
 assert.match(svg, />3<\/text>/);
 assert.match(
   buildShareCardSvg(buildSessionSharePayload({
@@ -35,6 +41,12 @@ assert.match(
     newWords: 0,
     retries: 0,
     streak: 1,
+    mastery: {
+      demonstrated: 1,
+      demonstratedToday: 1,
+      total: 1523,
+      projectedPercent: 10,
+    },
   })),
   /Milo &amp; Gideon practiced Spanish today/,
 );
@@ -46,7 +58,6 @@ assert.equal(await shareSessionResults({
 assert.deepEqual(sharedPayload, {
   title: payload.title,
   text: payload.text,
-  url: payload.url,
 });
 
 const fakeImage = { name: "tarjetas-session-results.png", type: "image/png" };

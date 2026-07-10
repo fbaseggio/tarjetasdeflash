@@ -37,7 +37,7 @@ const baseline = {
   lemma: "biblioteca",
   senses: ["library"],
   partOfSpeech: "noun",
-  tier: "expanding",
+  tier: "expanding1",
   chapter: 8,
 };
 const equivalent = {
@@ -200,7 +200,7 @@ const vocabulary = [
     lemma: "azul",
     senses: ["blue"],
     partOfSpeech: "adjective",
-    tier: "expanding",
+    tier: "expanding1",
     chapter: 8,
     semanticTags: [],
   },
@@ -261,7 +261,7 @@ assert.equal(
     direction: "english-to-spanish",
     isCandidate: true,
   }),
-  "invitado/a",
+  "invitado",
 );
 assert.equal(
   questionFieldText(
@@ -301,6 +301,41 @@ assert.equal(
     "spanish",
   ),
   "¿Cómo estás?",
+);
+assert.equal(
+  questionFieldText(
+    { spanish: "sacar/tomar fotos", partOfSpeech: "verb" },
+    "spanish",
+  ),
+  "sacar fotos",
+);
+assert.equal(
+  questionFieldText(
+    { spanish: "el año/los años", partOfSpeech: "noun" },
+    "spanish",
+  ),
+  "año",
+);
+assert.equal(
+  questionFieldText(
+    { english: "talk/reality show", partOfSpeech: "noun" },
+    "english",
+  ),
+  "talk show",
+);
+assert.equal(
+  questionFieldText(
+    { english: "good/bad time", partOfSpeech: "phrase" },
+    "english",
+  ),
+  "good time",
+);
+assert.equal(
+  questionFieldText(
+    { spanish: "¿cuánto(s)/a(s)?", partOfSpeech: "question" },
+    "spanish",
+  ),
+  "¿cuánto?",
 );
 
 console.log("Quality gate, compact quiz text, and weighted distractor checks passed.");

@@ -120,9 +120,33 @@ a {
   font-weight: 750;
 }
 
+.answer-delay-setting {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.answer-delay-setting select {
+  max-width: 92px;
+  padding: 6px 8px;
+  color: var(--violet-dark);
+  background: rgb(255 253 247 / 86%);
+  border: 1px solid #ccc5ef;
+  border-radius: 10px;
+  font: inherit;
+}
+
 .user-menu button:disabled {
   cursor: wait;
   opacity: 0.65;
+}
+
+.answer-delay-setting select:focus-visible {
+  outline: 3px solid var(--violet-soft);
+  outline-offset: 2px;
 }
 
 .quiz-panel,
@@ -843,6 +867,37 @@ h1 {
   background: #cfc9ee;
 }
 
+.mastery-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: -12px 0 24px;
+}
+
+.mastery-summary > div {
+  min-width: 0;
+  padding: 14px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.mastery-summary span,
+.mastery-summary small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.mastery-summary strong {
+  display: block;
+  margin: 4px 0;
+  color: var(--ink);
+  font-size: 1.35rem;
+}
+
 .daily-credit {
   margin: -10px 0 18px;
   color: var(--violet-dark);
@@ -978,6 +1033,14 @@ footer {
     gap: 6px;
   }
 
+  .answer-delay-setting span {
+    display: none;
+  }
+
+  .answer-delay-setting select {
+    max-width: 82px;
+  }
+
   .user-menu strong {
     max-width: 100px;
     overflow: hidden;
@@ -1018,6 +1081,10 @@ footer {
 
   .practice-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mastery-summary {
+    grid-template-columns: 1fr;
   }
 }
 

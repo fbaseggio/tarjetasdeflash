@@ -10,14 +10,14 @@ const dataset = { id: "test-vocabulary", version: 1 };
 const vocabulary = [
   { id: "agua", spanish: "agua", english: "water", partOfSpeech: "noun", tier: "foundation" },
   { id: "viaje", spanish: "viaje", english: "trip", partOfSpeech: "noun", tier: "everyday" },
-  { id: "recurso", spanish: "recurso", english: "resource", partOfSpeech: "noun", tier: "expanding" },
+  { id: "recurso", spanish: "recurso", english: "resource", partOfSpeech: "noun", tier: "expanding1" },
 ];
 let currentDate = new Date(2026, 6, 2, 9);
 const learning = createLearningStorage(memoryStorage, () => currentDate);
 
 learning.seedOnboarding("franco", dataset, {
   completedAt: "2026-07-01T14:00:00.000Z",
-  placement: { learningFrontier: "expanding" },
+  placement: { learningFrontier: "expanding1" },
   assessedWords: {
     agua: { direction: "spanish-to-english", correct: true },
     viaje: { direction: "english-to-spanish", correct: false },
@@ -34,20 +34,20 @@ assert.equal(snapshot.words.viaje.schedule.dueDate, "2026-07-02");
 let coverage = learning.getCoverage("franco", dataset);
 assert.deepEqual(coverage.foundation, { tested: 1, latestCorrect: 1, latestWrong: 0 });
 assert.deepEqual(coverage.everyday, { tested: 1, latestCorrect: 0, latestWrong: 1 });
-assert.deepEqual(coverage.expanding, { tested: 0, latestCorrect: 0, latestWrong: 0 });
+assert.deepEqual(coverage.expanding1, { tested: 0, latestCorrect: 0, latestWrong: 0 });
 
 learning.recordPresentations("franco", dataset, [vocabulary[2]]);
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-02");
 assert.equal(snapshot.words.recurso.schedule.intervalDays, 0);
-assert.equal(learning.getCoverage("franco", dataset).expanding.tested, 0);
+assert.equal(learning.getCoverage("franco", dataset).expanding1.tested, 0);
 
 learning.recordFirstAttempts("franco", dataset, [{
   vocabularyId: "recurso",
-  tier: "expanding",
+  tier: "expanding1",
   direction: "spanish-to-english",
   correct: true,
-}], "2026-07-02", { learningFrontier: "expanding" });
+}], "2026-07-02", { learningFrontier: "expanding1" });
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-05");
 assert.equal(snapshot.words.recurso.schedule.intervalDays, 3);
@@ -55,10 +55,10 @@ assert.equal(snapshot.words.recurso.directions["spanish-to-english"].testCount, 
 
 learning.recordFirstAttempts("franco", dataset, [{
   vocabularyId: "recurso",
-  tier: "expanding",
+  tier: "expanding1",
   direction: "english-to-spanish",
   correct: true,
-}], "2026-07-02", { learningFrontier: "expanding" });
+}], "2026-07-02", { learningFrontier: "expanding1" });
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.intervalDays, 3);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-05");
@@ -66,10 +66,10 @@ assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-05");
 currentDate = new Date(2026, 6, 5, 9);
 learning.recordFirstAttempts("franco", dataset, [{
   vocabularyId: "recurso",
-  tier: "expanding",
+  tier: "expanding1",
   direction: "spanish-to-english",
   correct: true,
-}], "2026-07-05", { learningFrontier: "expanding" });
+}], "2026-07-05", { learningFrontier: "expanding1" });
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-12");
 assert.equal(snapshot.words.recurso.schedule.intervalDays, 7);
@@ -81,7 +81,7 @@ learning.recordFirstAttempts("franco", dataset, [{
   direction: "spanish-to-english",
   correct: true,
   source: "review",
-}], "2026-07-20", { learningFrontier: "expanding" });
+}], "2026-07-20", { learningFrontier: "expanding1" });
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.viaje.masteryStatus, "repair");
 assert.equal(snapshot.words.viaje.repairCleanStreak, 1);
@@ -93,7 +93,7 @@ learning.recordFirstAttempts("franco", dataset, [{
   direction: "english-to-spanish",
   correct: true,
   source: "review",
-}], "2026-07-23", { learningFrontier: "expanding" });
+}], "2026-07-23", { learningFrontier: "expanding1" });
 snapshot = learning.getSnapshot("franco", dataset);
 assert.equal(snapshot.words.viaje.masteryStatus, "presumed-mastered");
 assert.equal(snapshot.words.viaje.schedule.intervalDays, 30);
@@ -106,7 +106,7 @@ learning.recordFirstAttempts("franco", dataset, [{
   direction: "english-to-spanish",
   correct: false,
   source: "check-in",
-}], "2026-07-04", { learningFrontier: "expanding" });
+}], "2026-07-04", { learningFrontier: "expanding1" });
 coverage = learning.getCoverage("franco", dataset);
 assert.deepEqual(coverage.foundation, { tested: 1, latestCorrect: 0, latestWrong: 1 });
 snapshot = learning.getSnapshot("franco", dataset);
@@ -176,10 +176,11 @@ assert.equal(legacyLearning.normalizeMastery(
   "franco",
   dataset,
   vocabulary,
-  { learningFrontier: "expanding" },
+  { learningFrontier: "expanding1" },
   "2026-07-01",
 ), true);
 assert.equal(legacyLearning.getSnapshot("franco", dataset).words.recurso.schedule.intervalDays, 3);
 assert.equal(legacyLearning.getSnapshot("franco", dataset).words.recurso.schedule.dueDate, "2026-07-04");
+assert.equal(legacyLearning.getSnapshot("franco", dataset).words.recurso.tier, "expanding1");
 
 console.log("Word evidence, same-day sessions, calendar repair, coverage, and scheduling checks passed.");

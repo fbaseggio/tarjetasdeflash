@@ -49,12 +49,18 @@
       ]
     },
     {
-      "id": "expanding",
-      "entryCount": 787,
+      "id": "expanding1",
+      "entryCount": 262,
       "chapters": [
         7,
         8,
-        9,
+        9
+      ]
+    },
+    {
+      "id": "expanding2",
+      "entryCount": 525,
+      "chapters": [
         10,
         11,
         12,
@@ -101,11 +107,11 @@
         "en caso de que",
         "tocar un instrumento musical"
       ],
-      "tierAssignment": "Year 2 entries are assigned to the existing expanding tier pending a future level-model refactor."
+      "tierAssignment": "Year 2 entries are assigned to the Expanding 2 application tier."
     }
   },
   "notes": [
-    "Chapter is the fine-grained curriculum order; the three application tiers are derived chapter bands.",
+    "Chapter is the fine-grained curriculum order; the four application tiers are derived chapter and year bands.",
     "Learner-facing Spanish is separated from the canonical lemma and source forms.",
     "Stem changes, required prepositions, reflexivity, irregular forms, and related notes are retained as structured grammar metadata.",
     "Repeated Spanish prompts are merged for fair multiple-choice questions; distinct source glosses are retained in the senses array.",
@@ -114,7 +120,7 @@
     "Learner-facing interrogatives use the question category; other former expressions use phrase so question distractors can be weighted independently.",
     "First-pass semantic tags adapt the Instituto Cervantes Nociones específicas organization to this curriculum; tags are project-authored and remain subject to editorial review.",
     "Every entry has a year label; repeated prompts can carry multiple years while retaining the year of first introduction.",
-    "Spanish II chapters 10–18 are currently assigned to the existing Expanding application tier.",
+    "Year 1 chapters 7–9 are Expanding 1; Spanish II chapters 10–18 are Expanding 2.",
     "The source's official Spanish-English teaching text is preserved except for quiz-only overrides used to remove misleading production prompts."
   ],
   "years": [

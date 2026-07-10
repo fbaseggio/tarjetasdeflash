@@ -6,11 +6,12 @@ import {
   isBelowFrontier,
   masteryAfterAttempt,
   REVIEW_INTERVALS,
-} from "./mastery-policy.js?v=0.17.0";
+} from "./mastery-policy.js?v=0.18.0";
+import { TIER_ORDER } from "./tiers.js?v=0.18.0";
 
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v2.";
 const CALENDAR_MODEL_VERSION = 2;
-const MASTERY_MODEL_VERSION = 1;
+const MASTERY_MODEL_VERSION = 2;
 const DIRECTIONS = Object.freeze(["spanish-to-english", "english-to-spanish"]);
 
 export function localDateKey(date) {
@@ -61,11 +62,10 @@ function sessionSequence(session) {
 }
 
 function summarize(words) {
-  const tiers = {
-    foundation: { tested: 0, latestCorrect: 0, latestWrong: 0 },
-    everyday: { tested: 0, latestCorrect: 0, latestWrong: 0 },
-    expanding: { tested: 0, latestCorrect: 0, latestWrong: 0 },
-  };
+  const tiers = Object.fromEntries(TIER_ORDER.map((tier) => [
+    tier,
+    { tested: 0, latestCorrect: 0, latestWrong: 0 },
+  ]));
 
   Object.values(words).forEach((word) => {
     const latest = latestWordResult(word);
@@ -230,6 +230,7 @@ export function createLearningStorage(storage, now = () => new Date()) {
     Object.entries(learning.words).forEach(([vocabularyId, word]) => {
       const entry = entries.get(vocabularyId);
       if (!entry) return;
+      word.tier = entry.tier;
       word.conceptKey ??= conceptKey(entry);
       const latest = latestWordResult(word);
       if (latest) {

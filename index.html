@@ -6,7 +6,7 @@
     <meta name="description" content="A tiny Spanish vocabulary quiz.">
     <title>Tarjetas de Flash</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=0.17.0">
+    <link rel="stylesheet" href="./styles.css?v=0.18.0">
   </head>
   <body>
     <main class="page-shell">
@@ -19,6 +19,14 @@
           <span class="prototype-badge">First look</span>
           <div id="user-menu" class="user-menu" hidden>
             <strong id="user-greeting"></strong>
+            <label class="answer-delay-setting" for="answer-delay">
+              <span>Answer delay</span>
+              <select id="answer-delay" name="answer-delay">
+                <option value="off">Off</option>
+                <option value="short">Short</option>
+                <option value="normal">Normal</option>
+              </select>
+            </label>
             <button
               id="export-diagnostics"
               type="button"
@@ -262,6 +270,19 @@
           </div>
         </div>
 
+        <div class="mastery-summary" aria-label="Estimated mastery">
+          <div>
+            <span>Mastery</span>
+            <strong id="mastery-demonstrated">0 / 1523</strong>
+            <small id="mastery-gain">+0 today</small>
+          </div>
+          <div>
+            <span>Projected</span>
+            <strong id="mastery-projected">0%</strong>
+            <small>estimated corpus mastery</small>
+          </div>
+        </div>
+
         <p id="daily-credit" class="daily-credit"></p>
         <dl class="practice-stats" aria-label="Practice history">
           <div>
@@ -336,6 +357,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./src/app.js?v=0.17.0"></script>
+    <script type="module" src="./src/app.js?v=0.18.0"></script>
   </body>
 </html>

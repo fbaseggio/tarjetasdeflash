@@ -1,13 +1,9 @@
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.18.0";
+
 const STAGE_LABELS = Object.freeze({
   "check-in": "Check-in",
   "due-review": "Due reviews",
   extra: "Extra quiz",
-});
-
-const TIER_LABELS = Object.freeze({
-  foundation: "Foundation assessment",
-  everyday: "Everyday assessment",
-  expanding: "Expanding assessment",
 });
 
 const REVIEW_GAPS = Object.freeze([1, 3, 7, 14, 30, 60]);
@@ -122,7 +118,7 @@ export function buildAllWordsReview({ vocabularyIds, vocabulary, learningWords =
 
 export function buildAssessmentReview(assessmentResult, vocabulary, learningWords = {}) {
   const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
-  return Object.freeze(["foundation", "everyday", "expanding"].map((tier) => {
+  return Object.freeze(TIER_ORDER.map((tier) => {
     const items = assessmentResult.attempts.filter((attempt) => attempt.tier === tier).map((attempt) => {
       const entry = entries.get(attempt.vocabularyId);
       const spanishPrompt = attempt.direction === "spanish-to-english";
@@ -139,7 +135,7 @@ export function buildAssessmentReview(assessmentResult, vocabulary, learningWord
     });
     return Object.freeze({
       id: `assessment-${tier}`,
-      title: TIER_LABELS[tier],
+      title: `${TIER_LABELS[tier]} assessment`,
       kind: "questions",
       correctCount: items.filter((item) => item.correct).length,
       wrongCount: items.filter((item) => !item.correct).length,

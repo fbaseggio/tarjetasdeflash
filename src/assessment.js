@@ -1,9 +1,11 @@
-import { buildQuestionForAnswer, DIRECTIONS, shuffle } from "./questions.js?v=0.17.0";
+import { buildQuestionForAnswer, DIRECTIONS, shuffle } from "./questions.js?v=0.18.0";
+import { TIER_ORDER } from "./tiers.js?v=0.18.0";
 
 export const ASSESSMENT_TIERS = Object.freeze({
   FOUNDATION: "foundation",
   EVERYDAY: "everyday",
-  EXPANDING: "expanding",
+  EXPANDING1: "expanding1",
+  EXPANDING2: "expanding2",
 });
 
 export const ASSESSMENT_ANCHORS = Object.freeze({
@@ -17,17 +19,23 @@ export const ASSESSMENT_ANCHORS = Object.freeze({
     "ver", "volver", "aeropuerto", "hotel", "playa", "pasaporte", "feliz", "llave",
     "limpio", "triste", "ayudar", "camisa", "barato", "bueno", "cambiar", "anoche",
   ]),
-  expanding: Object.freeze([
+  expanding1: Object.freeze([
     "acordarse", "acostarse", "despertarse", "durante", "gritar", "levantarse",
     "sentirse", "vestirse", "aceite", "arroz", "carne", "cebolla", "ensalada",
     "escoger", "leche", "manzana", "azúcar", "camarero", "siempre", "toalla",
     "jabón", "espejo", "preocuparse", "probarse",
   ]),
+  expanding2: Object.freeze([
+    "boca", "brazo", "cabeza", "corazón", "cuello", "cuerpo", "ojo", "pierna",
+    "dolor", "farmacia", "hospital", "medicamento", "salud", "síntoma",
+    "caerse", "estornudar", "olvidar", "recetar", "a menudo", "despacio",
+    "cargador", "teléfono celular", "sitio web", "descargar",
+  ]),
 });
 
 const CORE_PER_TIER = 4;
 const CONFIRMATION_COUNT = 6;
-const TOTAL_QUESTIONS = CORE_PER_TIER * 3 + CONFIRMATION_COUNT;
+const TOTAL_QUESTIONS = CORE_PER_TIER * TIER_ORDER.length + CONFIRMATION_COUNT;
 
 function isSolid(score) {
   return score.total > 0 && score.correct / score.total >= 0.7;
@@ -67,47 +75,30 @@ function buildItems(vocabulary, entries, tier, random) {
 }
 
 function emptyScores() {
-  return {
-    foundation: { correct: 0, total: 0 },
-    everyday: { correct: 0, total: 0 },
-    expanding: { correct: 0, total: 0 },
-  };
+  return Object.fromEntries(TIER_ORDER.map((tier) => [tier, { correct: 0, total: 0 }]));
 }
 
 function chooseConfirmationTier(scores) {
-  if (!isSolid(scores.foundation)) {
-    return ASSESSMENT_TIERS.FOUNDATION;
-  }
-  if (!isSolid(scores.everyday)) {
-    return ASSESSMENT_TIERS.EVERYDAY;
-  }
-  return ASSESSMENT_TIERS.EXPANDING;
+  return TIER_ORDER.find((tier) => !isSolid(scores[tier])) ?? ASSESSMENT_TIERS.EXPANDING2;
 }
 
 function calculatePlacement(scores) {
-  if (!isSolid(scores.foundation)) {
-    return { knownThrough: null, learningFrontier: ASSESSMENT_TIERS.FOUNDATION };
-  }
-  if (!isSolid(scores.everyday)) {
+  const frontier = TIER_ORDER.find((tier) => !isSolid(scores[tier]));
+  if (frontier) {
+    const frontierIndex = TIER_ORDER.indexOf(frontier);
     return {
-      knownThrough: ASSESSMENT_TIERS.FOUNDATION,
-      learningFrontier: ASSESSMENT_TIERS.EVERYDAY,
-    };
-  }
-  if (!isSolid(scores.expanding)) {
-    return {
-      knownThrough: ASSESSMENT_TIERS.EVERYDAY,
-      learningFrontier: ASSESSMENT_TIERS.EXPANDING,
+      knownThrough: frontierIndex > 0 ? TIER_ORDER[frontierIndex - 1] : null,
+      learningFrontier: frontier,
     };
   }
   return {
-    knownThrough: ASSESSMENT_TIERS.EXPANDING,
-    learningFrontier: ASSESSMENT_TIERS.EXPANDING,
+    knownThrough: ASSESSMENT_TIERS.EXPANDING2,
+    learningFrontier: ASSESSMENT_TIERS.EXPANDING2,
   };
 }
 
 export function createAssessmentSession(vocabulary, random = Math.random) {
-  if (!Array.isArray(vocabulary) || vocabulary.length < 18) {
+  if (!Array.isArray(vocabulary) || vocabulary.length < TOTAL_QUESTIONS) {
     throw new Error("The assessment requires a populated tiered vocabulary.");
   }
 
@@ -115,7 +106,7 @@ export function createAssessmentSession(vocabulary, random = Math.random) {
   const usedIds = new Set();
   const coreItems = [];
 
-  for (const tier of Object.values(ASSESSMENT_TIERS)) {
+  for (const tier of TIER_ORDER) {
     const entries = selectAnchors(byLemma, tier, CORE_PER_TIER, usedIds, random);
     entries.forEach((entry) => usedIds.add(entry.id));
     coreItems.push(...buildItems(vocabulary, entries, tier, random));
@@ -148,11 +139,12 @@ export function createAssessmentSession(vocabulary, random = Math.random) {
 
   function finish() {
     const placement = calculatePlacement(scores);
+    const knownIndex = TIER_ORDER.indexOf(placement.knownThrough);
     result = Object.freeze({
       ...placement,
       confidence: "low",
       assessedCount: attempts.length,
-      presumedKnownTiers: Object.freeze([ASSESSMENT_TIERS.FOUNDATION]),
+      presumedKnownTiers: Object.freeze(knownIndex >= 0 ? TIER_ORDER.slice(0, knownIndex + 1) : []),
       confirmationTier,
       scores: Object.freeze(Object.fromEntries(
         Object.entries(scores).map(([tier, score]) => [tier, Object.freeze({ ...score })]),

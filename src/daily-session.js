@@ -1,6 +1,5 @@
-import { shuffle } from "./questions.js?v=0.17.0";
-
-const TIER_ORDER = Object.freeze(["foundation", "everyday", "expanding"]);
+import { shuffle } from "./questions.js?v=0.18.0";
+import { lowerTiers } from "./tiers.js?v=0.18.0";
 
 function latestResult(word) {
   return Object.values(word.directions ?? {})
@@ -23,12 +22,10 @@ function dueForSameDayRepair(word, date) {
 
 function auditCandidates(vocabulary, words, placement, date, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
-  const lowerTiers = TIER_ORDER.filter((tier) => (
-    TIER_ORDER.indexOf(tier) < TIER_ORDER.indexOf(frontier)
-  ));
-  if (lowerTiers.length === 0) return [];
+  const auditTiers = lowerTiers(frontier);
+  if (auditTiers.length === 0) return [];
 
-  const byTier = Object.fromEntries(lowerTiers.map((tier) => [tier, shuffle(
+  const byTier = Object.fromEntries(auditTiers.map((tier) => [tier, shuffle(
     vocabulary.filter((entry) => {
       if (entry.tier !== tier) return false;
       const word = words[entry.id];
@@ -39,14 +36,11 @@ function auditCandidates(vocabulary, words, placement, date, random) {
   )]));
 
   const selected = [];
-  if (frontier === "expanding") {
-    if (byTier.foundation?.length) selected.push(byTier.foundation.shift());
-    if (byTier.everyday?.length) selected.push(byTier.everyday.shift());
-  } else {
-    selected.push(...(byTier.foundation ?? []).splice(0, 2));
-  }
+  [...auditTiers].reverse().slice(0, 2).forEach((tier) => {
+    if (byTier[tier]?.length) selected.push(byTier[tier].shift());
+  });
 
-  const remaining = lowerTiers.flatMap((tier) => byTier[tier]);
+  const remaining = auditTiers.flatMap((tier) => byTier[tier]);
   selected.push(...remaining.slice(0, 2 - selected.length));
   return selected;
 }

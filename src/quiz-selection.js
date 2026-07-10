@@ -1,4 +1,5 @@
-import { shuffle } from "./questions.js?v=0.17.0";
+import { shuffle } from "./questions.js?v=0.18.0";
+import { lowerTiers } from "./tiers.js?v=0.18.0";
 
 export function selectQuizVocabulary(
   vocabulary,
@@ -25,20 +26,22 @@ export function selectQuizVocabulary(
 
   if (auditCount > 0) {
     const selectedIds = new Set(selected.map((entry) => entry.id));
-    const auditTiers = frontier === "expanding"
-      ? ["foundation", "everyday"]
-      : Array.from({ length: auditCount }, () => "foundation");
-    auditTiers.forEach((tier) => {
-      const auditPool = shuffle(
-        vocabulary.filter((entry) => entry.tier === tier && !selectedIds.has(entry.id)),
-        random,
-      );
-      const entry = auditPool[0];
-      if (entry) {
-        selected.push(entry);
-        selectedIds.add(entry.id);
+    const auditTiers = lowerTiers(frontier);
+    const auditPools = Object.fromEntries(auditTiers.map((tier) => [tier, shuffle(
+      vocabulary.filter((entry) => entry.tier === tier && !selectedIds.has(entry.id)),
+      random,
+    )]));
+    const preferredTiers = [...auditTiers].reverse();
+    while (selected.length < requestedCount && preferredTiers.length > 0) {
+      const tier = preferredTiers[(selected.length - frontierCount) % preferredTiers.length];
+      const entry = auditPools[tier]?.shift();
+      if (!entry) {
+        preferredTiers.splice(preferredTiers.indexOf(tier), 1);
+        continue;
       }
-    });
+      selected.push(entry);
+      selectedIds.add(entry.id);
+    }
   }
 
   if (selected.length !== requestedCount) {

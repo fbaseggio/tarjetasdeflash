@@ -7,7 +7,7 @@ import {
   masteryAfterAttempt,
 } from "../src/mastery-policy.js";
 
-const placement = { learningFrontier: "expanding" };
+const placement = { learningFrontier: "expanding1" };
 const foundation = {
   id: "agua", spanish: "agua", english: "water", partOfSpeech: "noun", tier: "foundation",
 };
@@ -15,11 +15,12 @@ const everyday = {
   id: "viaje", spanish: "viaje", english: "trip", partOfSpeech: "noun", tier: "everyday",
 };
 const frontier = {
-  id: "recurso", spanish: "recurso", english: "resource", partOfSpeech: "noun", tier: "expanding",
+  id: "recurso", spanish: "recurso", english: "resource", partOfSpeech: "noun", tier: "expanding1",
 };
 
 assert.equal(auditGapDays("foundation"), 60);
 assert.equal(auditGapDays("everyday"), 30);
+assert.equal(auditGapDays("expanding1"), 30);
 assert.equal(conceptKey(foundation), "agua|noun|water");
 assert.equal(eligibleForOrdinaryQuestion(null, "2026-07-01"), true);
 assert.equal(eligibleForOrdinaryQuestion({
@@ -36,7 +37,7 @@ assert.equal(result.intervalDays, 3);
 assert.equal(result.retiredDate, "2026-07-01");
 
 result = masteryAfterAttempt({
-  tier: "expanding",
+  tier: "expanding1",
   lastFirstAttemptDate: "2026-07-01",
   schedule: { intervalDays: 3 },
 }, {

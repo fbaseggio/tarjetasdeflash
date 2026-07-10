@@ -7,7 +7,7 @@ const vocabulary = JSON.parse(
 );
 const foundation = vocabulary.filter((entry) => entry.tier === "foundation");
 const everyday = vocabulary.filter((entry) => entry.tier === "everyday");
-const expanding = vocabulary.filter((entry) => entry.tier === "expanding");
+const expanding = vocabulary.filter((entry) => entry.tier === "expanding1");
 const dueFrontier = expanding.slice(0, 8);
 const words = Object.fromEntries(dueFrontier.map((entry, index) => [entry.id, {
   tier: entry.tier,
@@ -25,7 +25,7 @@ const words = Object.fromEntries(dueFrontier.map((entry, index) => [entry.id, {
 
 const plan = createDailySessionPlan(
   vocabulary,
-  { knownThrough: "everyday", learningFrontier: "expanding" },
+  { knownThrough: "everyday", learningFrontier: "expanding1" },
   { words },
   "2026-07-02",
   () => 0.41,
@@ -49,7 +49,7 @@ const askedToday = Object.fromEntries(dueFrontier.map((entry) => [entry.id, {
 }]));
 const secondSameDayPlan = createDailySessionPlan(
   vocabulary,
-  { knownThrough: "everyday", learningFrontier: "expanding" },
+  { knownThrough: "everyday", learningFrontier: "expanding1" },
   { words: askedToday },
   "2026-07-02",
   () => 0.41,
@@ -60,7 +60,7 @@ assert.ok(secondSameDayPlan.reviewIds.every((id) => !dueFrontier.some((entry) =>
 const missedAudit = foundation[0];
 const repairPlan = createDailySessionPlan(
   vocabulary,
-  { knownThrough: "everyday", learningFrontier: "expanding" },
+  { knownThrough: "everyday", learningFrontier: "expanding1" },
   { words: {
     [missedAudit.id]: {
       tier: "foundation",
@@ -98,5 +98,17 @@ const backlogPlan = createDailySessionPlan(
 );
 assert.equal(backlogPlan.newWordIds.length, 0);
 assert.ok(backlogPlan.reviewIds.length >= 51);
+
+const expanding2 = vocabulary.filter((entry) => entry.tier === "expanding2");
+const exp2Plan = createDailySessionPlan(
+  vocabulary,
+  { knownThrough: "expanding1", learningFrontier: "expanding2" },
+  { words: {} },
+  "2026-07-02",
+  () => 0.41,
+);
+assert.equal(exp2Plan.checkInIds.filter((id) => everyday.some((entry) => entry.id === id)).length, 1);
+assert.equal(exp2Plan.checkInIds.filter((id) => expanding.some((entry) => entry.id === id)).length, 1);
+assert.ok(exp2Plan.newWordIds.every((id) => expanding2.some((entry) => entry.id === id)));
 
 console.log("Due-only check-in, tiered audits, same-day retirement, repair, and backlog checks passed.");

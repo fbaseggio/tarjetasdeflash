@@ -23,12 +23,12 @@ function completeAssessment(answerCorrectlyForTier) {
 }
 
 const advanced = completeAssessment(() => true);
-assert.equal(advanced.assessedCount, 18);
-assert.equal(advanced.confirmationTier, "expanding");
-assert.equal(advanced.knownThrough, "expanding");
-assert.equal(advanced.learningFrontier, "expanding");
+assert.equal(advanced.assessedCount, 22);
+assert.equal(advanced.confirmationTier, "expanding2");
+assert.equal(advanced.knownThrough, "expanding2");
+assert.equal(advanced.learningFrontier, "expanding2");
 assert.equal(advanced.confidence, "low");
-assert.deepEqual(advanced.presumedKnownTiers, ["foundation"]);
+assert.deepEqual(advanced.presumedKnownTiers, ["foundation", "everyday", "expanding1", "expanding2"]);
 
 const foundationRepair = completeAssessment((tier) => tier !== "foundation");
 assert.equal(foundationRepair.confirmationTier, "foundation");
@@ -42,10 +42,16 @@ assert.equal(everydayStart.knownThrough, "foundation");
 assert.equal(everydayStart.learningFrontier, "everyday");
 assert.equal(everydayStart.scores.everyday.total, 10);
 
-const expandingStart = completeAssessment((tier) => tier !== "expanding");
-assert.equal(expandingStart.confirmationTier, "expanding");
+const expandingStart = completeAssessment((tier) => tier !== "expanding1");
+assert.equal(expandingStart.confirmationTier, "expanding1");
 assert.equal(expandingStart.knownThrough, "everyday");
-assert.equal(expandingStart.learningFrontier, "expanding");
-assert.equal(expandingStart.scores.expanding.total, 10);
+assert.equal(expandingStart.learningFrontier, "expanding1");
+assert.equal(expandingStart.scores.expanding1.total, 10);
 
-console.log("Adaptive 18-question onboarding placement checks passed.");
+const expanding2Start = completeAssessment((tier) => tier !== "expanding2");
+assert.equal(expanding2Start.confirmationTier, "expanding2");
+assert.equal(expanding2Start.knownThrough, "expanding1");
+assert.equal(expanding2Start.learningFrontier, "expanding2");
+assert.equal(expanding2Start.scores.expanding2.total, 10);
+
+console.log("Adaptive 22-question onboarding placement checks passed.");

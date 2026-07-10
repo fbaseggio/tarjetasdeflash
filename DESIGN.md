@@ -13,14 +13,15 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
 - Twenty-seven playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
-- An active, versioned 1,523-entry curriculum vocabulary derived from the project-provided Year 1 and Spanish II workbooks, with chapter order, year labels, three application bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
-- A one-time, per-profile onboarding assessment with twelve mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
-- Due-only frontier practice plus sparse below-frontier audits: expanding learners receive one Foundation and one Everyday audit slot when available; Everyday learners receive two Foundation audit slots.
+- An active, versioned 1,523-entry curriculum vocabulary derived from the project-provided Year 1 and Spanish II workbooks, with chapter order, year labels, four application bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
+- A one-time, per-profile onboarding assessment with sixteen mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
+- Due-only frontier practice plus sparse below-frontier audits: learners above Everyday audit the nearest lower tiers when available; Everyday learners audit Foundation words.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
 - Four randomized choices with stable answer positions for both direction variants.
 - Quality-gated distractors using structural class, part of speech, semantic affinity, Spanish spelling and approximate sound, an initial reviewed set of directional false cognates, and explicit `verbo`/`verbo-falso` rules; deterministic audit and simulation expose every backoff.
 - Brief correct/incorrect feedback after every submission. When compact quiz text differs from the teaching form, a correct answer also reveals the complete pair; misses still advance quickly without exposing the answer.
 - Active quiz rounds carry the same post-answer information into a compact last-result breadcrumb above the next prompt so learners can see what just happened without scrolling backward or pausing. When the quiz form was shortened, the full flashcard/teaching version is shown as a small secondary line on phones.
+- Browser-local **Answer delay** setting with Off, Short, and Normal choices. Short is the default/current one-second pause; Normal is 1.5 seconds.
 - Round-robin reprise of missed words, first in the opposite direction and then alternating directions, with prior wrong choices struck through and disabled in the applicable direction.
 - Final-only scoring of ten resolved words and all wrong submissions.
 - Per-profile `localStorage` summaries for membership days, practiced days, current streak, completed quizzes, first-quiz-of-day error rate, and all-quiz error rate.
@@ -78,7 +79,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## 4. Vocabulary universe
 
-The active vocabulary universe is the 1,523-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided Year 1 `Vocab for G.xlsx` workbook plus the Spanish II `spanishii_vocabulary.xlsx` workbook. Chapters remain the fine-grained curriculum order. Every entry has a `year` of first introduction and a `years` list for repeated prompts; Year 1 covers chapters 0–9 and Spanish II/Year 2 covers chapters 10–18. Application tiers remain Foundation chapters 0–2, Everyday chapters 3–6, and Expanding chapters 7–18 until the level model is refactored beyond three bands. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
+The active vocabulary universe is the 1,523-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided Year 1 `Vocab for G.xlsx` workbook plus the Spanish II `spanishii_vocabulary.xlsx` workbook. Chapters remain the fine-grained curriculum order. Every entry has a `year` of first introduction and a `years` list for repeated prompts; Year 1 covers chapters 0–9 and Spanish II/Year 2 covers chapters 10–18. Application tiers are Foundation chapters 0–2, Everyday chapters 3–6, Expanding 1 chapters 7–9, and Expanding 2 Year 2 chapters 10–18. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
 
 ```json
 {
@@ -154,7 +155,7 @@ Before adding a new batch of vocabulary to the official dataset:
 
 6. **Place entries in the learning path.**
    - Assign chapter or introduction order.
-   - Derive the application tier: Foundation, Everyday, or Expanding.
+   - Derive the application tier: Foundation, Everyday, Expanding 1, or Expanding 2.
    - For words that should be presumed known for advanced learners, make sure their tier reflects that expectation.
 
 7. **Tag meaning and relationships.**
@@ -215,14 +216,14 @@ The MVP uses four-choice multiple choice in both directions. Each ten-question i
 
 The implemented selector never repeats a vocabulary item within one quiz round. Daily selection is stage-specific:
 
-1. The check-in uses up to ten eligible words. Below-frontier audit slots prioritize untested or due words; remaining slots use due frontier words, prioritizing recent misses. Expanding learners audit one Foundation and one Everyday word when available; Everyday learners audit two Foundation words.
+1. The check-in uses up to ten eligible words. Below-frontier audit slots prioritize untested or due words; remaining slots use due frontier words, prioritizing recent misses. Learners above Everyday audit the two nearest lower tiers when available; Everyday learners audit Foundation words.
 2. The new-word stage randomly chooses up to fifteen unseen words from the learner's tentative frontier.
 3. The review stage includes due frontier and repair words plus that day's newly presented words, split into rounds of at most ten. Successfully audited below-frontier words do not enter ordinary reviews.
 4. Optional extra-practice rounds use eight eligible frontier words plus tier-appropriate audit words and exclude every word already questioned that calendar day.
 
 The frontier scheduler starts clean initial retrieval at three days and then advances through 7, 14, 30, and 60 days. A first-presentation mistake resets the word to one day. A same-day success records evidence without lengthening the gap. Immediate reprise answers remain recovery practice and do not lengthen the interval. If more than sixty reviews are due, new-word introduction is suspended for that session.
 
-Below-frontier words use a separate audit track. A clean Foundation audit goes directly to a 60-day gap; a clean Everyday audit for an Expanding learner goes to 30 days. A miss revokes presumed mastery and enters repair at one day. Two later clean, spaced repair reviews restore the word to its tier's audit gap; a same-day corrective review does not count toward those two spaced successes.
+Below-frontier words use a separate audit track. A clean Foundation audit goes directly to a 60-day gap; clean Everyday and Expanding 1 audits for higher-frontier learners go to 30 days. A miss revokes presumed mastery and enters repair at one day. Two later clean, spaced repair reviews restore the word to its tier's audit gap; a same-day corrective review does not count toward those two spaced successes.
 
 Every first-pass question retires its word from ordinary selection for that local calendar day. A check-in or assessment miss may receive one later corrective due-review that day; once that review occurs, the word is retired. Immediate reprises are exempt because they complete the current question rather than create a new first-pass presentation.
 
@@ -262,7 +263,7 @@ A **verbo** is a curriculum entry categorized as a verb whose displayed Spanish 
 
 The first curated lexical-family set contains 24 families and 53 entries, including `invitar`/`invitado`, `llegar`/`llegada`, `desayunar`/`desayuno`, and `nacer`/`nacimiento`. Lexical-family affinity receives a strong weight only after structural compatibility; it cannot place a noun among verb answers or otherwise create a grammatical clue. A family member is still rejected whenever it could also be a valid answer.
 
-Teaching text remains exactly as imported. Generated questions use compact quiz text: parenthetical glosses and abbreviations are removed, the first unambiguous gloss is used when teaching text contains semicolon-separated alternatives, terminal sentence punctuation is removed outside questions, and incidental initial capitalization is normalized outside proper nouns, questions, and numbers. Spanish noun articles are omitted consistently across prompts and choices, preventing gender or the exceptional article-free form of a `verbo-falso` from revealing an answer. Optional `quizSpanish` and `quizEnglish` fields can override this safe default. Thus teaching may show `el jugo (de fruta)` while a quiz asks `jugo`, and `el calamar` becomes `calamar`.
+Teaching text remains exactly as imported. Generated questions use compact quiz text: parenthetical glosses and abbreviations are removed, the first unambiguous gloss is used when teaching text contains semicolon-separated or slash-separated alternatives, terminal sentence punctuation is removed outside questions, and incidental initial capitalization is normalized outside proper nouns, questions, and numbers. Spanish noun articles are omitted consistently across prompts and choices, preventing gender or the exceptional article-free form of a `verbo-falso` from revealing an answer. Optional `quizSpanish` and `quizEnglish` fields can override this safe default. Thus teaching may show `el jugo (de fruta)` while a quiz asks `jugo`, `sacar/tomar fotos` becomes `sacar fotos`, and `el calamar` becomes `calamar`.
 
 There is no unrelated baseline tail. `npm run audit:distractors -- 200 40` produces a deterministic Markdown-style report with compact questions, every distractor's part of speech, selection tier, reason flags, quiz-text shortening counts, and aggregate backoff rates. Full two-direction calibration keeps plain same-format fallback below 5% of both choices and questions; every fallback remains visible for later semantic or editorial improvement.
 
@@ -298,7 +299,7 @@ Generated questions remain stable for the duration of a quiz. Re-rendering a pag
 
 The current question number is visible during the initial pass, followed by the number of unresolved review words. Running right and wrong counts are not displayed. A submitted answer cannot be changed, because changes would make attempt history ambiguous.
 
-Each question first shows only the prompt for a brief recall pause, then reveals the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. Reduced-motion settings shorten the pause.
+Each question can first show only the prompt for a brief recall pause, then reveal the four choices automatically. This keeps the flow multiple-choice while nudging the learner to try active recall before scanning alternatives. The browser-local **Answer delay** setting controls this pause: Off reveals choices immediately, Short uses the current one-second pause, and Normal uses 1.5 seconds.
 
 After auto-advancing, the next active quiz or assessment screen keeps a compact summary of the previous answer above the prompt. Correct summaries may show the compact prompt/answer pair, reprise reminders, and—when quiz text differs from teaching text—the full flashcard/teaching pair with a small card cue. On narrow screens, secondary details move to their own lines to keep the main result readable. Wrong summaries show only what the learner chose for the prompt; they do not reveal the correct answer. The breadcrumb clears at the beginning of a new round and is separate from immutable attempt history.
 
@@ -308,7 +309,7 @@ When the previous answer completes a round or onboarding assessment, the applica
 
 Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
 
-The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day. The first completed full session for a calendar day also shows a preview of a simple share card and offers **Text my friends**, so the learner can see exactly what will be sent. The application generates the same card as a 1200×630 PNG containing the learner's display name, distinct words practiced, new words, retries, current streak, and public application URL, then attaches that image and a concise editable message to the browser's native share sheet. The recipient application is chosen by the learner; when native sharing is unavailable, the text is copied to the clipboard. Later sessions and standalone extra quizzes do not offer this action.
+The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day. It reports Demonstrated **Mastery** as a weighted count out of the full corpus and **Projected** mastery as a conservative percentage inferred from tier-level evidence. The first completed full session for a calendar day also shows a preview of a simple share card and offers **Text my friends**, so the learner can see exactly what will be sent. The application generates the same card as a 1200×630 PNG containing the learner's display name, distinct words practiced, new words, mastery gained today, current streak, and public application URL, then attaches that image and a concise editable message to the browser's native share sheet. The message contains the link, Demonstrated Mastery, Projected mastery, and retries, while avoiding a separate Web Share URL field to reduce multi-bubble text-message behavior. The recipient application is chosen by the learner; when native sharing is unavailable, the text is copied to the clipboard. Later sessions and standalone extra quizzes do not offer this action.
 
 Completing a quiz also updates a per-profile practice summary in local browser storage. Calendar dates use the device's local timezone. The first completed quiz on a date is that day's baseline quiz: it adds one practiced day, advances the streak when the preceding practice date was yesterday, and contributes to the daily first-quiz error rate. Later quizzes that day do not change the streak or baseline rate, but do increase the total quiz count and all-quiz error rate.
 
@@ -374,7 +375,7 @@ This is an honor-system design. Anyone who can open the site can select any prof
 Each profile will retain a coarse level estimate independently from any vocabulary dataset version:
 
 ```text
-estimatedTier          // foundation, everyday, or expanding
+estimatedTier          // foundation, everyday, expanding1, or expanding2
 confidence             // low, medium, or high
 receptiveScore         // Spanish-to-English evidence
 productiveScore        // English-to-Spanish evidence
@@ -385,9 +386,9 @@ evidenceDatasetVersion
 
 Only first attempts on previously unseen or check-in words contribute primary placement evidence. Immediate reprise answers do not raise the estimate, because they measure recovery rather than durable knowledge. Spanish-to-English and English-to-Spanish evidence remain separate because recognition is generally easier than production, even while both use multiple choice.
 
-The implemented onboarding estimator asks twelve core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all eighteen assessed words. The assessment gives brief feedback and advances automatically, does not reprise missed questions, and does not count as quiz activity or streak credit. Its placement screen offers a tier-grouped review of all assessment answers.
+The implemented onboarding estimator asks sixteen core questions—four per tier—then six confirmation questions in the apparent boundary tier. A tier is tentatively solid at 70% first-attempt accuracy. It stores `knownThrough`, `learningFrontier`, low confidence, per-tier scores, and direction-specific evidence for all twenty-two assessed words. The assessment gives brief feedback and advances automatically, does not reprise missed questions, and does not count as quiz activity or streak credit. Its placement screen offers a tier-grouped review of all assessment answers.
 
-All below-frontier words are provisionally presumed known, while observed misses revoke that presumption word by word. Foundation confirmations enter a 60-day audit pool; Everyday confirmations for Expanding learners enter a 30-day pool. Audit misses enter active repair until two clean spaced reviews restore presumed mastery. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned.
+All below-frontier words are provisionally presumed known, while observed misses revoke that presumption word by word. Foundation confirmations enter a 60-day audit pool; Everyday and Expanding 1 confirmations for higher-frontier learners enter a 30-day pool. Audit misses enter active repair until two clean spaced reviews restore presumed mastery. Continuous level revision from later check-ins and promotion to medium confidence after roughly 30–50 assessed words remain planned.
 
 When vocabulary changes, the coarse level estimate remains as a prior. Confidence is rebuilt against the new dataset, while exact semantic word matches retain their full word-level history. Thus a dataset migration neither discards useful knowledge evidence nor treats every approximate match as certain.
 
@@ -533,7 +534,7 @@ If a summary update fails after an attempt is preserved, a repair routine can re
 
 ## 10. Standings and reporting
 
-The current result screen reports the active learner's streak, membership days, practice days, completed quizzes, daily first-quiz error rate, overall error rate, and vocabulary coverage by tier. Coverage shows distinct words tested and divides them by the most recent first-presentation result: right or wrong. Presumed-known but untested words do not count as tested.
+The current result screen reports the active learner's streak, membership days, practice days, completed quizzes, daily first-quiz error rate, overall error rate, Demonstrated Mastery, Projected mastery, and vocabulary coverage by tier. Coverage shows distinct words tested and divides them by the most recent first-presentation result: right or wrong. Presumed-known but untested words do not count as tested.
 
 A separate standings screen is planned. It will read the small local profile summaries rather than scanning all historical attempts. These standings compare only activity stored in that browser. After Firestore synchronization is added, the same screen reads shared profile summary documents and becomes cross-device.
 
@@ -635,7 +636,7 @@ The practice-session and scheduling domain is implemented without DOM dependenci
 - Do not communicate correctness by color alone; use icons and text as well.
 - Keep accents and `ñ` intact throughout loading, display, and storage.
 - Announce new prompts, quiz progress, and brief answer outcomes for screen readers.
-- Avoid decorative animations that delay the next question; respect reduced-motion preferences. The intentional answer-choice reveal pause is short and reduced for users who request reduced motion.
+- Avoid decorative animations that delay the next question; respect reduced-motion preferences. The intentional answer-choice reveal pause is controlled by the learner's browser-local Answer delay setting.
 - Keep the visual tone cheerful and uncluttered rather than resembling a worksheet.
 
 ## 14. Deployment
@@ -659,13 +660,13 @@ Question-generation logic should be tested independently from the interface.
 
 Implemented prototype acceptance criteria:
 
-- The active vocabulary loads 1,523 official curriculum entries with Year 1/Year 2 labels, three current application tiers, required fields, unique IDs/prompts, and versioned source/transformation metadata.
+- The active vocabulary loads 1,523 official curriculum entries with Year 1/Year 2 labels, four current application tiers, required fields, unique IDs/prompts, and versioned source/transformation metadata.
 - Question generation rejects an asset that cannot produce four distinct displayed choices.
 - A ten-question quiz contains ten distinct vocabulary IDs.
 - A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
 - Every question has exactly four distinct displayed choices and one correct answer.
 - The correct answer appears in varying slots over repeated generation.
-- Each question gives a brief prompt-only recall pause before revealing choices, with a shorter reduced-motion delay.
+- Each question follows the browser-local Answer delay setting before revealing choices: Off, Short, or Normal.
 - Active quiz screens keep a compact last-result breadcrumb that carries forward the same post-answer information; wrong-answer breadcrumbs do not reveal the correct answer, and shortened quiz forms show the full flashcard version without crowding the main line on phones.
 - A submitted answer shows a brief text-and-color outcome, disables all choices, advances automatically after a short delay, and cannot be changed; correct answers reveal the full teaching pair only when it differs from the quiz form, while misses never reveal the answer.
 - No running score is displayed.
@@ -675,13 +676,13 @@ Implemented prototype acceptance criteria:
 - A completed quiz round reports one right resolution per target word and all wrong submissions; a daily result aggregates all completed rounds.
 - The active profile, onboarding placement, aggregate activity, daily plan, latest first-presentation evidence, and word schedules survive closing and reopening the browser.
 - The first completed quiz round of a local calendar day advances the streak and baseline rate once; later rounds update only all-quiz totals and error rate.
-- A profile without placement completes an 18-question onboarding assessment with brief feedback before its first daily session.
-- Onboarding stores a low-confidence known-through band, learning frontier, per-tier scores, and eighteen first-attempt word results without changing quiz or streak totals.
+- A profile without placement completes a 22-question onboarding assessment with brief feedback before its first daily session.
+- Onboarding stores a low-confidence known-through band, learning frontier, per-tier scores, and twenty-two first-attempt word results without changing quiz or streak totals.
 - A daily session contains an up-to-ten-word due/audit check-in, up to fifteen explicit new-word presentations, and all due frontier/repair reviews in rounds of at most ten.
-- Expanding learners audit one Foundation and one Everyday word when eligible; Everyday learners audit two Foundation words.
+- Learners above Everyday audit the two nearest lower tiers when eligible; Everyday learners audit Foundation words.
 - Newly presented words are reviewed later in the same session; more than sixty due reviews suspend new-word introduction.
 - Clean frontier retrieval begins at three days and advances through 7/14/30/60; misses reset to one day, and same-day or immediate-reprise success does not lengthen the gap.
-- Clean Foundation audits go to 60 days, clean Everyday audits for Expanding learners go to 30 days, and misses require two clean spaced repairs before returning to audit status.
+- Clean Foundation audits go to 60 days, clean Everyday and Expanding 1 audits for higher-frontier learners go to 30 days, and misses require two clean spaced repairs before returning to audit status.
 - A word is retired from ordinary selection after its first question that day; a miss may receive one later corrective due-review before retirement.
 - Spanish-to-English and English-to-Spanish evidence remain separate; the result screen reports distinct tested words and their latest first-presentation outcome by tier.
 - Optional extra-practice rounds draw only unseen or due words and exclude all words already questioned that day.

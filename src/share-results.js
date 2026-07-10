@@ -31,28 +31,41 @@ export function buildSessionSharePayload({
   newWords,
   retries,
   streak,
+  mastery = null,
   url = PUBLIC_APP_URL,
 }) {
   const name = String(displayName ?? "A learner").trim() || "A learner";
+  const masteryStats = {
+    demonstrated: safeCount(mastery?.demonstrated),
+    demonstratedToday: safeCount(mastery?.demonstratedToday),
+    total: safeCount(mastery?.total),
+    projectedPercent: safeCount(mastery?.projectedPercent),
+  };
   const card = Object.freeze({
     displayName: name,
     distinctWords: safeCount(distinctWords),
     newWords: safeCount(newWords),
     retries: safeCount(retries),
     streak: safeCount(streak),
+    mastery: Object.freeze(masteryStats),
   });
+  const masteryText = card.mastery.total > 0
+    ? `Mastery ${card.mastery.demonstrated}/${card.mastery.total} (+${card.mastery.demonstratedToday})`
+    : "Mastery starting soon";
+  const projectedText = card.mastery.projectedPercent > 0
+    ? `Projected ${card.mastery.projectedPercent}%`
+    : "Projected still learning";
   const stats = [
-    countLabel(card.distinctWords, "word") + " practiced",
-    countLabel(card.newWords, "new word"),
+    masteryText,
+    projectedText,
     countLabel(card.retries, "retry", "retries"),
-    `${card.streak}-day streak`,
   ].join(" · ");
-  const text = `🇪🇸 ${name} finished today’s Tarjetas de Flash session!\n${stats}`;
+  const text = `🇪🇸 ${name} practiced Spanish today.\n${stats}\nTry it: ${url}`;
   return Object.freeze({
     title: `${name}’s Spanish practice`,
     text,
     url,
-    clipboardText: `${text}\nTry it: ${url}`,
+    clipboardText: text,
     card,
   });
 }
@@ -64,7 +77,7 @@ export function buildShareCardSvg(payload) {
   const tiles = [
     { value: card.distinctWords, label: "WORDS", fill: "#6156D9", color: "#FFFFFF" },
     { value: card.newWords, label: "NEW", fill: "#F2C14E", color: "#241F3B" },
-    { value: card.retries, label: "RETRIES", fill: "#F5D0CF", color: "#A53B37" },
+    { value: `+${card.mastery.demonstratedToday}`, label: "MASTERY", fill: "#F5D0CF", color: "#A53B37" },
     { value: card.streak, label: "DAY STREAK", fill: "#BDE8D5", color: "#176846" },
   ];
   const tileMarkup = tiles.map((tile, index) => {
@@ -145,7 +158,6 @@ export async function shareSessionResults(navigatorObject, payload, imageFile = 
       const shareData = {
         title: payload.title,
         text: payload.text,
-        url: payload.url,
       };
       let sharesImage = false;
       if (imageFile && typeof navigatorObject.canShare === "function") {
