@@ -1,5 +1,12 @@
-import { shuffle } from "./questions.js?v=0.24.0";
-import { lowerTiers } from "./tiers.js?v=0.24.0";
+import { shuffle } from "./questions.js?v=0.24.1";
+import { lowerTiers } from "./tiers.js?v=0.24.1";
+
+export class QuizSelectionError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "QuizSelectionError";
+  }
+}
 
 export function selectQuizVocabulary(
   vocabulary,
@@ -8,7 +15,7 @@ export function selectQuizVocabulary(
   random = Math.random,
 ) {
   if (!Array.isArray(vocabulary) || vocabulary.length < requestedCount) {
-    throw new Error("The vocabulary is too small for the requested quiz.");
+    throw new QuizSelectionError("The vocabulary is too small for the requested quiz.");
   }
 
   const frontier = placement?.learningFrontier ?? "foundation";
@@ -19,21 +26,18 @@ export function selectQuizVocabulary(
   const auditCount = frontier === "foundation" ? 0 : Math.min(2, requestedCount);
   const frontierCount = requestedCount - auditCount;
   const selected = frontierPool.slice(0, frontierCount);
-
-  if (selected.length < frontierCount) {
-    throw new Error(`Not enough ${frontier} vocabulary is available.`);
-  }
+  const selectedIds = new Set(selected.map((entry) => entry.id));
 
   if (auditCount > 0) {
-    const selectedIds = new Set(selected.map((entry) => entry.id));
     const auditTiers = lowerTiers(frontier);
     const auditPools = Object.fromEntries(auditTiers.map((tier) => [tier, shuffle(
       vocabulary.filter((entry) => entry.tier === tier && !selectedIds.has(entry.id)),
       random,
     )]));
     const preferredTiers = [...auditTiers].reverse();
-    while (selected.length < requestedCount && preferredTiers.length > 0) {
-      const tier = preferredTiers[(selected.length - frontierCount) % preferredTiers.length];
+    let auditSelected = 0;
+    while (auditSelected < auditCount && selected.length < requestedCount && preferredTiers.length > 0) {
+      const tier = preferredTiers[auditSelected % preferredTiers.length];
       const entry = auditPools[tier]?.shift();
       if (!entry) {
         preferredTiers.splice(preferredTiers.indexOf(tier), 1);
@@ -41,11 +45,20 @@ export function selectQuizVocabulary(
       }
       selected.push(entry);
       selectedIds.add(entry.id);
+      auditSelected += 1;
     }
   }
 
+  if (selected.length < requestedCount) {
+    const fallbackPool = shuffle(
+      vocabulary.filter((entry) => !selectedIds.has(entry.id)),
+      random,
+    );
+    selected.push(...fallbackPool.slice(0, requestedCount - selected.length));
+  }
+
   if (selected.length !== requestedCount) {
-    throw new Error("The tiered quiz selection could not be filled.");
+    throw new QuizSelectionError("The tiered quiz selection could not be filled.");
   }
 
   return shuffle(selected, random);

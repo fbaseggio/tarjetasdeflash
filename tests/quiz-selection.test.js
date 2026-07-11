@@ -44,4 +44,18 @@ assert.equal(expanding2Quiz.filter((entry) => entry.tier === "expanding2").lengt
 assert.equal(expanding2Quiz.filter((entry) => entry.tier === "expanding1").length, 1);
 assert.equal(expanding2Quiz.filter((entry) => entry.tier === "everyday").length, 1);
 
+const sparseEligibleQuiz = selectQuizVocabulary(
+  [
+    ...vocabulary.filter((entry) => entry.tier === "foundation").slice(0, 2),
+    ...vocabulary.filter((entry) => entry.tier === "everyday").slice(0, 2),
+    ...vocabulary.filter((entry) => entry.tier === "expanding1").slice(0, 2),
+  ],
+  { learningFrontier: "expanding2" },
+  6,
+  () => 0.41,
+);
+assert.equal(sparseEligibleQuiz.length, 6);
+assert.equal(new Set(sparseEligibleQuiz.map((entry) => entry.id)).size, 6);
+assert.ok(sparseEligibleQuiz.every((entry) => entry.tier !== "expanding2"));
+
 console.log("Frontier-weighted quiz selection checks passed.");

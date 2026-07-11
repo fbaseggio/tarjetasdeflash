@@ -1,5 +1,5 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.0";
-import { tierIndex } from "./tiers.js?v=0.24.0";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.1";
+import { tierIndex } from "./tiers.js?v=0.24.1";
 
 export const MASTERY_SCHEMA_VERSION = 1;
 export const REVIEW_INTERVALS = Object.freeze([1, 3, 7, 14, 30, 60]);
