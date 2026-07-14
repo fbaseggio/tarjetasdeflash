@@ -6,8 +6,8 @@ import {
   isBelowFrontier,
   masteryAfterAttempt,
   REVIEW_INTERVALS,
-} from "./mastery-policy.js?v=0.24.7";
-import { TIER_ORDER } from "./tiers.js?v=0.24.7";
+} from "./mastery-policy.js?v=0.24.8";
+import { TIER_ORDER } from "./tiers.js?v=0.24.8";
 
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v2.";
 const CALENDAR_MODEL_VERSION = 2;
@@ -119,10 +119,12 @@ export function createLearningStorage(storage, now = () => new Date()) {
       const value = JSON.parse(storage.getItem(keyFor(profileId)) ?? "null");
       if (
         value?.datasetId === dataset.id
-        && value?.datasetVersion === dataset.version
         && value?.words
         && value?.dailySessions
       ) {
+        value.datasetVersion = dataset.version;
+        value.calendarModelVersion ??= 1;
+        value.masteryModelVersion ??= 1;
         return value;
       }
     } catch {
@@ -285,6 +287,138 @@ export function createLearningStorage(storage, now = () => new Date()) {
     return word;
   }
 
+  function recoverFromHistory(profileId, dataset, vocabulary, history, placement = null) {
+    const learning = read(profileId, dataset);
+    const entries = new Map(vocabulary.map((entry) => [entry.id, entry]));
+    const sessions = new Map((history?.practiceSessions ?? []).map((session) => [session.id, session]));
+    const historicalAttempts = (history?.attempts ?? [])
+      .filter((attempt) => (
+        attempt?.phase === "main"
+        && typeof attempt.vocabularyId === "string"
+        && typeof attempt.direction === "string"
+        && typeof attempt.answeredAt === "string"
+        && entries.has(attempt.vocabularyId)
+      ));
+    const historicalWordIds = new Set(historicalAttempts.map((attempt) => attempt.vocabularyId));
+    const currentWordCount = Object.keys(learning.words ?? {}).length;
+    if (historicalWordIds.size <= currentWordCount) {
+      return Object.freeze({
+        changed: false,
+        recoveredWordCount: 0,
+        historicalWordCount: historicalWordIds.size,
+        currentWordCount,
+      });
+    }
+
+    const existingWords = learning.words ?? {};
+    const events = [];
+    Object.entries(existingWords).forEach(([vocabularyId, word]) => {
+      const entry = entries.get(vocabularyId);
+      if (!entry) return;
+      Object.entries(word.directions ?? {}).forEach(([direction, result]) => {
+        if (!result?.testedAt) return;
+        events.push({
+          vocabularyId,
+          entry,
+          direction,
+          correct: Boolean(result.correct),
+          source: result.source ?? "existing-learning",
+          testedAt: result.testedAt,
+          effectiveDate: result.testedDate ?? localDateKey(new Date(result.testedAt)),
+        });
+      });
+    });
+    historicalAttempts.forEach((attempt) => {
+      const entry = entries.get(attempt.vocabularyId);
+      const session = sessions.get(attempt.practiceSessionId);
+      events.push({
+        vocabularyId: attempt.vocabularyId,
+        entry,
+        direction: attempt.direction,
+        correct: Boolean(attempt.correct),
+        source: attempt.stage ?? "history",
+        testedAt: attempt.answeredAt,
+        effectiveDate: session?.effectiveDate ?? localDateKey(new Date(attempt.answeredAt)),
+      });
+    });
+
+    events.sort((left, right) => left.testedAt.localeCompare(right.testedAt));
+    const recoveredWords = {};
+    events.forEach((event) => {
+      const existing = existingWords[event.vocabularyId];
+      const word = recoveredWords[event.vocabularyId] ?? emptyWord(
+        event.entry,
+        existing?.encounteredAt ?? event.testedAt,
+      );
+      word.presentations = Math.max(word.presentations ?? 0, existing?.presentations ?? 0);
+      const previous = word.directions[event.direction];
+      word.directions[event.direction] = {
+        correct: event.correct,
+        testedAt: event.testedAt,
+        testedDate: event.effectiveDate,
+        testCount: (previous?.testCount ?? 0) + 1,
+        source: event.source,
+      };
+      const policy = masteryAfterAttempt(word, {
+        ...event.entry,
+        vocabularyId: event.vocabularyId,
+        direction: event.direction,
+        correct: event.correct,
+        source: event.source,
+      }, event.effectiveDate, placement);
+      Object.assign(word, policy);
+      word.schedule = scheduleWithPriority(
+        policy.intervalDays,
+        event.effectiveDate,
+        event.testedAt,
+        word.manualPriority,
+      );
+      recoveredWords[event.vocabularyId] = word;
+    });
+
+    Object.entries(existingWords).forEach(([vocabularyId, existing]) => {
+      const recovered = recoveredWords[vocabularyId];
+      if (!recovered) {
+        recoveredWords[vocabularyId] = existing;
+        return;
+      }
+      if (existing.manualPriority) {
+        recovered.manualPriority = existing.manualPriority;
+        recovered.manualPriorityUpdatedAt = existing.manualPriorityUpdatedAt;
+        if (recovered.schedule) {
+          recovered.schedule = scheduleWithPriority(
+            recovered.schedule.intervalDays,
+            recovered.schedule.lastReviewedAt
+              ? localDateKey(new Date(recovered.schedule.lastReviewedAt))
+              : recovered.schedule.dueDate,
+            recovered.schedule.lastReviewedAt,
+            recovered.manualPriority,
+          );
+        }
+      }
+    });
+
+    const recoveredWordCount = Object.keys(recoveredWords).length;
+    if (recoveredWordCount <= currentWordCount) {
+      return Object.freeze({
+        changed: false,
+        recoveredWordCount,
+        historicalWordCount: historicalWordIds.size,
+        currentWordCount,
+      });
+    }
+
+    learning.words = recoveredWords;
+    learning.datasetVersion = dataset.version;
+    write(profileId, learning);
+    return Object.freeze({
+      changed: true,
+      recoveredWordCount,
+      historicalWordCount: historicalWordIds.size,
+      currentWordCount,
+    });
+  }
+
   function normalizeMastery(profileId, dataset, vocabulary, placement, today = localDateKey(now())) {
     const learning = read(profileId, dataset);
     if (learning.masteryModelVersion === MASTERY_MODEL_VERSION) return false;
@@ -443,6 +577,7 @@ export function createLearningStorage(storage, now = () => new Date()) {
     recordPresentations,
     recordFirstAttempts,
     setManualPriority,
+    recoverFromHistory,
     getCoverage,
     normalizeMastery,
     getMasteryProjection,

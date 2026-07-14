@@ -146,7 +146,107 @@ assert.equal(secondSession.sessionKey, "2026-07-04#2");
 assert.equal(learning.getDailySession("franco", dataset, "2026-07-04").status, "in-progress");
 assert.equal(learning.getDailySessionsForDate("franco", dataset, "2026-07-04").length, 2);
 assert.equal(learning.nextDailySessionKey("franco", dataset, "2026-07-04"), "2026-07-04#3");
-assert.equal(learning.getSnapshot("franco", { ...dataset, version: 2 }).words.agua, undefined);
+assert.equal(learning.getSnapshot("franco", { ...dataset, version: 2 }).words.agua.tier, "foundation");
+assert.equal(
+  learning.getSnapshot("franco", { ...dataset, id: "replacement-vocabulary" }).words.agua,
+  undefined,
+);
+
+const sparseValues = new Map([["tarjetas.learning.v2.rebecca", JSON.stringify({
+  datasetId: dataset.id,
+  datasetVersion: 1,
+  calendarModelVersion: 2,
+  masteryModelVersion: 2,
+  words: {
+    agua: {
+      tier: "foundation",
+      conceptKey: "agua|water",
+      encounteredAt: "2026-07-14T12:00:00.000Z",
+      presentations: 1,
+      directions: {
+        "spanish-to-english": {
+          correct: true,
+          testedAt: "2026-07-14T12:00:00.000Z",
+          testedDate: "2026-07-14",
+          testCount: 1,
+          source: "onboarding",
+        },
+      },
+      schedule: {
+        intervalIndex: 0,
+        intervalDays: 1,
+        dueDate: "2026-07-15",
+        lastReviewedAt: "2026-07-14T12:00:00.000Z",
+      },
+    },
+  },
+  dailySessions: {},
+})]]);
+const recoveringLearning = createLearningStorage({
+  getItem(key) { return sparseValues.get(key) ?? null; },
+  setItem(key, value) { sparseValues.set(key, value); },
+}, () => new Date(2026, 6, 14, 9));
+const recovery = recoveringLearning.recoverFromHistory(
+  "rebecca",
+  { ...dataset, version: 2 },
+  vocabulary,
+  {
+    practiceSessions: [{
+      id: "rebecca:2026-07-13",
+      effectiveDate: "2026-07-13",
+    }],
+    attempts: [{
+      id: "attempt-1",
+      profileId: "rebecca",
+      practiceSessionId: "rebecca:2026-07-13",
+      vocabularyId: "viaje",
+      stage: "check-in",
+      phase: "main",
+      direction: "spanish-to-english",
+      correct: true,
+      answeredAt: "2026-07-13T14:00:00.000Z",
+    }, {
+      id: "attempt-2",
+      profileId: "rebecca",
+      practiceSessionId: "rebecca:2026-07-13",
+      vocabularyId: "recurso",
+      stage: "due-review",
+      phase: "main",
+      direction: "english-to-spanish",
+      correct: false,
+      answeredAt: "2026-07-13T14:05:00.000Z",
+    }, {
+      id: "attempt-3",
+      profileId: "rebecca",
+      practiceSessionId: "rebecca:2026-07-13",
+      vocabularyId: "recurso",
+      stage: "due-review",
+      phase: "review",
+      direction: "spanish-to-english",
+      correct: true,
+      answeredAt: "2026-07-13T14:06:00.000Z",
+    }],
+  },
+  { learningFrontier: "expanding1" },
+);
+assert.equal(recovery.changed, true);
+assert.equal(recovery.currentWordCount, 1);
+assert.equal(recovery.historicalWordCount, 2);
+snapshot = recoveringLearning.getSnapshot("rebecca", { ...dataset, version: 2 });
+assert.equal(Object.keys(snapshot.words).length, 3);
+assert.equal(snapshot.words.viaje.directions["spanish-to-english"].correct, true);
+assert.equal(snapshot.words.recurso.directions["english-to-spanish"].correct, false);
+assert.equal(snapshot.words.recurso.directions["spanish-to-english"], undefined);
+assert.equal(snapshot.words.agua.directions["spanish-to-english"].source, "onboarding");
+
+const noRecovery = recoveringLearning.recoverFromHistory(
+  "rebecca",
+  { ...dataset, version: 2 },
+  vocabulary,
+  { practiceSessions: [], attempts: [] },
+  { learningFrontier: "expanding1" },
+);
+assert.equal(noRecovery.changed, false);
 
 const legacyValues = new Map([["tarjetas.learning.v2.franco", JSON.stringify({
   datasetId: dataset.id,

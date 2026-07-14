@@ -1,46 +1,46 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.24.7";
-import { APP_VERSION } from "./app-version.js?v=0.24.7";
-import { createAssessmentSession } from "./assessment.js?v=0.24.7";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.7";
+import { createActivityStorage } from "./activity-storage.js?v=0.24.8";
+import { APP_VERSION } from "./app-version.js?v=0.24.8";
+import { createAssessmentSession } from "./assessment.js?v=0.24.8";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.8";
 import {
   buildDiagnosticExport,
   buildCognateTransparencySummary,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.24.7";
+} from "./diagnostic-export.js?v=0.24.8";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.24.7";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.7";
-import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.7";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.7";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.7";
-import { createProfileStorage } from "./profile-storage.js?v=0.24.7";
-import { buildQuizFromAnswers } from "./questions.js?v=0.24.7";
-import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.7";
-import { createQuizSession } from "./quiz-session.js?v=0.24.7";
-import { initializeRecognition } from "./recognition.js?v=0.24.7";
+} from "./indexed-history.js?v=0.24.8";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.8";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.8";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.8";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.8";
+import { createProfileStorage } from "./profile-storage.js?v=0.24.8";
+import { buildQuizFromAnswers } from "./questions.js?v=0.24.8";
+import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.8";
+import { createQuizSession } from "./quiz-session.js?v=0.24.8";
+import { initializeRecognition } from "./recognition.js?v=0.24.8";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.24.7";
+} from "./review-results.js?v=0.24.8";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   shareSessionResults,
-} from "./share-results.js?v=0.24.7";
+} from "./share-results.js?v=0.24.8";
 import {
   choiceRevealDelayMs,
   createSettingsStorage,
-} from "./settings-storage.js?v=0.24.7";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.7";
-import { TIER_LABELS } from "./tiers.js?v=0.24.7";
+} from "./settings-storage.js?v=0.24.8";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.8";
+import { TIER_LABELS } from "./tiers.js?v=0.24.8";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -707,10 +707,36 @@ function showSessionIntro() {
   startSessionButton.focus();
 }
 
-function prepareDailySession() {
+async function recoverLearningHistoryIfNeeded(today) {
+  const history = await historyStorage.getProfileHistory(activeProfileId);
+  const recovery = learningStorage.recoverFromHistory(
+    activeProfileId,
+    datasetMetadata,
+    vocabulary,
+    history,
+    onboardingRecord?.placement,
+  );
+  if (recovery.changed) {
+    console.info(
+      `Recovered ${recovery.recoveredWordCount} learning records from local attempt history `
+        + `(${recovery.currentWordCount} current, ${recovery.historicalWordCount} historical).`,
+    );
+    learningStorage.normalizeMastery(
+      activeProfileId,
+      datasetMetadata,
+      vocabulary,
+      onboardingRecord.placement,
+      today,
+    );
+  }
+  return recovery;
+}
+
+async function prepareDailySession() {
   learningStorage.seedOnboarding(activeProfileId, datasetMetadata, onboardingRecord, vocabulary);
   const actualNow = new Date();
   const today = localDateKey(actualNow);
+  await recoverLearningHistoryIfNeeded(today);
   learningStorage.normalizeCalendar(activeProfileId, datasetMetadata, today);
   learningStorage.normalizeMastery(
     activeProfileId,
@@ -1405,8 +1431,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.24.7"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.7"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.24.8"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.8"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -1509,7 +1535,7 @@ async function recognizeProfile(profile) {
     await loadVocabulary();
     onboardingRecord = onboardingStorage.get(profile.id, datasetMetadata);
     if (onboardingRecord) {
-      prepareDailySession();
+      await prepareDailySession();
     } else {
       showOnboarding();
     }

@@ -14,11 +14,11 @@ export function createOnboardingStorage(storage, now = () => new Date()) {
       const value = JSON.parse(serialized);
       if (
         value?.datasetId !== dataset.id
-        || value?.datasetVersion !== dataset.version
         || !value?.placement
       ) {
         return null;
       }
+      value.datasetVersion = dataset.version;
       return value;
     } catch {
       return null;

@@ -42,6 +42,7 @@ const saved = storage.save("franco", dataset, {
 assert.equal(saved.completedAt, "2026-07-02T18:00:00.000Z");
 assert.equal(storage.get("franco", dataset)?.placement.learningFrontier, "everyday");
 assert.equal(storage.get("milo", dataset), null);
-assert.equal(storage.get("franco", { ...dataset, version: 2 }), null);
+assert.equal(storage.get("franco", { ...dataset, version: 2 })?.placement.learningFrontier, "everyday");
+assert.equal(storage.get("franco", { ...dataset, id: "replacement-vocabulary" }), null);
 
-console.log("Per-profile, dataset-versioned onboarding storage checks passed.");
+console.log("Per-profile, dataset-compatible onboarding storage checks passed.");

@@ -185,7 +185,7 @@ Before adding a new batch of vocabulary to the official dataset:
    - Map exact overlapping words and senses from the previous dataset.
    - Preserve portable mastery for exact semantic matches.
    - Avoid attaching history to ambiguous overlaps unless reviewed.
-   - Bump dataset metadata and storage/migration code only as much as the change requires.
+   - Bump dataset metadata and storage/migration code only as much as the change requires; ordinary same-dataset metadata edits must not invalidate local learning or onboarding records.
 
 11. **Release deliberately.**
     - Update vocabulary metadata with counts and transformation notes.
@@ -416,7 +416,7 @@ A reload resumes the saved practice stage and restarts an unfinished quiz round 
 - Per-profile, per-word scheduling state.
 - The generated state of an in-progress quiz so a reload does not reshuffle it.
 
-The browser records use versioned key prefixes, dataset ID/version checks, and stable profile and vocabulary IDs. Diagnostic exports also contain a versioned per-concept mastery projection. Activation of official vocabulary v1 intentionally advanced the local-storage and IndexedDB generation and erased all prior learning, onboarding, activity, and immutable attempt history while preserving the remembered profile identity. Later vocabulary revisions should migrate compatible mastery rather than repeat this early-development reset.
+The browser records use versioned key prefixes, dataset ID compatibility checks, and stable profile and vocabulary IDs. Same-dataset vocabulary metadata revisions update the stored dataset version but preserve compatible local onboarding, learning, activity, and daily-session records. If a previous release leaves the compact learning summary suspiciously sparse, the app can replay main-question attempts from IndexedDB history to recover most per-word evidence before planning the next session. Diagnostic exports also contain a versioned per-concept mastery projection. Activation of official vocabulary v1 intentionally advanced the local-storage and IndexedDB generation and erased all prior learning, onboarding, activity, and immutable attempt history while preserving the remembered profile identity. Later vocabulary revisions should migrate compatible mastery rather than repeat this early-development reset.
 
 ### 9.3 Later shared service
 
