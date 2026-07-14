@@ -1,10 +1,11 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.1";
-import { shuffle } from "./questions.js?v=0.24.1";
-import { lowerTiers } from "./tiers.js?v=0.24.1";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.2";
+import { shuffle } from "./questions.js?v=0.24.2";
+import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.2";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;
-const BACKLOG_WORDS_PER_NEW_WORD_REDUCTION = 4;
+const MIN_NEW_WORD_COUNT = 8;
+const BACKLOG_WORDS_PER_NEW_WORD_REDUCTION = 8;
 const NEW_WORD_TRANSPARENCY_WEIGHTS = Object.freeze({
   [COGNATE_TRANSPARENCY.NONE]: 1,
   [COGNATE_TRANSPARENCY.MODERATE]: 0.6,
@@ -144,6 +145,34 @@ export function newWordSelectionWeight(entry) {
     ?? NEW_WORD_TRANSPARENCY_WEIGHTS[COGNATE_TRANSPARENCY.NONE];
 }
 
+function selectNewWords(vocabulary, words, placement, checkInIds, count, random) {
+  const frontier = placement?.learningFrontier ?? "foundation";
+  const tiers = TIER_ORDER.slice(tierIndex(frontier));
+  const selected = [];
+  const selectedIds = new Set(checkInIds);
+
+  tiers.forEach((tier) => {
+    if (selected.length >= count) return;
+    const pool = vocabulary.filter((entry) => (
+      entry.tier === tier
+      && !words[entry.id]
+      && !selectedIds.has(entry.id)
+    ));
+    const tierSelection = weightedSampleWithoutReplacement(
+      pool,
+      count - selected.length,
+      newWordSelectionWeight,
+      random,
+    );
+    tierSelection.forEach((entry) => {
+      selected.push(entry);
+      selectedIds.add(entry.id);
+    });
+  });
+
+  return selected;
+}
+
 function auditCandidates(vocabulary, words, placement, date, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
   const auditTiers = lowerTiers(frontier);
@@ -171,6 +200,38 @@ function auditCandidates(vocabulary, words, placement, date, random) {
   return selected;
 }
 
+function supplementalAuditCandidates(vocabulary, words, placement, date, selectedIds, random) {
+  const frontier = placement?.learningFrontier ?? "foundation";
+  const { counts } = auditSlotCounts(vocabulary, words, frontier, date);
+  const tiers = lowerTiers(frontier).filter((tier) => counts[tier] > 0).reverse();
+  const byTier = Object.fromEntries(tiers.map((tier) => [tier, auditTierCandidates(
+    vocabulary,
+    words,
+    tier,
+    date,
+    random,
+  ).filter((entry) => !selectedIds.has(entry.id))]));
+  const selected = [];
+  const availableTiers = [...tiers];
+  let tierCursor = 0;
+
+  while (availableTiers.length > 0) {
+    const tier = availableTiers[tierCursor % availableTiers.length];
+    const entry = byTier[tier]?.shift();
+    if (entry) {
+      selected.push(entry);
+      tierCursor += 1;
+      continue;
+    }
+    availableTiers.splice(availableTiers.indexOf(tier), 1);
+    if (availableTiers.length > 0) {
+      tierCursor %= availableTiers.length;
+    }
+  }
+
+  return selected;
+}
+
 function checkInCandidates(vocabulary, words, placement, date, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
   const selected = auditCandidates(vocabulary, words, placement, date, random);
@@ -189,13 +250,24 @@ function checkInCandidates(vocabulary, words, placement, date, random) {
   selected.push(...[...wrong, ...correct]
     .slice(0, CHECK_IN_SIZE - selected.length)
     .map(({ entry }) => entry));
+  selected.forEach((entry) => selectedIds.add(entry.id));
+  if (selected.length < CHECK_IN_SIZE) {
+    selected.push(...supplementalAuditCandidates(
+      vocabulary,
+      words,
+      placement,
+      date,
+      selectedIds,
+      random,
+    ).slice(0, CHECK_IN_SIZE - selected.length));
+  }
   return selected;
 }
 
 export function adaptiveNewWordCount(backlogCount) {
   const backlog = Number.isFinite(backlogCount) ? Math.max(0, Math.floor(backlogCount)) : 0;
   return Math.max(
-    0,
+    MIN_NEW_WORD_COUNT,
     BASE_NEW_WORD_COUNT - Math.floor(backlog / BACKLOG_WORDS_PER_NEW_WORD_REDUCTION),
   );
 }
@@ -220,16 +292,12 @@ export function createDailySessionPlan(
     return dueForSameDayRepair(word, date) || dueForOrdinaryReview(word, date);
   });
   const newWordCount = adaptiveNewWordCount(totalDueBacklog);
-  const frontier = placement?.learningFrontier ?? "foundation";
-  const newWordPool = vocabulary.filter((entry) => (
-    entry.tier === frontier
-    && !words[entry.id]
-    && !checkInIds.has(entry.id)
-  ));
-  const newWords = weightedSampleWithoutReplacement(
-    newWordPool,
+  const newWords = selectNewWords(
+    vocabulary,
+    words,
+    placement,
+    checkInIds,
     newWordCount,
-    newWordSelectionWeight,
     random,
   );
   const reviewIds = [...new Set([...due, ...newWords].map((entry) => entry.id))];

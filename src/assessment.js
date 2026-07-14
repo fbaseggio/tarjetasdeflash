@@ -1,5 +1,5 @@
-import { buildQuestionForAnswer, DIRECTIONS, shuffle } from "./questions.js?v=0.24.1";
-import { TIER_ORDER } from "./tiers.js?v=0.24.1";
+import { buildQuestionForAnswer, DIRECTIONS, shuffle } from "./questions.js?v=0.24.2";
+import { TIER_ORDER } from "./tiers.js?v=0.24.2";
 
 export const ASSESSMENT_TIERS = Object.freeze({
   FOUNDATION: "foundation",

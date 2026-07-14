@@ -40,13 +40,13 @@ assert.equal(plan.checkInIds.length, 10);
 assert.equal(plan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length, 1);
 assert.equal(plan.checkInIds.filter((id) => everyday.some((entry) => entry.id === id)).length, 1);
 assert.equal(plan.checkInIds.filter((id) => dueFrontier.some((entry) => entry.id === id)).length, 8);
-assert.equal(plan.newWordIds.length, 13);
-assert.equal(plan.reviewIds.length, 13);
+assert.equal(plan.newWordIds.length, 14);
+assert.equal(plan.reviewIds.length, 14);
 assert.ok(plan.newWordIds.every((id) => expanding.some((entry) => entry.id === id)));
-assert.equal(new Set([...plan.checkInIds, ...plan.newWordIds]).size, 23);
+assert.equal(new Set([...plan.checkInIds, ...plan.newWordIds]).size, 24);
 assert.equal(getReviewRoundIds(plan).length, 10);
 plan.reviewCursor = 10;
-assert.equal(getReviewRoundIds(plan).length, 3);
+assert.equal(getReviewRoundIds(plan).length, 4);
 
 const askedToday = Object.fromEntries(dueFrontier.map((entry) => [entry.id, {
   ...words[entry.id],
@@ -102,8 +102,37 @@ const backlogPlan = createDailySessionPlan(
   "2026-07-02",
   () => 0.41,
 );
-assert.equal(backlogPlan.newWordIds.length, 0);
+assert.equal(backlogPlan.newWordIds.length, 8);
 assert.ok(backlogPlan.reviewIds.length >= 51);
+
+const remainingFoundation = foundation.slice(0, 4);
+const completedFoundationWords = Object.fromEntries(foundation.slice(4).map((entry) => [entry.id, {
+  tier: entry.tier,
+  masteryTrack: "frontier",
+  masteryStatus: "learning",
+  lastFirstAttemptDate: "2026-07-01",
+  directions: {
+    "spanish-to-english": {
+      correct: true,
+      testedAt: "2026-07-01T12:00:00.000Z",
+    },
+  },
+  schedule: { intervalDays: 30, dueDate: "2099-01-01" },
+}]));
+const nearlyFinishedFoundationPlan = createDailySessionPlan(
+  vocabulary,
+  { knownThrough: null, learningFrontier: "foundation" },
+  { words: completedFoundationWords },
+  "2026-07-02",
+  () => 0.41,
+);
+assert.equal(nearlyFinishedFoundationPlan.newWordIds.length, 15);
+assert.equal(nearlyFinishedFoundationPlan.newWordIds.filter((id) => (
+  remainingFoundation.some((entry) => entry.id === id)
+)).length, 4);
+assert.equal(nearlyFinishedFoundationPlan.newWordIds.filter((id) => (
+  everyday.some((entry) => entry.id === id)
+)).length, 11);
 
 const expanding2 = vocabulary.filter((entry) => entry.tier === "expanding2");
 const exp2Plan = createDailySessionPlan(
@@ -113,9 +142,10 @@ const exp2Plan = createDailySessionPlan(
   "2026-07-02",
   () => 0.41,
 );
-assert.equal(exp2Plan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length, 1);
-assert.equal(exp2Plan.checkInIds.filter((id) => everyday.some((entry) => entry.id === id)).length, 1);
-assert.equal(exp2Plan.checkInIds.filter((id) => expanding.some((entry) => entry.id === id)).length, 1);
+assert.equal(exp2Plan.checkInIds.length, 10);
+assert.ok(exp2Plan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length >= 1);
+assert.ok(exp2Plan.checkInIds.filter((id) => everyday.some((entry) => entry.id === id)).length >= 1);
+assert.ok(exp2Plan.checkInIds.filter((id) => expanding.some((entry) => entry.id === id)).length >= 1);
 assert.ok(exp2Plan.newWordIds.every((id) => expanding2.some((entry) => entry.id === id)));
 
 const exp2OddDayPlan = createDailySessionPlan(
@@ -126,6 +156,7 @@ const exp2OddDayPlan = createDailySessionPlan(
   () => 0.41,
 );
 assert.equal(exp2OddDayPlan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length, 0);
+assert.equal(exp2OddDayPlan.checkInIds.length, 10);
 
 const weakFoundationEntries = foundation.slice(0, 4);
 const weakFoundationWords = Object.fromEntries(weakFoundationEntries.map((entry, index) => [entry.id, {
@@ -154,8 +185,8 @@ const weakFoundationPlan = createDailySessionPlan(
 assert.ok(weakFoundationPlan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length >= 2);
 
 assert.equal(adaptiveNewWordCount(0), 15);
-assert.equal(adaptiveNewWordCount(8), 13);
-assert.equal(adaptiveNewWordCount(60), 0);
+assert.equal(adaptiveNewWordCount(8), 14);
+assert.equal(adaptiveNewWordCount(60), 8);
 assert.equal(newWordSelectionWeight({
   spanish: "zapato",
   lemma: "zapato",
