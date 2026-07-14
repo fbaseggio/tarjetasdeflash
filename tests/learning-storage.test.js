@@ -75,6 +75,24 @@ assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-12");
 assert.equal(snapshot.words.recurso.schedule.intervalDays, 7);
 assert.equal(snapshot.words.recurso.directions["spanish-to-english"].testCount, 2);
 
+learning.setManualPriority("franco", dataset, "recurso", "more", "2026-07-05");
+snapshot = learning.getSnapshot("franco", dataset);
+assert.equal(snapshot.words.recurso.manualPriority, "more");
+assert.equal(snapshot.words.recurso.schedule.intervalDays, 3);
+assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-08");
+
+learning.setManualPriority("franco", dataset, "recurso", "less", "2026-07-05");
+snapshot = learning.getSnapshot("franco", dataset);
+assert.equal(snapshot.words.recurso.manualPriority, "less");
+assert.equal(snapshot.words.recurso.schedule.intervalDays, 14);
+assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-19");
+
+learning.setManualPriority("franco", dataset, "recurso", null, "2026-07-05");
+snapshot = learning.getSnapshot("franco", dataset);
+assert.equal(snapshot.words.recurso.manualPriority, undefined);
+assert.equal(snapshot.words.recurso.schedule.intervalDays, 14);
+assert.equal(snapshot.words.recurso.schedule.dueDate, "2026-07-19");
+
 learning.recordFirstAttempts("franco", dataset, [{
   vocabularyId: "viaje",
   tier: "everyday",

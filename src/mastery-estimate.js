@@ -1,4 +1,4 @@
-import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.3";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.4";
 
 const GAP_CREDIT = Object.freeze([
   [60, 1],

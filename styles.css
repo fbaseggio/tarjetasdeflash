@@ -522,6 +522,7 @@ h1 {
 .next-button:focus-visible,
 .secondary-button:focus-visible,
 .repeat-session-button:focus-visible,
+.priority-button:focus-visible,
 .identify-button:focus-visible,
 .user-menu button:focus-visible {
   outline: 3px solid rgb(98 83 217 / 28%);
@@ -813,6 +814,42 @@ h1 {
 .review-answer {
   color: var(--muted);
   font-size: 0.76rem;
+}
+
+.priority-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  margin-top: 7px;
+}
+
+.priority-status {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.priority-button {
+  padding: 5px 8px;
+  color: var(--violet-dark);
+  background: rgb(255 253 247 / 74%);
+  border: 1px solid #d6d0ea;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.priority-button:hover {
+  background: var(--violet-soft);
+}
+
+.priority-button.active {
+  color: white;
+  background: var(--violet);
+  border-color: var(--violet);
 }
 
 .results-intro {

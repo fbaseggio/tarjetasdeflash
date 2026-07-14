@@ -1,47 +1,47 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.24.3";
-import { APP_VERSION } from "./app-version.js?v=0.24.3";
-import { createAssessmentSession } from "./assessment.js?v=0.24.3";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.3";
+import { createActivityStorage } from "./activity-storage.js?v=0.24.4";
+import { APP_VERSION } from "./app-version.js?v=0.24.4";
+import { createAssessmentSession } from "./assessment.js?v=0.24.4";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.4";
 import {
   buildDiagnosticExport,
   buildCognateTransparencySummary,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.24.3";
+} from "./diagnostic-export.js?v=0.24.4";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.24.3";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.3";
-import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.3";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.3";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.3";
-import { createProfileStorage } from "./profile-storage.js?v=0.24.3";
-import { buildQuizFromAnswers } from "./questions.js?v=0.24.3";
-import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.3";
-import { createQuizSession } from "./quiz-session.js?v=0.24.3";
-import { initializeRecognition } from "./recognition.js?v=0.24.3";
+} from "./indexed-history.js?v=0.24.4";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.4";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.4";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.4";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.4";
+import { createProfileStorage } from "./profile-storage.js?v=0.24.4";
+import { buildQuizFromAnswers } from "./questions.js?v=0.24.4";
+import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.4";
+import { createQuizSession } from "./quiz-session.js?v=0.24.4";
+import { initializeRecognition } from "./recognition.js?v=0.24.4";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.24.3";
+} from "./review-results.js?v=0.24.4";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   isFirstSessionOfDay,
   shareSessionResults,
-} from "./share-results.js?v=0.24.3";
+} from "./share-results.js?v=0.24.4";
 import {
   choiceRevealDelayMs,
   createSettingsStorage,
-} from "./settings-storage.js?v=0.24.3";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.3";
-import { TIER_LABELS } from "./tiers.js?v=0.24.3";
+} from "./settings-storage.js?v=0.24.4";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.4";
+import { TIER_LABELS } from "./tiers.js?v=0.24.4";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -942,9 +942,110 @@ function renderCoverage() {
   coverageReportElement.hidden = false;
 }
 
+function priorityButtonLabel(priority) {
+  if (priority === "more") return "More practice";
+  if (priority === "less") return "Know it";
+  return "Normal";
+}
+
+function priorityStatusText(priority) {
+  return `Priority: ${priorityButtonLabel(priority)}`;
+}
+
+function updatePriorityControls(vocabularyId, word) {
+  const priority = word?.manualPriority ?? null;
+  reviewSectionsElement
+    .querySelectorAll("[data-vocabulary-id]")
+    .forEach((itemElement) => {
+      if (itemElement.dataset.vocabularyId !== vocabularyId) return;
+      itemElement.dataset.manualPriority = priority ?? "normal";
+      const priorityStatus = itemElement.querySelector("[data-priority-status]");
+      if (priorityStatus) priorityStatus.textContent = priorityStatusText(priority);
+      itemElement.querySelectorAll("[data-priority]").forEach((button) => {
+        const buttonPriority = button.dataset.priority === "normal" ? null : button.dataset.priority;
+        const active = buttonPriority === priority;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+      const gap = itemElement.querySelector("[data-review-gap]");
+      if (gap) gap.textContent = reviewGapLabel(word?.schedule?.intervalDays ?? null);
+    });
+}
+
+function updateReviewStatePriority(sections, vocabularyId, word) {
+  return sections.map((section) => ({
+    ...section,
+    items: section.items.map((item) => (
+      item.vocabularyId === vocabularyId
+        ? {
+          ...item,
+          manualPriority: word?.manualPriority ?? null,
+          reviewGapDays: word?.schedule?.intervalDays ?? null,
+        }
+        : item
+    )),
+  }));
+}
+
+function changeManualPriority(vocabularyId, priority) {
+  const normalizedPriority = priority === "normal" ? null : priority;
+  const currentWord = learningStorage.getSnapshot(activeProfileId, datasetMetadata).words[vocabularyId];
+  if ((currentWord?.manualPriority ?? null) === normalizedPriority) return;
+  const word = learningStorage.setManualPriority(
+    activeProfileId,
+    datasetMetadata,
+    vocabularyId,
+    normalizedPriority,
+    reviewContext?.date ?? localDateKey(new Date()),
+  );
+  if (!word) return;
+  sectionReviewState = updateReviewStatePriority(sectionReviewState, vocabularyId, word);
+  allWordsReviewState = updateReviewStatePriority(allWordsReviewState, vocabularyId, word);
+  updatePriorityControls(vocabularyId, word);
+}
+
+function priorityControlsElement(item) {
+  const container = document.createElement("div");
+  container.className = "priority-controls";
+  const status = document.createElement("span");
+  status.className = "priority-status";
+  status.dataset.priorityStatus = "true";
+  status.textContent = priorityStatusText(item.manualPriority);
+  container.append(status);
+
+  [
+    ["normal", "Normal"],
+    ["more", "More practice"],
+    ["less", "Know it"],
+  ].forEach(([priority, label]) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "priority-button";
+    button.dataset.priority = priority;
+    button.dataset.vocabularyId = item.vocabularyId;
+    button.textContent = label;
+    const active = (priority === "normal" ? null : priority) === (item.manualPriority ?? null);
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    container.append(button);
+  });
+
+  return container;
+}
+
+function handlePriorityClick(event) {
+  const button = event.target.closest("[data-priority]");
+  if (!button) return;
+  changeManualPriority(button.dataset.vocabularyId, button.dataset.priority);
+}
+
 function reviewItemElement(item, kind) {
   const listItem = document.createElement("li");
   listItem.className = `review-item ${kind === "presentations" ? "review-pair" : ""}`;
+  if (item.vocabularyId) {
+    listItem.dataset.vocabularyId = item.vocabularyId;
+    listItem.dataset.manualPriority = item.manualPriority ?? "normal";
+  }
   const mark = document.createElement("span");
   const content = document.createElement("div");
 
@@ -955,6 +1056,7 @@ function reviewItemElement(item, kind) {
     const detail = document.createElement("span");
     pair.textContent = `${item.spanish} — ${item.english}`;
     detail.className = "review-answer";
+    detail.dataset.reviewGap = "true";
     detail.textContent = reviewGapLabel(item.reviewGapDays);
     content.append(pair, detail);
   } else {
@@ -969,8 +1071,15 @@ function reviewItemElement(item, kind) {
     const recoveryText = item.recoveryAttempts > 0
       ? ` · ${item.recoveryAttempts} follow-up ${item.recoveryAttempts === 1 ? "try" : "tries"}`
       : "";
-    detail.textContent = `${resultText}${recoveryText} · ${reviewGapLabel(item.reviewGapDays)}`;
+    const gap = document.createElement("span");
+    gap.dataset.reviewGap = "true";
+    gap.textContent = reviewGapLabel(item.reviewGapDays);
+    detail.append(`${resultText}${recoveryText} · `, gap);
     content.append(answer, detail);
+  }
+
+  if (item.vocabularyId && reviewContext?.type !== "assessment") {
+    content.append(priorityControlsElement(item));
   }
 
   listItem.append(mark, content);
@@ -1297,8 +1406,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.24.3"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.3"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.24.4"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.4"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -1434,6 +1543,7 @@ reviewAssessmentButton.addEventListener("click", () => {
 });
 reviewResultsButton.addEventListener("click", showReviewResults);
 reviewAllWordsButton.addEventListener("click", toggleAllWordsReview);
+reviewSectionsElement.addEventListener("click", handlePriorityClick);
 backFromReviewButton.addEventListener("click", () => reviewReturn?.());
 
 initializeRecognition({

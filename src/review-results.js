@@ -1,4 +1,4 @@
-import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.3";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.4";
 
 const STAGE_LABELS = Object.freeze({
   "check-in": "Check-in",
@@ -22,6 +22,7 @@ export function reviewGapLabel(days) {
 }
 
 function questionItem(attempt, relatedAttempts, learningWords) {
+  const word = learningWords[attempt.vocabularyId];
   return Object.freeze({
     vocabularyId: attempt.vocabularyId,
     prompt: attempt.promptText,
@@ -30,7 +31,8 @@ function questionItem(attempt, relatedAttempts, learningWords) {
     correct: attempt.correct,
     direction: attempt.direction,
     recoveryAttempts: Math.max(0, relatedAttempts.length - 1),
-    reviewGapDays: reviewGapDays(learningWords[attempt.vocabularyId]),
+    reviewGapDays: reviewGapDays(word),
+    manualPriority: word?.manualPriority ?? null,
   });
 }
 
@@ -76,6 +78,7 @@ export function buildHistoryReview({
             spanish: entry.spanish,
             english: entry.english,
             reviewGapDays: reviewGapDays(learningWords[entry.id]),
+            manualPriority: learningWords[entry.id]?.manualPriority ?? null,
           }))),
         }));
       }
@@ -104,6 +107,7 @@ export function buildAllWordsReview({ vocabularyIds, vocabulary, learningWords =
       spanish: entry.spanish,
       english: entry.english,
       reviewGapDays: reviewGapDays(learningWords[entry.id]),
+      manualPriority: learningWords[entry.id]?.manualPriority ?? null,
     }))
     .sort((left, right) => left.spanish.localeCompare(right.spanish, "es"));
 
@@ -131,6 +135,7 @@ export function buildAssessmentReview(assessmentResult, vocabulary, learningWord
         direction: attempt.direction,
         recoveryAttempts: 0,
         reviewGapDays: reviewGapDays(learningWords[attempt.vocabularyId]),
+        manualPriority: learningWords[attempt.vocabularyId]?.manualPriority ?? null,
       });
     });
     return Object.freeze({

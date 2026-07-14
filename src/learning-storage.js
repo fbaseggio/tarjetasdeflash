@@ -6,13 +6,17 @@ import {
   isBelowFrontier,
   masteryAfterAttempt,
   REVIEW_INTERVALS,
-} from "./mastery-policy.js?v=0.24.3";
-import { TIER_ORDER } from "./tiers.js?v=0.24.3";
+} from "./mastery-policy.js?v=0.24.4";
+import { TIER_ORDER } from "./tiers.js?v=0.24.4";
 
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v2.";
 const CALENDAR_MODEL_VERSION = 2;
 const MASTERY_MODEL_VERSION = 2;
 const DIRECTIONS = Object.freeze(["spanish-to-english", "english-to-spanish"]);
+const MANUAL_PRIORITY = Object.freeze({
+  MORE: "more",
+  LESS: "less",
+});
 
 export function localDateKey(date) {
   const year = date.getFullYear();
@@ -25,6 +29,30 @@ function addDays(dateKey, days) {
   const [year, month, day] = dateKey.split("-").map(Number);
   const date = new Date(year, month - 1, day + days);
   return localDateKey(date);
+}
+
+function intervalDaysForPriority(intervalDays, manualPriority) {
+  if (!manualPriority) return intervalDays;
+  const fallbackIndex = manualPriority === MANUAL_PRIORITY.LESS ? 0 : 1;
+  const currentIndex = REVIEW_INTERVALS.indexOf(intervalDays);
+  const index = currentIndex >= 0 ? currentIndex : fallbackIndex;
+  if (manualPriority === MANUAL_PRIORITY.MORE) {
+    return REVIEW_INTERVALS[Math.max(0, index - 1)];
+  }
+  if (manualPriority === MANUAL_PRIORITY.LESS) {
+    return REVIEW_INTERVALS[Math.min(REVIEW_INTERVALS.length - 1, index + 2)];
+  }
+  return intervalDays;
+}
+
+function scheduleWithPriority(intervalDays, baseDate, lastReviewedAt, manualPriority) {
+  const adjustedIntervalDays = intervalDaysForPriority(intervalDays, manualPriority);
+  return {
+    intervalIndex: intervalIndexForDays(adjustedIntervalDays),
+    intervalDays: adjustedIntervalDays,
+    dueDate: addDays(baseDate, adjustedIntervalDays),
+    lastReviewedAt,
+  };
 }
 
 function emptyLearning(dataset) {
@@ -138,12 +166,12 @@ export function createLearningStorage(storage, now = () => new Date()) {
         source: "onboarding",
       }, effectiveDate, onboardingRecord.placement);
       Object.assign(word, policy);
-      word.schedule = {
-        intervalIndex: policy.intervalIndex,
-        intervalDays: policy.intervalDays,
-        dueDate: addDays(effectiveDate, policy.intervalDays),
-        lastReviewedAt: testedAt,
-      };
+      word.schedule = scheduleWithPriority(
+        policy.intervalDays,
+        effectiveDate,
+        testedAt,
+        word.manualPriority,
+      );
       learning.words[vocabularyId] = word;
     });
 
@@ -205,12 +233,12 @@ export function createLearningStorage(storage, now = () => new Date()) {
 
       const policy = masteryAfterAttempt(word, attempt, effectiveDate, placement);
       Object.assign(word, policy);
-      word.schedule = {
-        intervalIndex: policy.intervalIndex,
-        intervalDays: policy.intervalDays,
-        dueDate: addDays(effectiveDate, policy.intervalDays),
-        lastReviewedAt: timestamp,
-      };
+      word.schedule = scheduleWithPriority(
+        policy.intervalDays,
+        effectiveDate,
+        timestamp,
+        word.manualPriority,
+      );
       learning.words[attempt.vocabularyId] = word;
     });
 
@@ -220,6 +248,41 @@ export function createLearningStorage(storage, now = () => new Date()) {
 
   function getCoverage(profileId, dataset) {
     return summarize(read(profileId, dataset).words);
+  }
+
+  function setManualPriority(
+    profileId,
+    dataset,
+    vocabularyId,
+    priority,
+    effectiveDate = localDateKey(now()),
+  ) {
+    const learning = read(profileId, dataset);
+    const word = learning.words[vocabularyId];
+    if (!word) return null;
+    const normalizedPriority = priority === MANUAL_PRIORITY.MORE || priority === MANUAL_PRIORITY.LESS
+      ? priority
+      : null;
+
+    if (normalizedPriority) {
+      word.manualPriority = normalizedPriority;
+      word.manualPriorityUpdatedAt = now().toISOString();
+    } else {
+      delete word.manualPriority;
+      delete word.manualPriorityUpdatedAt;
+    }
+
+    if (word.schedule && normalizedPriority) {
+      word.schedule = scheduleWithPriority(
+        word.schedule.intervalDays,
+        effectiveDate,
+        word.schedule.lastReviewedAt,
+        normalizedPriority,
+      );
+    }
+    learning.words[vocabularyId] = word;
+    write(profileId, learning);
+    return word;
   }
 
   function normalizeMastery(profileId, dataset, vocabulary, placement, today = localDateKey(now())) {
@@ -379,6 +442,7 @@ export function createLearningStorage(storage, now = () => new Date()) {
     seedOnboarding,
     recordPresentations,
     recordFirstAttempts,
+    setManualPriority,
     getCoverage,
     normalizeMastery,
     getMasteryProjection,

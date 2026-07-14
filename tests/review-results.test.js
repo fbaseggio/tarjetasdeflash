@@ -43,7 +43,7 @@ const sessionSections = buildHistoryReview({
   newWords: [{ id: "viaje", spanish: "viaje", english: "trip" }],
   learningWords: {
     agua: { schedule: { intervalIndex: 0, dueDate: "2026-07-04" } },
-    viaje: { schedule: { intervalIndex: 2, dueDate: "2026-07-10" } },
+    viaje: { schedule: { intervalIndex: 2, dueDate: "2026-07-10" }, manualPriority: "more" },
   },
 });
 assert.deepEqual(sessionSections.map((section) => section.id), [
@@ -53,7 +53,9 @@ assert.equal(sessionSections[0].wrongCount, 1);
 assert.equal(sessionSections[0].items[0].recoveryAttempts, 1);
 assert.equal(sessionSections[1].items[0].spanish, "viaje");
 assert.equal(sessionSections[1].items[0].reviewGapDays, 7);
+assert.equal(sessionSections[1].items[0].manualPriority, "more");
 assert.equal(sessionSections[2].correctCount, 1);
+assert.equal(sessionSections[2].items[0].manualPriority, "more");
 assert.equal(sessionSections[0].items[0].reviewGapDays, 1);
 
 const extraSections = buildHistoryReview({ rounds, attempts, roundId: "extra" });
@@ -78,12 +80,13 @@ const allWords = buildAllWordsReview({
   ],
   learningWords: {
     agua: { schedule: { intervalDays: 3 } },
-    viaje: { schedule: { intervalIndex: 2 } },
+    viaje: { schedule: { intervalIndex: 2 }, manualPriority: "less" },
   },
 });
 assert.equal(allWords.length, 1);
 assert.deepEqual(allWords[0].items.map((item) => item.vocabularyId), ["agua", "viaje"]);
 assert.deepEqual(allWords[0].items.map((item) => item.reviewGapDays), [3, 7]);
+assert.deepEqual(allWords[0].items.map((item) => item.manualPriority), [null, "less"]);
 
 assert.equal(reviewGapDays({ schedule: { intervalDays: 14, intervalIndex: 0 } }), 14);
 assert.equal(reviewGapDays({ schedule: { intervalIndex: 5 } }), 60);
