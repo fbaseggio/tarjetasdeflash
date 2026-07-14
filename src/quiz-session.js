@@ -1,4 +1,4 @@
-import { oppositeDirection } from "./questions.js?v=0.24.2";
+import { oppositeDirection } from "./questions.js?v=0.24.3";
 
 export function createQuizSession(questions) {
   if (!Array.isArray(questions) || questions.length === 0) {

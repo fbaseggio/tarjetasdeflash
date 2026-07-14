@@ -1,10 +1,10 @@
-import { APP_RELEASE_DATE, APP_VERSION, DIAGNOSTIC_EXPORT_VERSION } from "./app-version.js?v=0.24.2";
+import { APP_RELEASE_DATE, APP_VERSION, DIAGNOSTIC_EXPORT_VERSION } from "./app-version.js?v=0.24.3";
 import {
   cognateTransparencyLevel,
   COGNATE_TRANSPARENCY,
   COGNATE_TRANSPARENCY_THRESHOLDS,
-} from "./distractors.js?v=0.24.2";
-import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.2";
+} from "./distractors.js?v=0.24.3";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.3";
 
 export function buildCognateTransparencySummary(vocabulary) {
   const byTier = TIER_ORDER.map((tier) => {

@@ -1,4 +1,4 @@
-import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.24.2";
+import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.24.3";
 
 export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   baseWeight: 1,
@@ -192,6 +192,20 @@ function firstTopLevelSemicolonSegment(value) {
   return result;
 }
 
+function firstTopLevelSentenceSegment(value) {
+  const text = String(value ?? "");
+  let depth = 0;
+  let result = "";
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    if (character === "(") depth += 1;
+    if (character === ")" && depth > 0) depth -= 1;
+    if (character === "." && depth === 0 && /\s/u.test(text[index + 1] ?? "")) break;
+    result += character;
+  }
+  return result;
+}
+
 function removeParentheticalText(value) {
   let depth = 0;
   let result = "";
@@ -326,7 +340,7 @@ function compactQuizText(entry, field, role = "answer") {
   value = firstSlashAlternative(value);
 
   if (entry.partOfSpeech !== "question") {
-    value = value.split(/\.\s+/u)[0];
+    value = firstTopLevelSentenceSegment(value);
     value = value.replace(/[.!…]+$/u, "").trim();
   }
   if (!['proper noun', 'question', 'number'].includes(entry.partOfSpeech)) {

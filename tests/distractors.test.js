@@ -396,5 +396,66 @@ assert.equal(
   ),
   "¿cuánto?",
 );
+assert.equal(
+  questionFieldText(
+    {
+      spanish: "(no) hay",
+      english: "there is (not); there are (not)",
+      quizSpanish: "hay",
+      quizEnglish: "there is; there are",
+      partOfSpeech: "conjugated verb",
+    },
+    "spanish",
+  ),
+  "hay",
+);
+assert.equal(
+  questionFieldText(
+    {
+      spanish: "(no) hay",
+      english: "there is (not); there are (not)",
+      quizSpanish: "hay",
+      quizEnglish: "there is; there are",
+      partOfSpeech: "conjugated verb",
+    },
+    "english",
+  ),
+  "there is; there are",
+);
+assert.equal(
+  questionFieldText(
+    {
+      spanish: "vais",
+      english: "you (fam. pl.) are going",
+      quizEnglishAnswer: "you all are going",
+      quizEnglishPrompt: "you all are going (familiar plural)",
+      partOfSpeech: "conjugated verb",
+    },
+    "english",
+  ),
+  "you all are going",
+);
+assert.equal(
+  questionFieldText(
+    {
+      spanish: "vais",
+      english: "you (fam. pl.) are going",
+      quizEnglishAnswer: "you all are going",
+      quizEnglishPrompt: "you all are going (familiar plural)",
+      partOfSpeech: "conjugated verb",
+    },
+    "english",
+    { role: "prompt", direction: "english-to-spanish" },
+  ),
+  "you all are going (familiar plural)",
+);
+assert.equal(
+  questionFieldText(
+    { english: "you (fam. pl.) are going", partOfSpeech: "conjugated verb" },
+    "english",
+    { role: "prompt", direction: "english-to-spanish" },
+  ),
+  "you (fam. pl.) are going",
+);
 
 console.log("Quality gate, compact quiz text, and weighted distractor checks passed.");
