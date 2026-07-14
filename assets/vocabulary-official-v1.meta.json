@@ -1,8 +1,8 @@
 {
   "id": "tarjetas-official-vocabulary-v1",
-  "version": 1,
+  "version": 3,
   "createdOn": "2026-07-02",
-  "entryCount": 1523,
+  "entryCount": 1536,
   "applicationStatus": "active-official-vocabulary",
   "source": {
     "id": "combined-official-curriculum-2026-07-08",
@@ -31,7 +31,7 @@
   "tiers": [
     {
       "id": "foundation",
-      "entryCount": 326,
+      "entryCount": 327,
       "chapters": [
         0,
         1,
@@ -40,7 +40,7 @@
     },
     {
       "id": "everyday",
-      "entryCount": 410,
+      "entryCount": 411,
       "chapters": [
         3,
         4,
@@ -50,7 +50,7 @@
     },
     {
       "id": "expanding1",
-      "entryCount": 262,
+      "entryCount": 263,
       "chapters": [
         7,
         8,
@@ -59,7 +59,7 @@
     },
     {
       "id": "expanding2",
-      "entryCount": 525,
+      "entryCount": 535,
       "chapters": [
         10,
         11,
@@ -83,7 +83,7 @@
     "reclassifiedQuestionOrPhraseCount": 73,
     "semanticTagging": {
       "taxonomy": "Cervantes-inspired project taxonomy v1",
-      "taggedEntryCount": 1523,
+      "taggedEntryCount": 1536,
       "untaggedEntryCount": 0,
       "broadTagCount": 22,
       "narrowTagCount": 98
@@ -99,7 +99,7 @@
     "spanishIIImport": {
       "sourceRows": 549,
       "uniqueSourcePrompts": 544,
-      "newEntries": 525,
+      "newEntries": 535,
       "mergedIntoYear1Entries": 19,
       "internalDuplicateRowsMerged": 5,
       "existingDuplicateRowsMerged": 19,
@@ -108,6 +108,12 @@
         "tocar un instrumento musical"
       ],
       "tierAssignment": "Year 2 entries are assigned to the Expanding 2 application tier."
+    },
+    "sourceAlternativeSplits": {
+      "splitSourceEntryCount": 16,
+      "activeSplitEntryCount": 29,
+      "duplicateSpanishAlternativesOmitted": 3,
+      "note": "Clear comma-separated Spanish alternatives are represented as separate active entries; poner, el garaje, and la cocina alternatives are omitted where those Spanish prompts already exist as distinct entries."
     }
   },
   "notes": [
@@ -121,13 +127,14 @@
     "First-pass semantic tags adapt the Instituto Cervantes Nociones específicas organization to this curriculum; tags are project-authored and remain subject to editorial review.",
     "Every entry has a year label; repeated prompts can carry multiple years while retaining the year of first introduction.",
     "Year 1 chapters 7–9 are Expanding 1; Spanish II chapters 10–18 are Expanding 2.",
-    "The source's official Spanish-English teaching text is preserved except for quiz-only overrides used to remove misleading production prompts."
+    "The source's official Spanish-English teaching text is preserved except for quiz-only overrides used to remove misleading production prompts.",
+    "Clear comma-separated Spanish alternatives that can be quizzed independently are split into separate active entries; punctuation and grammar-variant comma entries remain combined."
   ],
   "years": [
     {
       "id": 1,
       "label": "Year 1",
-      "entryCount": 998,
+      "entryCount": 1001,
       "firstIntroductionChapters": [
         0,
         1,
@@ -146,7 +153,7 @@
       "label": "Year 2",
       "sourceRowCount": 549,
       "sourcePromptCount": 544,
-      "newEntryCount": 525,
+      "newEntryCount": 535,
       "repeatedYear1EntryCount": 19,
       "firstIntroductionChapters": [
         10,

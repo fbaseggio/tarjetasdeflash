@@ -8199,9 +8199,9 @@
   },
   {
     "id": "g-curso-la-materia-11iz76w",
-    "spanish": "el curso, la materia",
+    "spanish": "el curso",
     "english": "course",
-    "lemma": "curso, la materia",
+    "lemma": "curso",
     "partOfSpeech": "noun",
     "tier": "foundation",
     "chapter": 2,
@@ -8224,7 +8224,40 @@
     "year": 1,
     "years": [
       1
-    ]
+    ],
+    "splitFromSpanish": "el curso, la materia",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g-la-materia-11iz76w",
+    "spanish": "la materia",
+    "english": "course",
+    "lemma": "materia",
+    "partOfSpeech": "noun",
+    "tier": "foundation",
+    "chapter": 2,
+    "chapters": [
+      2
+    ],
+    "category": "chapter-2",
+    "senses": [
+      "course"
+    ],
+    "source": "vocab-for-g-2026-07-02",
+    "sourceRows": [
+      773
+    ],
+    "curriculumRank": 264,
+    "semanticTags": [
+      "education",
+      "education:school"
+    ],
+    "year": 1,
+    "years": [
+      1
+    ],
+    "splitFromSpanish": "el curso, la materia",
+    "splitVariantIndex": 2
   },
   {
     "id": "g-debajo-de-0q7colr",
@@ -21860,9 +21893,9 @@
   },
   {
     "id": "g-marron-cafe-0w8xoun",
-    "spanish": "marrón, café",
+    "spanish": "marrón",
     "english": "brown",
-    "lemma": "marrón, café",
+    "lemma": "marrón",
     "partOfSpeech": "adjective",
     "tier": "everyday",
     "chapter": 6,
@@ -21887,7 +21920,42 @@
     "year": 1,
     "years": [
       1
-    ]
+    ],
+    "splitVariantIndex": 1,
+    "splitFromSpanish": "marrón, café"
+  },
+  {
+    "id": "g-cafe-0w8xoun",
+    "spanish": "café",
+    "english": "brown",
+    "lemma": "café",
+    "partOfSpeech": "adjective",
+    "tier": "everyday",
+    "chapter": 6,
+    "chapters": [
+      6
+    ],
+    "category": "chapter-6",
+    "senses": [
+      "brown"
+    ],
+    "source": "vocab-for-g-2026-07-02",
+    "sourceRows": [
+      163
+    ],
+    "curriculumRank": 692,
+    "semanticTags": [
+      "description",
+      "description:color",
+      "place",
+      "place:building"
+    ],
+    "year": 1,
+    "years": [
+      1
+    ],
+    "splitVariantIndex": 2,
+    "splitFromSpanish": "marrón, café"
   },
   {
     "id": "g-medias-15e4xa8",
@@ -23680,9 +23748,9 @@
   },
   {
     "id": "g-bano-el-cuarto-de-bano-1lg81ha",
-    "spanish": "el baño, el cuarto de baño",
+    "spanish": "el baño",
     "english": "bathroom",
-    "lemma": "baño, el cuarto de baño",
+    "lemma": "baño",
     "partOfSpeech": "noun",
     "tier": "expanding1",
     "chapter": 7,
@@ -23705,7 +23773,40 @@
     "year": 1,
     "years": [
       1
-    ]
+    ],
+    "splitFromSpanish": "el baño, el cuarto de baño",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g-el-cuarto-de-bano-1lg81ha",
+    "spanish": "el cuarto de baño",
+    "english": "bathroom",
+    "lemma": "cuarto de baño",
+    "partOfSpeech": "noun",
+    "tier": "expanding1",
+    "chapter": 7,
+    "chapters": [
+      7
+    ],
+    "category": "chapter-7",
+    "senses": [
+      "bathroom"
+    ],
+    "source": "vocab-for-g-2026-07-02",
+    "sourceRows": [
+      220
+    ],
+    "curriculumRank": 749,
+    "semanticTags": [
+      "home",
+      "home:furniture"
+    ],
+    "year": 1,
+    "years": [
+      1
+    ],
+    "splitFromSpanish": "el baño, el cuarto de baño",
+    "splitVariantIndex": 2
   },
   {
     "id": "g-cepillarse-el-pelo-15o0kl8",
@@ -29963,7 +30064,7 @@
   {
     "id": "g-eras-0i79rpu",
     "spanish": "eras",
-    "english": "were",
+    "english": "you were",
     "lemma": "eras",
     "partOfSpeech": "conjugated verb",
     "tier": "expanding1",
@@ -29973,7 +30074,7 @@
     ],
     "category": "chapter-9",
     "senses": [
-      "were"
+      "you were"
     ],
     "source": "vocab-for-g-2026-07-02",
     "sourceRows": [
@@ -29987,7 +30088,9 @@
     "year": 1,
     "years": [
       1
-    ]
+    ],
+    "quizEnglishPrompt": "you were (familiar singular)",
+    "quizEnglishAnswer": "you were"
   },
   {
     "id": "g-estado-civil-0alycyp",
@@ -36150,7 +36253,7 @@
   },
   {
     "id": "g2-el-carro-el-coche-e281926",
-    "spanish": "el carro, el coche",
+    "spanish": "el carro",
     "english": "car",
     "lemma": "carro",
     "partOfSpeech": "noun",
@@ -36180,15 +36283,53 @@
       }
     ],
     "curriculumRank": 1119,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "el carro",
     "semanticTags": [
       "travel",
       "travel:car",
       "travel:transport"
-    ]
+    ],
+    "splitFromSpanish": "el carro, el coche",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-el-coche-e281926",
+    "spanish": "el coche",
+    "english": "car",
+    "lemma": "coche",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 11,
+    "chapters": [
+      11
+    ],
+    "category": "El carro",
+    "senses": [
+      "car"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      122
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 122
+      }
+    ],
+    "curriculumRank": 1119,
+    "semanticTags": [
+      "travel",
+      "travel:car",
+      "travel:transport"
+    ],
+    "splitFromSpanish": "el carro, el coche",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-el-la-conductor-a-ccbc2aa",
@@ -36236,9 +36377,9 @@
   },
   {
     "id": "g2-el-garaje-el-taller-63423a8",
-    "spanish": "el garaje, el taller",
-    "english": "garage; mechanic’s repair shop",
-    "lemma": "garaje",
+    "spanish": "el taller",
+    "english": "mechanic’s repair shop",
+    "lemma": "taller",
     "partOfSpeech": "noun",
     "tier": "expanding2",
     "year": 2,
@@ -36251,7 +36392,6 @@
     ],
     "category": "El carro",
     "senses": [
-      "garage",
       "mechanic’s repair shop"
     ],
     "source": "spanishii-vocabulary-2026-07-08",
@@ -36267,16 +36407,14 @@
       }
     ],
     "curriculumRank": 1121,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "el garaje",
     "semanticTags": [
       "shopping",
       "shopping:store",
       "travel",
       "travel:car"
-    ]
+    ],
+    "splitVariantIndex": 2,
+    "splitFromSpanish": "el garaje, el taller"
   },
   {
     "id": "g2-la-gasolina-2f2c195",
@@ -36625,9 +36763,9 @@
   },
   {
     "id": "g2-poner-prender-d17fa12",
-    "spanish": "poner, prender",
+    "spanish": "prender",
     "english": "to turn on",
-    "lemma": "poner",
+    "lemma": "prender",
     "partOfSpeech": "verb expression",
     "tier": "expanding2",
     "year": 2,
@@ -36655,14 +36793,12 @@
       }
     ],
     "curriculumRank": 1131,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "poner",
     "semanticTags": [
       "technology",
       "technology:device"
-    ]
+    ],
+    "splitFromSpanish": "poner, prender",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-sonar-o-ue-549d40f",
@@ -38359,9 +38495,9 @@
   },
   {
     "id": "g2-la-cocina-la-estufa-6924828",
-    "spanish": "la cocina, la estufa",
+    "spanish": "la estufa",
     "english": "stove",
-    "lemma": "cocina",
+    "lemma": "estufa",
     "partOfSpeech": "noun",
     "tier": "expanding2",
     "year": 2,
@@ -38389,14 +38525,12 @@
       }
     ],
     "curriculumRank": 1176,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "la cocina",
     "semanticTags": [
       "home",
       "home:appliance"
-    ]
+    ],
+    "splitVariantIndex": 2,
+    "splitFromSpanish": "la cocina, la estufa"
   },
   {
     "id": "g2-el-congelador-bde2148",
@@ -39035,8 +39169,8 @@
   },
   {
     "id": "g2-lavar-el-suelo-los-platos-7c81f3a",
-    "spanish": "lavar el suelo, los platos",
-    "english": "to wash the floor, the dishes",
+    "spanish": "lavar el suelo",
+    "english": "to wash the floor",
     "lemma": "lavar el suelo",
     "partOfSpeech": "verb expression",
     "tier": "expanding2",
@@ -39050,7 +39184,7 @@
     ],
     "category": "Los quehaceres domésticos",
     "senses": [
-      "to wash the floor, the dishes"
+      "to wash the floor"
     ],
     "source": "spanishii-vocabulary-2026-07-08",
     "sourceRows": [
@@ -39065,17 +39199,57 @@
       }
     ],
     "curriculumRank": 1194,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "lavar el suelo",
     "semanticTags": [
       "body",
       "body:hygiene",
       "home",
       "home:chores",
       "home:furniture"
-    ]
+    ],
+    "splitVariantIndex": 1,
+    "splitFromSpanish": "lavar el suelo, los platos"
+  },
+  {
+    "id": "g2-lavar-los-platos-7c81f3a",
+    "spanish": "lavar los platos",
+    "english": "to wash the dishes",
+    "lemma": "lavar los platos",
+    "partOfSpeech": "verb expression",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 12,
+    "chapters": [
+      12
+    ],
+    "category": "Los quehaceres domésticos",
+    "senses": [
+      "to wash the dishes"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      204
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 204
+      }
+    ],
+    "curriculumRank": 1194,
+    "semanticTags": [
+      "body",
+      "body:hygiene",
+      "home",
+      "home:chores",
+      "home:furniture"
+    ],
+    "splitVariantIndex": 2,
+    "splitFromSpanish": "lavar el suelo, los platos"
   },
   {
     "id": "g2-limpiar-la-casa-60864fe",
@@ -40222,7 +40396,7 @@
   },
   {
     "id": "g2-la-selva-la-jungla-5fd26f6",
-    "spanish": "la selva, la jungla",
+    "spanish": "la selva",
     "english": "jungle",
     "lemma": "selva",
     "partOfSpeech": "noun",
@@ -40252,14 +40426,51 @@
       }
     ],
     "curriculumRank": 1225,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "la selva",
     "semanticTags": [
       "nature",
       "nature:landscape"
-    ]
+    ],
+    "splitFromSpanish": "la selva, la jungla",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-la-jungla-5fd26f6",
+    "spanish": "la jungla",
+    "english": "jungle",
+    "lemma": "jungla",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 13,
+    "chapters": [
+      13
+    ],
+    "category": "La naturaleza",
+    "senses": [
+      "jungle"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      236
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 236
+      }
+    ],
+    "curriculumRank": 1225,
+    "semanticTags": [
+      "nature",
+      "nature:landscape"
+    ],
+    "splitFromSpanish": "la selva, la jungla",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-el-sendero-9e0f9ac",
@@ -40423,7 +40634,7 @@
   },
   {
     "id": "g2-el-ave-el-pajaro-594f955",
-    "spanish": "el ave, el pájaro",
+    "spanish": "el ave",
     "english": "bird",
     "lemma": "ave",
     "partOfSpeech": "noun",
@@ -40453,14 +40664,51 @@
       }
     ],
     "curriculumRank": 1230,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "el ave",
     "semanticTags": [
       "nature",
       "nature:animal"
-    ]
+    ],
+    "splitFromSpanish": "el ave, el pájaro",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-el-pajaro-594f955",
+    "spanish": "el pájaro",
+    "english": "bird",
+    "lemma": "pájaro",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 13,
+    "chapters": [
+      13
+    ],
+    "category": "Los animales",
+    "senses": [
+      "bird"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      241
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 241
+      }
+    ],
+    "curriculumRank": 1230,
+    "semanticTags": [
+      "nature",
+      "nature:animal"
+    ],
+    "splitFromSpanish": "el ave, el pájaro",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-el-gato-f161006",
@@ -40883,8 +41131,8 @@
   },
   {
     "id": "g2-la-energia-nuclear-solar-a217572",
-    "spanish": "la energía nuclear, solar",
-    "english": "nuclear, solar energy",
+    "spanish": "la energía nuclear",
+    "english": "nuclear energy",
     "lemma": "energía nuclear",
     "partOfSpeech": "noun",
     "tier": "expanding2",
@@ -40898,7 +41146,7 @@
     ],
     "category": "El medio ambiente",
     "senses": [
-      "nuclear, solar energy"
+      "nuclear energy"
     ],
     "source": "spanishii-vocabulary-2026-07-08",
     "sourceRows": [
@@ -40913,14 +41161,51 @@
       }
     ],
     "curriculumRank": 1242,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "la energía nuclear",
     "semanticTags": [
       "nature",
       "nature:environment"
-    ]
+    ],
+    "splitVariantIndex": 1,
+    "splitFromSpanish": "la energía nuclear, solar"
+  },
+  {
+    "id": "g2-la-energia-solar-a217572",
+    "spanish": "la energía solar",
+    "english": "solar energy",
+    "lemma": "energía solar",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 13,
+    "chapters": [
+      13
+    ],
+    "category": "El medio ambiente",
+    "senses": [
+      "solar energy"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      254
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 254
+      }
+    ],
+    "curriculumRank": 1242,
+    "semanticTags": [
+      "nature",
+      "nature:environment"
+    ],
+    "splitVariantIndex": 2,
+    "splitFromSpanish": "la energía nuclear, solar"
   },
   {
     "id": "g2-el-envase-46d6478",
@@ -43639,7 +43924,7 @@
   },
   {
     "id": "g2-apurarse-darse-prisa-64ecbe4",
-    "spanish": "apurarse, darse prisa",
+    "spanish": "apurarse",
     "english": "to hurry; to rush",
     "lemma": "apurarse",
     "partOfSpeech": "verb expression",
@@ -43671,18 +43956,61 @@
     ],
     "curriculumRank": 1314,
     "grammar": {
-      "reflexive": true,
-      "sourceAlternatives": true
+      "reflexive": true
     },
-    "quizSpanish": "apurarse",
     "semanticTags": [
       "body",
       "body:wellness"
-    ]
+    ],
+    "splitFromSpanish": "apurarse, darse prisa",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-darse-prisa-64ecbe4",
+    "spanish": "darse prisa",
+    "english": "to hurry; to rush",
+    "lemma": "darse prisa",
+    "partOfSpeech": "verb expression",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 14,
+    "chapters": [
+      14
+    ],
+    "category": "El bienestar",
+    "senses": [
+      "to hurry",
+      "to rush"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      328
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 328
+      }
+    ],
+    "curriculumRank": 1314,
+    "grammar": {
+      "reflexive": true
+    },
+    "semanticTags": [
+      "body",
+      "body:wellness"
+    ],
+    "splitFromSpanish": "apurarse, darse prisa",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-aumentar-de-peso-engordar-eb2ce63",
-    "spanish": "aumentar de peso, engordar",
+    "spanish": "aumentar de peso",
     "english": "to gain weight",
     "lemma": "aumentar de peso",
     "partOfSpeech": "verb expression",
@@ -43712,14 +44040,51 @@
       }
     ],
     "curriculumRank": 1315,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "aumentar de peso",
     "semanticTags": [
       "body",
       "body:wellness"
-    ]
+    ],
+    "splitFromSpanish": "aumentar de peso, engordar",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-engordar-eb2ce63",
+    "spanish": "engordar",
+    "english": "to gain weight",
+    "lemma": "engordar",
+    "partOfSpeech": "verb expression",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 14,
+    "chapters": [
+      14
+    ],
+    "category": "El bienestar",
+    "senses": [
+      "to gain weight"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      329
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 329
+      }
+    ],
+    "curriculumRank": 1315,
+    "semanticTags": [
+      "body",
+      "body:wellness"
+    ],
+    "splitFromSpanish": "aumentar de peso, engordar",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-disfrutar-de-b17718e",
@@ -47096,7 +47461,7 @@
   },
   {
     "id": "g2-el-salario-el-sueldo-2190acb",
-    "spanish": "el salario, el sueldo",
+    "spanish": "el salario",
     "english": "salary",
     "lemma": "salario",
     "partOfSpeech": "noun",
@@ -47126,14 +47491,51 @@
       }
     ],
     "curriculumRank": 1402,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "el salario",
     "semanticTags": [
       "work",
       "work:job-search"
-    ]
+    ],
+    "splitFromSpanish": "el salario, el sueldo",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-el-sueldo-2190acb",
+    "spanish": "el sueldo",
+    "english": "salary",
+    "lemma": "sueldo",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 16,
+    "chapters": [
+      16
+    ],
+    "category": "La entrevista",
+    "senses": [
+      "salary"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      418
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 418
+      }
+    ],
+    "curriculumRank": 1402,
+    "semanticTags": [
+      "work",
+      "work:job-search"
+    ],
+    "splitFromSpanish": "el salario, el sueldo",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-la-solicitud-de-trabajo-5323829",
@@ -47372,7 +47774,7 @@
   },
   {
     "id": "g2-la-compania-la-empresa-acc8e74",
-    "spanish": "la compañía, la empresa",
+    "spanish": "la compañía",
     "english": "company; firm",
     "lemma": "compañía",
     "partOfSpeech": "noun",
@@ -47403,14 +47805,52 @@
       }
     ],
     "curriculumRank": 1409,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "la compañía",
     "semanticTags": [
       "work",
       "work:workplace"
-    ]
+    ],
+    "splitFromSpanish": "la compañía, la empresa",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-la-empresa-acc8e74",
+    "spanish": "la empresa",
+    "english": "company; firm",
+    "lemma": "empresa",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 16,
+    "chapters": [
+      16
+    ],
+    "category": "El mundo del trabajo",
+    "senses": [
+      "company",
+      "firm"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      425
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 425
+      }
+    ],
+    "curriculumRank": 1409,
+    "semanticTags": [
+      "work",
+      "work:workplace"
+    ],
+    "splitFromSpanish": "la compañía, la empresa",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-el-empleo-61942e4",
@@ -48071,7 +48511,7 @@
   },
   {
     "id": "g2-el-baile-la-danza-72a8806",
-    "spanish": "el baile, la danza",
+    "spanish": "el baile",
     "english": "dance",
     "lemma": "baile",
     "partOfSpeech": "noun",
@@ -48101,14 +48541,51 @@
       }
     ],
     "curriculumRank": 1427,
-    "grammar": {
-      "sourceAlternatives": true
-    },
-    "quizSpanish": "el baile",
     "semanticTags": [
       "leisure",
       "leisure:arts"
-    ]
+    ],
+    "splitFromSpanish": "el baile, la danza",
+    "splitVariantIndex": 1
+  },
+  {
+    "id": "g2-la-danza-72a8806",
+    "spanish": "la danza",
+    "english": "dance",
+    "lemma": "danza",
+    "partOfSpeech": "noun",
+    "tier": "expanding2",
+    "year": 2,
+    "years": [
+      2
+    ],
+    "chapter": 17,
+    "chapters": [
+      17
+    ],
+    "category": "Las bellas artes",
+    "senses": [
+      "dance"
+    ],
+    "source": "spanishii-vocabulary-2026-07-08",
+    "sourceRows": [
+      444
+    ],
+    "sourceReferences": [
+      {
+        "source": "spanishii-vocabulary-2026-07-08",
+        "sourceFile": "spanishii_vocabulary.xlsx",
+        "sourceSheet": "Vocabulary",
+        "sourceRow": 444
+      }
+    ],
+    "curriculumRank": 1427,
+    "semanticTags": [
+      "leisure",
+      "leisure:arts"
+    ],
+    "splitFromSpanish": "el baile, la danza",
+    "splitVariantIndex": 2
   },
   {
     "id": "g2-la-banda-d46c339",

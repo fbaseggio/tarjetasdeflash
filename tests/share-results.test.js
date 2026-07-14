@@ -16,7 +16,7 @@ const payload = buildSessionSharePayload({
   mastery: {
     demonstrated: 30,
     demonstratedToday: 6,
-    total: 1523,
+    total: 1536,
     projectedPercent: 85,
     estimatedLevelLabel: "Expanding 2",
   },
@@ -24,7 +24,7 @@ const payload = buildSessionSharePayload({
 assert.equal(payload.title, "Franco’s Spanish practice");
 assert.equal(
   payload.text,
-  "🇪🇸 Franco practiced Spanish today.\nMastery 30/1523 (+6) · Projected 85% · Level Expanding 2 · 4 retries\nTry it: https://fbaseggio.github.io/tarjetasdeflash/",
+  "🇪🇸 Franco practiced Spanish today.\nMastery 30/1536 (+6) · Projected 85% · Level Expanding 2 · 4 retries\nTry it: https://fbaseggio.github.io/tarjetasdeflash/",
 );
 assert.equal(payload.url, PUBLIC_APP_URL);
 assert.equal(payload.clipboardText, payload.text);
@@ -45,7 +45,7 @@ assert.match(
     mastery: {
       demonstrated: 1,
       demonstratedToday: 1,
-      total: 1523,
+      total: 1536,
       projectedPercent: 10,
     },
   })),

@@ -10,7 +10,7 @@ const metadata = JSON.parse(
   await readFile(new URL("../assets/vocabulary-official-v1.meta.json", import.meta.url), "utf8"),
 );
 
-assert.equal(officialVocabulary.length, 1523);
+assert.equal(officialVocabulary.length, 1536);
 assert.equal(metadata.entryCount, officialVocabulary.length);
 assert.equal(metadata.applicationStatus, "active-official-vocabulary");
 assert.equal(new Set(officialVocabulary.map((entry) => entry.id)).size, officialVocabulary.length);
@@ -76,12 +76,12 @@ assert.equal(
   officialVocabulary.length,
 );
 
-assert.equal(officialVocabulary.filter((entry) => entry.year === 1).length, 998);
-assert.equal(officialVocabulary.filter((entry) => entry.year === 2).length, 525);
-assert.equal(officialVocabulary.filter((entry) => entry.years?.includes(2)).length, 544);
+assert.equal(officialVocabulary.filter((entry) => entry.year === 1).length, 1001);
+assert.equal(officialVocabulary.filter((entry) => entry.year === 2).length, 535);
+assert.equal(officialVocabulary.filter((entry) => entry.years?.includes(2)).length, 554);
 assert.deepEqual(metadata.years.map((year) => year.label), ["Year 1", "Year 2"]);
-assert.equal(metadata.years.find((year) => year.id === 1).entryCount, 998);
-assert.equal(metadata.years.find((year) => year.id === 2).newEntryCount, 525);
+assert.equal(metadata.years.find((year) => year.id === 1).entryCount, 1001);
+assert.equal(metadata.years.find((year) => year.id === 2).newEntryCount, 535);
 assert.equal(metadata.years.find((year) => year.id === 2).repeatedYear1EntryCount, 19);
 
 for (const tierMetadata of metadata.tiers) {
@@ -213,4 +213,35 @@ assert.deepEqual(estacion.years, [1, 2]);
 assert.ok(estacion.senses.includes("season"));
 assert.ok(estacion.senses.includes("station"));
 
-console.log("Validated 1,523 entries in the official curriculum vocabulary.");
+const splitAlternatives = officialVocabulary.filter((entry) => entry.splitFromSpanish);
+assert.equal(splitAlternatives.length, 29);
+assert.ok(officialVocabulary.find((entry) => entry.spanish === "engordar"));
+assert.ok(officialVocabulary.find((entry) => entry.spanish === "aumentar de peso"));
+assert.equal(officialVocabulary.filter((entry) => entry.spanish === "poner").length, 1);
+assert.equal(officialVocabulary.find((entry) => entry.spanish === "prender").english, "to turn on");
+assert.equal(officialVocabulary.find((entry) => entry.spanish === "café").english, "brown");
+assert.equal(
+  officialVocabulary.find((entry) => entry.spanish === "el taller").english,
+  "mechanic’s repair shop",
+);
+assert.equal(officialVocabulary.find((entry) => entry.spanish === "la cocina").english, "kitchen");
+assert.equal(officialVocabulary.find((entry) => entry.spanish === "la estufa").english, "stove");
+assert.equal(
+  officialVocabulary.find((entry) => entry.spanish === "lavar los platos").english,
+  "to wash the dishes",
+);
+assert.equal(
+  officialVocabulary.find((entry) => entry.spanish === "la energía solar").english,
+  "solar energy",
+);
+assert.equal(
+  officialVocabulary.find((entry) => entry.spanish === "el/la doctor/a, el/la médico/a").english,
+  "doctor; physician",
+);
+
+const eras = officialVocabulary.find((entry) => entry.spanish === "eras");
+assert.equal(eras.english, "you were");
+assert.equal(eras.quizEnglishPrompt, "you were (familiar singular)");
+assert.equal(eras.quizEnglishAnswer, "you were");
+
+console.log("Validated 1,536 entries in the official curriculum vocabulary.");

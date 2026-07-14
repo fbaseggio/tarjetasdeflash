@@ -6,8 +6,8 @@ import {
   isBelowFrontier,
   masteryAfterAttempt,
   REVIEW_INTERVALS,
-} from "./mastery-policy.js?v=0.24.4";
-import { TIER_ORDER } from "./tiers.js?v=0.24.4";
+} from "./mastery-policy.js?v=0.24.7";
+import { TIER_ORDER } from "./tiers.js?v=0.24.7";
 
 const LEARNING_KEY_PREFIX = "tarjetas.learning.v2.";
 const CALENDAR_MODEL_VERSION = 2;

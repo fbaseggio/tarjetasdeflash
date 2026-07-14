@@ -13,7 +13,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
 - Twenty-seven playful, honor-system profiles with per-browser recognition, greeting, and change-user behavior.
 - A 100-entry placeholder vocabulary asset.
-- An active, versioned 1,523-entry curriculum vocabulary derived from the project-provided Year 1 and Spanish II workbooks, with chapter order, year labels, four application bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
+- An active, versioned 1,536-entry curriculum vocabulary derived from the project-provided Year 1 and Spanish II workbooks, with chapter order, year labels, four application bands, canonical lemmas, merged duplicate rows and senses, structured grammar metadata, and validation tests.
 - A one-time, per-profile onboarding assessment with sixteen mixed core questions, six adaptive confirmation questions, persisted tentative placement, and no effect on streak statistics.
 - Due-only frontier practice plus structured below-frontier audits, including Expanding 2 Foundation check-ins every other day and extra audit pressure when lower-tier misses appear.
 - Random ten-word quiz rounds, balanced between five Spanish-to-English and five English-to-Spanish prompts.
@@ -79,7 +79,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## 4. Vocabulary universe
 
-The active vocabulary universe is the 1,523-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided Year 1 `Vocab for G.xlsx` workbook plus the Spanish II `spanishii_vocabulary.xlsx` workbook. Chapters remain the fine-grained curriculum order. Every entry has a `year` of first introduction and a `years` list for repeated prompts; Year 1 covers chapters 0–9 and Spanish II/Year 2 covers chapters 10–18. Application tiers are Foundation chapters 0–2, Everyday chapters 3–6, Expanding 1 chapters 7–9, and Expanding 2 Year 2 chapters 10–18. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
+The active vocabulary universe is the 1,536-entry curriculum set at [`assets/vocabulary-official-v1.json`](assets/vocabulary-official-v1.json), with version and transformation metadata alongside it. It was derived from the project-provided Year 1 `Vocab for G.xlsx` workbook plus the Spanish II `spanishii_vocabulary.xlsx` workbook. Chapters remain the fine-grained curriculum order. Every entry has a `year` of first introduction and a `years` list for repeated prompts; Year 1 covers chapters 0–9 and Spanish II/Year 2 covers chapters 10–18. Application tiers are Foundation chapters 0–2, Everyday chapters 3–6, Expanding 1 chapters 7–9, and Expanding 2 Year 2 chapters 10–18. The former 1,500-entry testing set and original 100-entry placeholder remain in `assets/` only as possible supplementary and migration-reference material.
 
 ```json
 {
@@ -114,7 +114,7 @@ Requirements:
 
 The vocabulary file remains a static application asset in the MVP. Moving vocabulary into Firestore is unnecessary until browser-based editing or dynamic decks are desired.
 
-The first official import merged 80 repeated Year 1 source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, and retained structured grammar metadata. The Spanish II import read 549 rows from chapters 10–18, producing 544 unique Year 2 prompts: 525 brand-new entries, 19 exact repeats merged into existing Year 1 entries, and 5 duplicate Spanish II rows merged internally. Later editorial passes inferred all previously blank parts of speech, corrected geographic names and several conjugated forms, and the enlarged dataset now classifies 28 proper nouns, 31 numbers, 29 questions, 73 phrases, and 10 conjunctions; dataset validation rejects any remaining `unknown` category. The first-pass semantic taxonomy now assigns at least one broad and narrow tag to every entry using bounded word/phrase rules, source-category rules, safe Spanish morphological stems, and reviewed overrides for otherwise untagged curriculum words. It marks 179 bare infinitives as `verbo`, nine noun lookalikes—`mujer`, `celular`, `lugar`, `suéter`, `azúcar`, `calamar`, `deber`, `porvenir`, and `titular`—as `verbo-falso`, and 53 entries in 24 curated lexical families. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
+The first official import merged 80 repeated Year 1 source rows into 998 distinct Spanish prompts, supplied the workbook's missing translation for `cero`, and retained structured grammar metadata. The Spanish II import read 549 rows from chapters 10–18, producing 544 unique Year 2 prompts: 525 brand-new entries, 19 exact repeats merged into existing Year 1 entries, and 5 duplicate Spanish II rows merged internally. Later editorial passes inferred all previously blank parts of speech, corrected geographic names and several conjugated forms, and the enlarged dataset now classifies 28 proper nouns, 31 numbers, 29 questions, 73 phrases, and 10 conjunctions; dataset validation rejects any remaining `unknown` category. The first-pass semantic taxonomy now assigns at least one broad and narrow tag to every entry using bounded word/phrase rules, source-category rules, safe Spanish morphological stems, and reviewed overrides for otherwise untagged curriculum words. It marks 179 bare infinitives as `verbo`, nine noun lookalikes—`mujer`, `celular`, `lugar`, `suéter`, `azúcar`, `calamar`, `deber`, `porvenir`, and `titular`—as `verbo-falso`, and 53 entries in 24 curated lexical families. Clear comma-separated Spanish alternatives that can be quizzed independently are split into separate active entries, while punctuation and grammar-variant comma entries remain combined. The former testing dataset keeps its own attribution documentation and is not loaded by the application.
 
 ### 4.1 New vocabulary onboarding checklist
 
@@ -128,6 +128,7 @@ Before adding a new batch of vocabulary to the official dataset:
 2. **Normalize learner-facing text.**
    - Split source notation such as stem changes, gender variants, or usage notes into structured metadata where practical.
    - Keep `spanish` and `english` as the full teaching pair shown to learners.
+   - Split true comma-separated Spanish alternatives into separate active entries when each form should be quizzed independently; keep punctuation, gender, number, and short-form adjective variants together.
    - Add `quizSpanish` or `quizEnglish` only when the generated compact form needs a human override.
    - Preserve accents, `ñ`, opening punctuation, and meaningful articles in teaching text.
    - Review compact quiz forms for punctuation clues: unmatched `¡`/`¿`, commas, parentheticals, abbreviations, and capitalization should not make one choice stand out unless the punctuation is part of the skill being tested.
@@ -247,7 +248,7 @@ Candidate weights then increase according to independent, potentially compoundin
 - Proper-name structure: proper nouns compete only with proper nouns; ordinary targets can never receive a capitalized proper-name distractor.
 - Same curriculum tier and proximity in chapter order.
 - Same semantic family or topic.
-- Verbo surface form: bare infinitives and the six noun lookalikes use a separately calibrated eligibility and weighting policy.
+- Verbo surface form: bare infinitives and the nine noun lookalikes use a separately calibrated eligibility and weighting policy.
 - A known false-cognate relationship between prompt and answer.
 - Similar Spanish spelling or pronunciation.
 - Similar answer form or length when that makes the alternatives grammatically homogeneous.
@@ -255,7 +256,7 @@ Candidate weights then increase according to independent, potentially compoundin
 
 False-cognate relationships may be directional: a particular English answer can be tempting for a Spanish prompt without the reverse direction being equally useful. Sound and spelling similarity should be computed between the relevant Spanish forms even when the displayed answers are English. Explicit editorial relationships take precedence where automatic similarity would be misleading.
 
-English-to-Spanish selection also computes how transparently each Spanish candidate reveals its own English meaning. Normalized lemma-to-gloss similarity currently identifies 169 strong and 130 moderate non-proper cognates across the 1,523-word official corpus, with reviewed additions such as `profesor/a` whose stored gloss is “teacher.” Strong candidates receive a `0.12` multiplier and moderate candidates `0.35`; they remain possible but rarely outrank equally good opaque alternatives. This penalty is directional, never affects a correct answer, excludes proper names, and is suppressed when the candidate is an explicit false-cognate lure for the current prompt.
+English-to-Spanish selection also computes how transparently each Spanish candidate reveals its own English meaning. Normalized lemma-to-gloss similarity currently identifies 142 strong and 158 moderate non-proper cognates across the 1,536-word official corpus, with reviewed additions such as `profesor/a` whose stored gloss is “teacher.” Strong candidates receive a `0.12` multiplier and moderate candidates `0.35`; they remain possible but rarely outrank equally good opaque alternatives. This penalty is directional, never affects a correct answer, excludes proper names, and is suppressed when the candidate is an explicit false-cognate lure for the current prompt.
 
 Weights are configuration, not domain invariants. The first selection tier requires a narrow semantic match, meaningful spelling/sound similarity, an explicit relationship, or a special homogeneous class such as questions, proper nouns, or numbers. If fewer than three choices are available, the chooser backs off to same-part-of-speech broad semantic matches. Only after both affinity tiers are exhausted may it use a same-format, same-part-of-speech fallback. Tier, chapter, and answer length can adjust weights but can never qualify a candidate by themselves. Learner-confusion data has a defined scoring hook but is not yet populated. Selection remains random within each tier, so questions do not become fixed category-matching exercises.
 
@@ -309,7 +310,7 @@ When the previous answer completes a round or onboarding assessment, the applica
 
 Each quiz round records every submitted answer. Correctly resolving a vocabulary item contributes one right answer; every incorrect submission contributes one wrong answer. A full ten-word round therefore ends with `10 right` and `N wrong`; the daily session result aggregates its check-in and all due-review rounds, so its right count can be larger.
 
-The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day. It reports Demonstrated **Mastery** as a weighted count out of the full corpus, **Projected** mastery as a conservative percentage inferred from tier-level evidence, a projected level label, and a 1–4 placement-readiness score. The first completed full session for a calendar day also shows a preview of a simple share card and offers **Text my friends**, so the learner can see exactly what will be sent. The application generates the same card as a 1200×630 PNG containing the learner's display name, distinct words practiced, new words, mastery gained today, current streak, and public application URL, then attaches that image and a concise editable message to the browser's native share sheet. The message contains the link, Demonstrated Mastery, Projected mastery, projected level, and retries, while avoiding a separate Web Share URL field to reduce multi-bubble text-message behavior. The recipient application is chosen by the learner; when native sharing is unavailable, the text is copied to the clipboard. Later sessions and standalone extra quizzes do not offer this action.
+The result screen appears only at completion and offers a concise review, optional extra practice, and another full session on the same actual day. It reports Demonstrated **Mastery** as a weighted count out of the full corpus, **Projected** mastery as a conservative percentage inferred from tier-level evidence, a projected level label, and a 1–4 placement-readiness score. Completed full-session result screens show a preview of a simple share card and offer **Text my friends**, so the learner can see exactly what will be sent even after the first session of the day. The application generates the same card as a 1200×630 PNG containing the learner's display name, distinct words practiced, new words, mastery gained today, current streak, and public application URL, then attaches that image and a concise editable message to the browser's native share sheet. The message contains the link, Demonstrated Mastery, Projected mastery, projected level, and retries, while avoiding a separate Web Share URL field to reduce multi-bubble text-message behavior. The recipient application is chosen by the learner; when native sharing is unavailable, the text is copied to the clipboard. Standalone extra quizzes do not offer this action.
 
 The stage-by-stage review and the “all words seen today” review also allow optional local manual priority changes for each reviewed word. **More practice** records a per-word override and pulls the next review one scheduler step sooner; **Know it** records a per-word override and pushes the next review two scheduler steps later; **Normal** removes the override without rewriting the recorded answer history. These controls are deliberately absent during the live quiz, so they adjust future scheduling without changing right/wrong counts or the evidence trail.
 
@@ -666,7 +667,7 @@ Question-generation logic should be tested independently from the interface.
 
 Implemented prototype acceptance criteria:
 
-- The active vocabulary loads 1,523 official curriculum entries with Year 1/Year 2 labels, four current application tiers, required fields, unique IDs/prompts, and versioned source/transformation metadata.
+- The active vocabulary loads 1,536 official curriculum entries with Year 1/Year 2 labels, four current application tiers, required fields, unique IDs/prompts, and versioned source/transformation metadata.
 - Question generation rejects an asset that cannot produce four distinct displayed choices.
 - A ten-question quiz contains ten distinct vocabulary IDs.
 - A final short review round can contain fewer than four target words while drawing distractors from the full vocabulary.
@@ -727,7 +728,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 
 ### Phase 1B — Local learning sessions (in progress)
 
-- [x] A 1,523-entry official curriculum vocabulary with chapter order, Year 1/Year 2 labels, canonical lemmas, merged senses, structured grammar metadata, source metadata, and validation tests.
+- [x] A 1,536-entry official curriculum vocabulary with chapter order, Year 1/Year 2 labels, canonical lemmas, merged senses, structured grammar metadata, source metadata, and validation tests.
 - [x] One-time 12-core-plus-6-confirmation adaptive onboarding with persisted tentative placement.
 - [x] Activation of the larger vocabulary and frontier-weighted quiz selection with Foundation auditing.
 - [x] Daily practice sessions composed of check-in, explicit new-word presentation, and due reviews.
