@@ -236,6 +236,30 @@ assert.deepEqual(splitTopicPlan.newWordIds, [
   "city-0", "city-1", "city-2", "city-3", "city-4", "city-5", "city-6",
 ]);
 
+const placeholderChapterVocabulary = [
+  ...Array.from({ length: 8 }, (_, index) => ({
+    ...fakeEntry(`place-${index}`, "chapter-0", index * 2 + 1),
+    semanticTags: ["place", "place:geography"],
+  })),
+  ...Array.from({ length: 8 }, (_, index) => ({
+    ...fakeEntry(`number-${index}`, "chapter-0", index * 2 + 2),
+    partOfSpeech: "number",
+    semanticTags: ["number", "number:cardinal"],
+  })),
+];
+const semanticTopicPlan = createDailySessionPlan(
+  placeholderChapterVocabulary,
+  { knownThrough: null, learningFrontier: "foundation" },
+  { words: {} },
+  "2026-07-02",
+  () => 0.99,
+  { newWordStyle: NEW_WORD_STYLES.TOPIC_GROUPS },
+);
+assert.deepEqual(semanticTopicPlan.newWordIds, [
+  "place-0", "place-1", "place-2", "place-3",
+  "place-4", "place-5", "place-6", "place-7",
+]);
+
 assert.equal(adaptiveNewWordCount(0), 15);
 assert.equal(adaptiveNewWordCount(8), 14);
 assert.equal(adaptiveNewWordCount(60), 8);

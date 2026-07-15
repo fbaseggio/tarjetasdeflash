@@ -1,6 +1,6 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.10";
-import { shuffle } from "./questions.js?v=0.24.10";
-import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.10";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.11";
+import { shuffle } from "./questions.js?v=0.24.11";
+import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.11";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;
@@ -237,13 +237,24 @@ function splitTopicGroup(entries) {
   return chunks;
 }
 
+function topicGroupKey(entry) {
+  if (entry.category && !String(entry.category).startsWith("chapter-")) {
+    return entry.category;
+  }
+
+  return entry.semanticTags?.[0]
+    ?? entry.partOfSpeech
+    ?? entry.category
+    ?? "general";
+}
+
 function topicPacketsForTier(vocabulary, words, tier, selectedIds) {
   const groups = new Map();
   vocabulary
     .filter((entry) => entry.tier === tier && !words[entry.id] && !selectedIds.has(entry.id))
     .sort(curriculumOrder)
     .forEach((entry) => {
-      const key = `${entry.chapter ?? ""}|${entry.category ?? ""}`;
+      const key = `${entry.chapter ?? ""}|${topicGroupKey(entry)}`;
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(entry);
     });
@@ -258,12 +269,14 @@ function selectThematicNewWords(vocabulary, words, placement, checkInIds, count)
 
   for (const tier of tiers) {
     const packets = topicPacketsForTier(vocabulary, words, tier, selectedIds);
+    const minimumPacketSize = Math.min(MIN_TOPIC_PACKET_SIZE, count);
+    const fullPacket = packets.find((packet) => packet.length >= minimumPacketSize);
+    if (fullPacket) {
+      return fullPacket.slice(0, Math.max(count, KEEP_TOGETHER_TOPIC_PACKET_SIZE));
+    }
+
     for (let packetIndex = 0; packetIndex < packets.length; packetIndex += 1) {
       const packet = [...packets[packetIndex]];
-      if (packet.length >= Math.min(MIN_TOPIC_PACKET_SIZE, count)) {
-        return packet.slice(0, Math.max(count, KEEP_TOGETHER_TOPIC_PACKET_SIZE));
-      }
-
       for (
         let nextIndex = packetIndex + 1;
         nextIndex < packets.length && packet.length < MIN_TOPIC_PACKET_SIZE;
