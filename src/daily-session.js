@@ -1,11 +1,12 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.9";
-import { shuffle } from "./questions.js?v=0.24.9";
-import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.9";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.10";
+import { shuffle } from "./questions.js?v=0.24.10";
+import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.10";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;
 const MIN_NEW_WORD_COUNT = 8;
 const BACKLOG_WORDS_PER_NEW_WORD_REDUCTION = 8;
+export const MAX_REVIEW_STAGE_WORDS = 20;
 const NEW_WORD_TRANSPARENCY_WEIGHTS = Object.freeze({
   [COGNATE_TRANSPARENCY.NONE]: 1,
   [COGNATE_TRANSPARENCY.MODERATE]: 0.6,
@@ -184,6 +185,44 @@ function curriculumOrder(left, right) {
   return (left.curriculumRank ?? 0) - (right.curriculumRank ?? 0)
     || (left.chapter ?? 0) - (right.chapter ?? 0)
     || String(left.spanish).localeCompare(String(right.spanish), "es");
+}
+
+function reviewDueDate(entry, words) {
+  const word = words[entry.id];
+  return word?.repairDueDate ?? word?.schedule?.dueDate ?? "9999-12-31";
+}
+
+function reviewPriority(left, right, words, date) {
+  const leftWord = words[left.id];
+  const rightWord = words[right.id];
+  const leftRepair = dueForSameDayRepair(leftWord, date);
+  const rightRepair = dueForSameDayRepair(rightWord, date);
+  if (leftRepair !== rightRepair) return leftRepair ? -1 : 1;
+
+  const leftLatest = latestResult(leftWord);
+  const rightLatest = latestResult(rightWord);
+  const leftMiss = Boolean(leftLatest && !leftLatest.correct);
+  const rightMiss = Boolean(rightLatest && !rightLatest.correct);
+  if (leftMiss !== rightMiss) return leftMiss ? -1 : 1;
+
+  return String(reviewDueDate(left, words)).localeCompare(String(reviewDueDate(right, words)))
+    || curriculumOrder(left, right);
+}
+
+function reviewIdsForSession(due, newWords, words, date) {
+  const orderedDue = [...due].sort((left, right) => reviewPriority(left, right, words, date));
+  const sameDayRepairs = orderedDue.filter((entry) => dueForSameDayRepair(words[entry.id], date));
+  const ordinaryDue = orderedDue.filter((entry) => !dueForSameDayRepair(words[entry.id], date));
+  const ordinarySlots = Math.max(
+    0,
+    MAX_REVIEW_STAGE_WORDS - sameDayRepairs.length - newWords.length,
+  );
+
+  return [...new Set([
+    ...sameDayRepairs,
+    ...ordinaryDue.slice(0, ordinarySlots),
+    ...newWords,
+  ].map((entry) => entry.id))];
 }
 
 function splitTopicGroup(entries) {
@@ -378,7 +417,7 @@ export function createDailySessionPlan(
     random,
     options.newWordStyle,
   );
-  const reviewIds = [...new Set([...due, ...newWords].map((entry) => entry.id))];
+  const reviewIds = reviewIdsForSession(due, newWords, words, date);
 
   return {
     date,

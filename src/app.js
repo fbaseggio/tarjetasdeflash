@@ -1,46 +1,46 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.24.9";
-import { APP_VERSION } from "./app-version.js?v=0.24.9";
-import { createAssessmentSession } from "./assessment.js?v=0.24.9";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.9";
+import { createActivityStorage } from "./activity-storage.js?v=0.24.10";
+import { APP_VERSION } from "./app-version.js?v=0.24.10";
+import { createAssessmentSession } from "./assessment.js?v=0.24.10";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.10";
 import {
   buildDiagnosticExport,
   buildCognateTransparencySummary,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.24.9";
+} from "./diagnostic-export.js?v=0.24.10";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.24.9";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.9";
-import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.9";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.9";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.9";
-import { createProfileStorage } from "./profile-storage.js?v=0.24.9";
-import { buildQuizFromAnswers } from "./questions.js?v=0.24.9";
-import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.9";
-import { createQuizSession } from "./quiz-session.js?v=0.24.9";
-import { initializeRecognition } from "./recognition.js?v=0.24.9";
+} from "./indexed-history.js?v=0.24.10";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.10";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.10";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.10";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.10";
+import { createProfileStorage } from "./profile-storage.js?v=0.24.10";
+import { buildQuizFromAnswers } from "./questions.js?v=0.24.10";
+import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.10";
+import { createQuizSession } from "./quiz-session.js?v=0.24.10";
+import { initializeRecognition } from "./recognition.js?v=0.24.10";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.24.9";
+} from "./review-results.js?v=0.24.10";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   shareSessionResults,
-} from "./share-results.js?v=0.24.9";
+} from "./share-results.js?v=0.24.10";
 import {
   choiceRevealDelayMs,
   createSettingsStorage,
-} from "./settings-storage.js?v=0.24.9";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.9";
-import { TIER_LABELS } from "./tiers.js?v=0.24.9";
+} from "./settings-storage.js?v=0.24.10";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.10";
+import { TIER_LABELS } from "./tiers.js?v=0.24.10";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -75,6 +75,7 @@ const directionLabelElement = document.querySelector("#direction-label");
 const quizErrorElement = document.querySelector("#quiz-error");
 const progressElement = document.querySelector("#quiz-progress");
 const roundCompleteButton = document.querySelector("#round-complete-button");
+const endSessionButton = document.querySelector("#end-session-button");
 const newQuizButton = document.querySelector("#new-quiz-button");
 const resultsEyebrowElement = document.querySelector("#results-eyebrow");
 const resultsTitleElement = document.querySelector("#results-title");
@@ -151,6 +152,7 @@ let choiceRevealTimer = null;
 let autoAdvanceTimer = null;
 let lastFeedbackSnapshot = null;
 let pendingRoundCompletion = null;
+let pendingRoundEndSession = null;
 
 function dateFromKey(dateKey) {
   const [year, month, day] = dateKey.split("-").map(Number);
@@ -231,7 +233,9 @@ function hideLastResult() {
 
 function hideRoundCompleteButton() {
   pendingRoundCompletion = null;
+  pendingRoundEndSession = null;
   roundCompleteButton.hidden = true;
+  endSessionButton.hidden = true;
 }
 
 function appendTeachingLine(container, question) {
@@ -521,10 +525,17 @@ function roundCompletionButtonText() {
   return "Continue session ";
 }
 
-function renderRoundCompletion(onContinue) {
+function canEndSessionAfterReviewRound() {
+  if (roundKind !== "review" || !dailySession) return false;
+  const reviewedThrough = dailySession.reviewCursor + roundEntries.length;
+  return reviewedThrough < dailySession.reviewIds.length;
+}
+
+function renderRoundCompletion(onContinue, onEndSession = null) {
   clearChoiceRevealTimer();
   clearAutoAdvanceTimer();
   pendingRoundCompletion = onContinue;
+  pendingRoundEndSession = onEndSession;
   directionLabelElement.textContent = lastFeedbackSnapshot?.kind === "assessment"
     ? "Starting point complete"
     : roundKind === "check-in"
@@ -549,6 +560,7 @@ function renderRoundCompletion(onContinue) {
   renderLastResult();
   roundCompleteButton.firstChild.textContent = roundCompletionButtonText();
   roundCompleteButton.hidden = false;
+  endSessionButton.hidden = !canEndSessionAfterReviewRound();
   roundCompleteButton.focus();
 }
 
@@ -557,6 +569,13 @@ function continueAfterRoundCompletion() {
   if (!onContinue) return;
   hideRoundCompleteButton();
   onContinue();
+}
+
+function endSessionAfterReviewRound() {
+  const onEndSession = pendingRoundEndSession;
+  if (!canEndSessionAfterReviewRound() || !onEndSession) return;
+  hideRoundCompleteButton();
+  onEndSession();
 }
 
 function attemptFromState(state, correct, source) {
@@ -626,7 +645,10 @@ function handleAnswer(event) {
   scheduleAutoAdvance(() => {
     const state = quizSession.advance();
     if (state.phase === "complete") {
-      renderRoundCompletion(() => completeQuizRound(state));
+      renderRoundCompletion(
+        () => completeQuizRound(state),
+        () => completeQuizRound(state, { endSession: true }),
+      );
     } else {
       renderQuestion();
     }
@@ -888,7 +910,7 @@ function startNextReviewRound() {
   startRound(entryList(ids), "review");
 }
 
-function completeQuizRound(state) {
+function completeQuizRound(state, options = {}) {
   currentRoundRecord = {
     ...currentRoundRecord,
     status: "completed",
@@ -930,7 +952,11 @@ function completeQuizRound(state) {
   } else {
     dailySession.reviewCursor += roundEntries.length;
     saveDailySession();
-    startNextReviewRound();
+    if (options.endSession) {
+      completeDailySession();
+    } else {
+      startNextReviewRound();
+    }
   }
 }
 
@@ -1447,8 +1473,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.24.9"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.9"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.24.10"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.10"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -1571,6 +1597,7 @@ startSessionButton.addEventListener("click", startOrResumeSession);
 nextPresentationButton.addEventListener("click", advancePresentation);
 newSessionButton.addEventListener("click", startAnotherSessionToday);
 roundCompleteButton.addEventListener("click", continueAfterRoundCompletion);
+endSessionButton.addEventListener("click", endSessionAfterReviewRound);
 shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 answerDelaySelect.addEventListener("change", updateAnswerDelaySetting);

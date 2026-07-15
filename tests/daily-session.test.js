@@ -5,6 +5,7 @@ import {
   createDailySessionPlan,
   getReviewRoundIds,
   lowerTierHealth,
+  MAX_REVIEW_STAGE_WORDS,
   NEW_WORD_STYLES,
   newWordSelectionWeight,
 } from "../src/daily-session.js";
@@ -104,7 +105,9 @@ const backlogPlan = createDailySessionPlan(
   () => 0.41,
 );
 assert.equal(backlogPlan.newWordIds.length, 8);
-assert.ok(backlogPlan.reviewIds.length >= 51);
+assert.equal(backlogPlan.reviewIds.length, MAX_REVIEW_STAGE_WORDS);
+assert.equal(backlogPlan.reviewIds.filter((id) => backlogEntries.some((entry) => entry.id === id)).length, 12);
+assert.equal(backlogPlan.reviewIds.filter((id) => backlogPlan.newWordIds.includes(id)).length, 8);
 
 const remainingFoundation = foundation.slice(0, 4);
 const completedFoundationWords = Object.fromEntries(foundation.slice(4).map((entry) => [entry.id, {
