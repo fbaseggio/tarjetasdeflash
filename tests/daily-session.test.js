@@ -5,6 +5,7 @@ import {
   createDailySessionPlan,
   getReviewRoundIds,
   lowerTierHealth,
+  NEW_WORD_STYLES,
   newWordSelectionWeight,
 } from "../src/daily-session.js";
 
@@ -183,6 +184,54 @@ const weakFoundationPlan = createDailySessionPlan(
   () => 0.41,
 );
 assert.ok(weakFoundationPlan.checkInIds.filter((id) => foundation.some((entry) => entry.id === id)).length >= 2);
+
+function fakeEntry(id, category, curriculumRank) {
+  return {
+    id,
+    spanish: id,
+    english: id,
+    lemma: id,
+    tier: "foundation",
+    chapter: 1,
+    category,
+    curriculumRank,
+    partOfSpeech: "noun",
+  };
+}
+
+const thematicVocabulary = [
+  ...Array.from({ length: 6 }, (_, index) => fakeEntry(`day-${index}`, "Los días", index + 1)),
+  ...Array.from({ length: 5 }, (_, index) => fakeEntry(`month-${index}`, "Los meses", index + 7)),
+  ...Array.from({ length: 4 }, (_, index) => fakeEntry(`place-${index}`, "Los lugares", index + 12)),
+];
+const thematicPlan = createDailySessionPlan(
+  thematicVocabulary,
+  { knownThrough: null, learningFrontier: "foundation" },
+  { words: {} },
+  "2026-07-02",
+  () => 0.99,
+  { newWordStyle: NEW_WORD_STYLES.TOPIC_GROUPS },
+);
+assert.deepEqual(thematicPlan.newWordIds, [
+  "day-0", "day-1", "day-2", "day-3", "day-4", "day-5",
+  "month-0", "month-1", "month-2", "month-3", "month-4",
+]);
+
+const fourteenWordTopic = Array.from(
+  { length: 14 },
+  (_, index) => fakeEntry(`city-${index}`, "En la ciudad", index + 1),
+);
+const splitTopicPlan = createDailySessionPlan(
+  fourteenWordTopic,
+  { knownThrough: null, learningFrontier: "foundation" },
+  { words: {} },
+  "2026-07-02",
+  () => 0.99,
+  { newWordStyle: NEW_WORD_STYLES.TOPIC_GROUPS },
+);
+assert.deepEqual(splitTopicPlan.newWordIds, [
+  "city-0", "city-1", "city-2", "city-3", "city-4", "city-5", "city-6",
+]);
 
 assert.equal(adaptiveNewWordCount(0), 15);
 assert.equal(adaptiveNewWordCount(8), 14);

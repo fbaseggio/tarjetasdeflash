@@ -1,6 +1,6 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.8";
-import { shuffle } from "./questions.js?v=0.24.8";
-import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.8";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.9";
+import { shuffle } from "./questions.js?v=0.24.9";
+import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.9";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;
@@ -11,6 +11,13 @@ const NEW_WORD_TRANSPARENCY_WEIGHTS = Object.freeze({
   [COGNATE_TRANSPARENCY.MODERATE]: 0.6,
   [COGNATE_TRANSPARENCY.STRONG]: 0.35,
 });
+export const NEW_WORD_STYLES = Object.freeze({
+  MIXED: "mixed",
+  TOPIC_GROUPS: "topic-groups",
+});
+const MIN_TOPIC_PACKET_SIZE = 7;
+const SOFT_MAX_TOPIC_PACKET_SIZE = 12;
+const KEEP_TOGETHER_TOPIC_PACKET_SIZE = 13;
 
 function latestResult(word) {
   return Object.values(word?.directions ?? {})
@@ -145,7 +152,7 @@ export function newWordSelectionWeight(entry) {
     ?? NEW_WORD_TRANSPARENCY_WEIGHTS[COGNATE_TRANSPARENCY.NONE];
 }
 
-function selectNewWords(vocabulary, words, placement, checkInIds, count, random) {
+function selectMixedNewWords(vocabulary, words, placement, checkInIds, count, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
   const tiers = TIER_ORDER.slice(tierIndex(frontier));
   const selected = [];
@@ -171,6 +178,75 @@ function selectNewWords(vocabulary, words, placement, checkInIds, count, random)
   });
 
   return selected;
+}
+
+function curriculumOrder(left, right) {
+  return (left.curriculumRank ?? 0) - (right.curriculumRank ?? 0)
+    || (left.chapter ?? 0) - (right.chapter ?? 0)
+    || String(left.spanish).localeCompare(String(right.spanish), "es");
+}
+
+function splitTopicGroup(entries) {
+  const ordered = [...entries].sort(curriculumOrder);
+  if (ordered.length <= KEEP_TOGETHER_TOPIC_PACKET_SIZE) return [ordered];
+  const chunkCount = Math.ceil(ordered.length / SOFT_MAX_TOPIC_PACKET_SIZE);
+  const chunkSize = Math.ceil(ordered.length / chunkCount);
+  const chunks = [];
+  for (let index = 0; index < ordered.length; index += chunkSize) {
+    chunks.push(ordered.slice(index, index + chunkSize));
+  }
+  return chunks;
+}
+
+function topicPacketsForTier(vocabulary, words, tier, selectedIds) {
+  const groups = new Map();
+  vocabulary
+    .filter((entry) => entry.tier === tier && !words[entry.id] && !selectedIds.has(entry.id))
+    .sort(curriculumOrder)
+    .forEach((entry) => {
+      const key = `${entry.chapter ?? ""}|${entry.category ?? ""}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(entry);
+    });
+
+  return [...groups.values()].flatMap(splitTopicGroup);
+}
+
+function selectThematicNewWords(vocabulary, words, placement, checkInIds, count) {
+  const frontier = placement?.learningFrontier ?? "foundation";
+  const tiers = TIER_ORDER.slice(tierIndex(frontier));
+  const selectedIds = new Set(checkInIds);
+
+  for (const tier of tiers) {
+    const packets = topicPacketsForTier(vocabulary, words, tier, selectedIds);
+    for (let packetIndex = 0; packetIndex < packets.length; packetIndex += 1) {
+      const packet = [...packets[packetIndex]];
+      if (packet.length >= Math.min(MIN_TOPIC_PACKET_SIZE, count)) {
+        return packet.slice(0, Math.max(count, KEEP_TOGETHER_TOPIC_PACKET_SIZE));
+      }
+
+      for (
+        let nextIndex = packetIndex + 1;
+        nextIndex < packets.length && packet.length < MIN_TOPIC_PACKET_SIZE;
+        nextIndex += 1
+      ) {
+        packet.push(...packets[nextIndex]);
+      }
+
+      if (packet.length > 0) {
+        return packet.slice(0, Math.max(count, KEEP_TOGETHER_TOPIC_PACKET_SIZE));
+      }
+    }
+  }
+
+  return [];
+}
+
+function selectNewWords(vocabulary, words, placement, checkInIds, count, random, style) {
+  if (style === NEW_WORD_STYLES.TOPIC_GROUPS) {
+    return selectThematicNewWords(vocabulary, words, placement, checkInIds, count);
+  }
+  return selectMixedNewWords(vocabulary, words, placement, checkInIds, count, random);
 }
 
 function auditCandidates(vocabulary, words, placement, date, random) {
@@ -278,6 +354,7 @@ export function createDailySessionPlan(
   learning,
   date,
   random = Math.random,
+  options = {},
 ) {
   const words = learning.words ?? {};
   const totalDueBacklog = vocabulary.filter((entry) => {
@@ -299,6 +376,7 @@ export function createDailySessionPlan(
     checkInIds,
     newWordCount,
     random,
+    options.newWordStyle,
   );
   const reviewIds = [...new Set([...due, ...newWords].map((entry) => entry.id))];
 

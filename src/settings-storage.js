@@ -4,9 +4,15 @@ const CHOICE_REVEAL_DELAYS = Object.freeze({
   short: 1000,
   normal: 1500,
 });
+const NEW_WORD_STYLES = Object.freeze({
+  MIXED: "mixed",
+  TOPIC_GROUPS: "topic-groups",
+});
 
 export const DEFAULT_CHOICE_REVEAL_DELAY = "normal";
 export const CHOICE_REVEAL_DELAY_OPTIONS = Object.freeze(Object.keys(CHOICE_REVEAL_DELAYS));
+export const DEFAULT_NEW_WORD_STYLE = NEW_WORD_STYLES.MIXED;
+export const NEW_WORD_STYLE_OPTIONS = Object.freeze(Object.values(NEW_WORD_STYLES));
 
 function safeParse(rawValue) {
   if (!rawValue) return {};
@@ -22,6 +28,16 @@ function normalizeChoiceRevealDelay(value) {
   return CHOICE_REVEAL_DELAY_OPTIONS.includes(value)
     ? value
     : DEFAULT_CHOICE_REVEAL_DELAY;
+}
+
+function defaultNewWordStyle(profileId) {
+  return profileId === "gideon" ? NEW_WORD_STYLES.TOPIC_GROUPS : DEFAULT_NEW_WORD_STYLE;
+}
+
+function normalizeNewWordStyle(value, profileId = null) {
+  return NEW_WORD_STYLE_OPTIONS.includes(value)
+    ? value
+    : defaultNewWordStyle(profileId);
 }
 
 export function choiceRevealDelayMs(setting) {
@@ -45,10 +61,14 @@ export function createSettingsStorage(storage) {
     }
   }
 
-  function getSettings() {
+  function getSettings(profileId = null) {
     const settings = read();
     return Object.freeze({
       choiceRevealDelay: normalizeChoiceRevealDelay(settings.choiceRevealDelay),
+      newWordStyle: normalizeNewWordStyle(
+        settings.newWordStyleByProfile?.[profileId],
+        profileId,
+      ),
     });
   }
 
@@ -61,5 +81,18 @@ export function createSettingsStorage(storage) {
     return getSettings();
   }
 
-  return Object.freeze({ getSettings, setChoiceRevealDelay });
+  function setNewWordStyle(profileId, newWordStyle) {
+    const settings = read();
+    const byProfile = {
+      ...(settings.newWordStyleByProfile ?? {}),
+      [profileId]: normalizeNewWordStyle(newWordStyle, profileId),
+    };
+    save({
+      ...settings,
+      newWordStyleByProfile: byProfile,
+    });
+    return getSettings(profileId);
+  }
+
+  return Object.freeze({ getSettings, setChoiceRevealDelay, setNewWordStyle });
 }

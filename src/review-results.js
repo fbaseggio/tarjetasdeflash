@@ -1,4 +1,4 @@
-import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.8";
+import { TIER_LABELS, TIER_ORDER } from "./tiers.js?v=0.24.9";
 
 const STAGE_LABELS = Object.freeze({
   "check-in": "Check-in",

@@ -1,46 +1,46 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.24.8";
-import { APP_VERSION } from "./app-version.js?v=0.24.8";
-import { createAssessmentSession } from "./assessment.js?v=0.24.8";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.8";
+import { createActivityStorage } from "./activity-storage.js?v=0.24.9";
+import { APP_VERSION } from "./app-version.js?v=0.24.9";
+import { createAssessmentSession } from "./assessment.js?v=0.24.9";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.9";
 import {
   buildDiagnosticExport,
   buildCognateTransparencySummary,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.24.8";
+} from "./diagnostic-export.js?v=0.24.9";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.24.8";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.8";
-import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.8";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.8";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.8";
-import { createProfileStorage } from "./profile-storage.js?v=0.24.8";
-import { buildQuizFromAnswers } from "./questions.js?v=0.24.8";
-import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.8";
-import { createQuizSession } from "./quiz-session.js?v=0.24.8";
-import { initializeRecognition } from "./recognition.js?v=0.24.8";
+} from "./indexed-history.js?v=0.24.9";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.9";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.9";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.9";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.9";
+import { createProfileStorage } from "./profile-storage.js?v=0.24.9";
+import { buildQuizFromAnswers } from "./questions.js?v=0.24.9";
+import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.9";
+import { createQuizSession } from "./quiz-session.js?v=0.24.9";
+import { initializeRecognition } from "./recognition.js?v=0.24.9";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.24.8";
+} from "./review-results.js?v=0.24.9";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   shareSessionResults,
-} from "./share-results.js?v=0.24.8";
+} from "./share-results.js?v=0.24.9";
 import {
   choiceRevealDelayMs,
   createSettingsStorage,
-} from "./settings-storage.js?v=0.24.8";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.8";
-import { TIER_LABELS } from "./tiers.js?v=0.24.8";
+} from "./settings-storage.js?v=0.24.9";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.9";
+import { TIER_LABELS } from "./tiers.js?v=0.24.9";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -109,6 +109,7 @@ const backFromReviewButton = document.querySelector("#back-from-review-button");
 const exportButton = document.querySelector("#export-diagnostics");
 const exportStatusElement = document.querySelector("#export-status");
 const answerDelaySelect = document.querySelector("#answer-delay");
+const newWordStyleSelect = document.querySelector("#new-word-style");
 
 await ensureCurrentStorageGeneration(window.localStorage, window.indexedDB);
 
@@ -202,12 +203,23 @@ function choiceRevealDelay() {
   return choiceRevealDelayMs(settingsStorage.getSettings().choiceRevealDelay);
 }
 
+function currentNewWordStyle() {
+  return settingsStorage.getSettings(activeProfileId).newWordStyle;
+}
+
 function renderSettings() {
   answerDelaySelect.value = settingsStorage.getSettings().choiceRevealDelay;
+  newWordStyleSelect.value = currentNewWordStyle();
 }
 
 function updateAnswerDelaySetting() {
   settingsStorage.setChoiceRevealDelay(answerDelaySelect.value);
+  renderSettings();
+}
+
+function updateNewWordStyleSetting() {
+  if (!activeProfileId) return;
+  settingsStorage.setNewWordStyle(activeProfileId, newWordStyleSelect.value);
   renderSettings();
 }
 
@@ -753,6 +765,8 @@ async function prepareDailySession() {
       onboardingRecord.placement,
       learningStorage.getSnapshot(activeProfileId, datasetMetadata),
       today,
+      Math.random,
+      { newWordStyle: currentNewWordStyle() },
     );
     dailySession.sessionKey = learningStorage.nextDailySessionKey(
       activeProfileId,
@@ -1354,6 +1368,8 @@ function startAnotherSessionToday() {
     onboardingRecord.placement,
     learningStorage.getSnapshot(activeProfileId, datasetMetadata),
     today,
+    Math.random,
+    { newWordStyle: currentNewWordStyle() },
   );
   dailySession.sessionKey = learningStorage.nextDailySessionKey(
     activeProfileId,
@@ -1431,8 +1447,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.24.8"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.8"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.24.9"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.9"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
@@ -1525,6 +1541,7 @@ async function startAssessment() {
 async function recognizeProfile(profile) {
   activeProfileId = profile.id;
   activeProfile = profile;
+  renderSettings();
   activityStorage.ensureMember(profile.id);
   hideMainPanels();
   panels.quiz.hidden = false;
@@ -1557,6 +1574,7 @@ roundCompleteButton.addEventListener("click", continueAfterRoundCompletion);
 shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 answerDelaySelect.addEventListener("change", updateAnswerDelaySetting);
+newWordStyleSelect.addEventListener("change", updateNewWordStyleSetting);
 reviewAssessmentButton.addEventListener("click", () => {
   reviewContext = {
     type: "assessment",

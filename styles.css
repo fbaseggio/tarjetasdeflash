@@ -120,7 +120,7 @@ a {
   font-weight: 750;
 }
 
-.answer-delay-setting {
+.user-setting {
   display: flex;
   gap: 6px;
   align-items: center;
@@ -129,7 +129,7 @@ a {
   font-weight: 800;
 }
 
-.answer-delay-setting select {
+.user-setting select {
   max-width: 92px;
   padding: 6px 8px;
   color: var(--violet-dark);
@@ -144,7 +144,7 @@ a {
   opacity: 0.65;
 }
 
-.answer-delay-setting select:focus-visible {
+.user-setting select:focus-visible {
   outline: 3px solid var(--violet-soft);
   outline-offset: 2px;
 }
@@ -1070,11 +1070,11 @@ footer {
     gap: 6px;
   }
 
-  .answer-delay-setting span {
+  .user-setting span {
     display: none;
   }
 
-  .answer-delay-setting select {
+  .user-setting select {
     max-width: 82px;
   }
 

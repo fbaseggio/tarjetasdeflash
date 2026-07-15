@@ -6,7 +6,7 @@
     <meta name="description" content="A tiny Spanish vocabulary quiz.">
     <title>Tarjetas de Flash</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="./styles.css?v=0.24.8">
+    <link rel="stylesheet" href="./styles.css?v=0.24.9">
   </head>
   <body>
     <main class="page-shell">
@@ -19,12 +19,19 @@
           <span class="prototype-badge">First look</span>
           <div id="user-menu" class="user-menu" hidden>
             <strong id="user-greeting"></strong>
-            <label class="answer-delay-setting" for="answer-delay">
+            <label class="user-setting" for="answer-delay">
               <span>Answer delay</span>
               <select id="answer-delay" name="answer-delay">
                 <option value="off">Off</option>
                 <option value="short">Short</option>
                 <option value="normal">Normal</option>
+              </select>
+            </label>
+            <label class="user-setting" for="new-word-style">
+              <span>New words</span>
+              <select id="new-word-style" name="new-word-style">
+                <option value="mixed">Mixed</option>
+                <option value="topic-groups">Topic groups</option>
               </select>
             </label>
             <button
@@ -367,6 +374,6 @@
       </footer>
     </main>
 
-    <script type="module" src="./src/app.js?v=0.24.8"></script>
+    <script type="module" src="./src/app.js?v=0.24.9"></script>
   </body>
 </html>
