@@ -1067,15 +1067,28 @@ footer {
   }
 
   .user-menu {
-    gap: 6px;
+    justify-content: flex-end;
+    gap: 6px 8px;
+    flex-wrap: wrap;
+  }
+
+  .user-setting {
+    order: 2;
+    flex: 1 1 45%;
+    justify-content: flex-end;
+    gap: 4px;
+    font-size: 0.68rem;
   }
 
   .user-setting span {
-    display: none;
+    display: inline;
   }
 
   .user-setting select {
-    max-width: 82px;
+    width: 76px;
+    max-width: 42vw;
+    padding: 5px 6px;
+    font-size: 0.68rem;
   }
 
   .user-menu strong {

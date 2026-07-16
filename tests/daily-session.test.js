@@ -50,6 +50,23 @@ assert.equal(getReviewRoundIds(plan).length, 10);
 plan.reviewCursor = 10;
 assert.equal(getReviewRoundIds(plan).length, 4);
 
+const foundationWarmupPlan = createDailySessionPlan(
+  vocabulary,
+  { knownThrough: null, learningFrontier: "foundation" },
+  { words: {} },
+  "2026-07-02",
+  () => 0.41,
+);
+assert.equal(foundationWarmupPlan.checkInIds.length, 10);
+assert.equal(foundationWarmupPlan.newWordIds.length, 15);
+assert.equal(new Set([
+  ...foundationWarmupPlan.checkInIds,
+  ...foundationWarmupPlan.newWordIds,
+]).size, 25);
+assert.ok(foundationWarmupPlan.checkInIds.every((id) => (
+  foundation.some((entry) => entry.id === id)
+)));
+
 const askedToday = Object.fromEntries(dueFrontier.map((entry) => [entry.id, {
   ...words[entry.id],
   lastFirstAttemptDate: "2026-07-02",
@@ -202,7 +219,26 @@ function fakeEntry(id, category, curriculumRank) {
   };
 }
 
+const topicWarmups = Array.from(
+  { length: 10 },
+  (_, index) => fakeEntry(`warmup-${index}`, "Warmups", index + 1),
+);
+const topicWarmupWords = Object.fromEntries(topicWarmups.map((entry, index) => [entry.id, {
+  tier: entry.tier,
+  masteryTrack: "frontier",
+  masteryStatus: "learning",
+  lastFirstAttemptDate: "2026-07-01",
+  directions: {
+    "spanish-to-english": {
+      correct: true,
+      testedAt: `2026-07-01T12:${String(index).padStart(2, "0")}:00.000Z`,
+    },
+  },
+  schedule: { intervalDays: 30, dueDate: "2099-01-01" },
+}]));
+
 const thematicVocabulary = [
+  ...topicWarmups,
   ...Array.from({ length: 6 }, (_, index) => fakeEntry(`day-${index}`, "Los días", index + 1)),
   ...Array.from({ length: 5 }, (_, index) => fakeEntry(`month-${index}`, "Los meses", index + 7)),
   ...Array.from({ length: 4 }, (_, index) => fakeEntry(`place-${index}`, "Los lugares", index + 12)),
@@ -210,7 +246,7 @@ const thematicVocabulary = [
 const thematicPlan = createDailySessionPlan(
   thematicVocabulary,
   { knownThrough: null, learningFrontier: "foundation" },
-  { words: {} },
+  { words: topicWarmupWords },
   "2026-07-02",
   () => 0.99,
   { newWordStyle: NEW_WORD_STYLES.TOPIC_GROUPS },
@@ -218,6 +254,7 @@ const thematicPlan = createDailySessionPlan(
 assert.deepEqual(thematicPlan.newWordIds, [
   "day-0", "day-1", "day-2", "day-3", "day-4", "day-5",
   "month-0", "month-1", "month-2", "month-3", "month-4",
+  "place-0", "place-1", "place-2", "place-3",
 ]);
 
 const fourteenWordTopic = Array.from(
@@ -225,18 +262,20 @@ const fourteenWordTopic = Array.from(
   (_, index) => fakeEntry(`city-${index}`, "En la ciudad", index + 1),
 );
 const splitTopicPlan = createDailySessionPlan(
-  fourteenWordTopic,
+  [...topicWarmups, ...fourteenWordTopic],
   { knownThrough: null, learningFrontier: "foundation" },
-  { words: {} },
+  { words: topicWarmupWords },
   "2026-07-02",
   () => 0.99,
   { newWordStyle: NEW_WORD_STYLES.TOPIC_GROUPS },
 );
 assert.deepEqual(splitTopicPlan.newWordIds, [
   "city-0", "city-1", "city-2", "city-3", "city-4", "city-5", "city-6",
+  "city-7", "city-8", "city-9", "city-10", "city-11", "city-12", "city-13",
 ]);
 
 const placeholderChapterVocabulary = [
+  ...topicWarmups,
   ...Array.from({ length: 8 }, (_, index) => ({
     ...fakeEntry(`place-${index}`, "chapter-0", index * 2 + 1),
     semanticTags: ["place", "place:geography"],
@@ -250,7 +289,7 @@ const placeholderChapterVocabulary = [
 const semanticTopicPlan = createDailySessionPlan(
   placeholderChapterVocabulary,
   { knownThrough: null, learningFrontier: "foundation" },
-  { words: {} },
+  { words: topicWarmupWords },
   "2026-07-02",
   () => 0.99,
   { newWordStyle: NEW_WORD_STYLES.TOPIC_GROUPS },
@@ -258,6 +297,8 @@ const semanticTopicPlan = createDailySessionPlan(
 assert.deepEqual(semanticTopicPlan.newWordIds, [
   "place-0", "place-1", "place-2", "place-3",
   "place-4", "place-5", "place-6", "place-7",
+  "number-0", "number-1", "number-2", "number-3",
+  "number-4", "number-5", "number-6",
 ]);
 
 assert.equal(adaptiveNewWordCount(0), 15);

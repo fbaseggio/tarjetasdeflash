@@ -1,5 +1,5 @@
-import { shuffle } from "./questions.js?v=0.24.11";
-import { lowerTiers } from "./tiers.js?v=0.24.11";
+import { shuffle } from "./questions.js?v=0.24.12";
+import { lowerTiers } from "./tiers.js?v=0.24.12";
 
 export class QuizSelectionError extends Error {
   constructor(message) {

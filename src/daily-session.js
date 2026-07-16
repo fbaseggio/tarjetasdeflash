@@ -1,6 +1,6 @@
-import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.11";
-import { shuffle } from "./questions.js?v=0.24.11";
-import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.11";
+import { cognateTransparencyLevel, COGNATE_TRANSPARENCY } from "./distractors.js?v=0.24.12";
+import { shuffle } from "./questions.js?v=0.24.12";
+import { lowerTiers, tierIndex, TIER_ORDER } from "./tiers.js?v=0.24.12";
 
 const CHECK_IN_SIZE = 10;
 const BASE_NEW_WORD_COUNT = 15;
@@ -16,10 +16,6 @@ export const NEW_WORD_STYLES = Object.freeze({
   MIXED: "mixed",
   TOPIC_GROUPS: "topic-groups",
 });
-const MIN_TOPIC_PACKET_SIZE = 7;
-const SOFT_MAX_TOPIC_PACKET_SIZE = 12;
-const KEEP_TOGETHER_TOPIC_PACKET_SIZE = 13;
-
 function latestResult(word) {
   return Object.values(word?.directions ?? {})
     .sort((left, right) => right.testedAt.localeCompare(left.testedAt))[0] ?? null;
@@ -225,11 +221,10 @@ function reviewIdsForSession(due, newWords, words, date) {
   ].map((entry) => entry.id))];
 }
 
-function splitTopicGroup(entries) {
+function splitTopicGroup(entries, targetSize = BASE_NEW_WORD_COUNT) {
   const ordered = [...entries].sort(curriculumOrder);
-  if (ordered.length <= KEEP_TOGETHER_TOPIC_PACKET_SIZE) return [ordered];
-  const chunkCount = Math.ceil(ordered.length / SOFT_MAX_TOPIC_PACKET_SIZE);
-  const chunkSize = Math.ceil(ordered.length / chunkCount);
+  const chunkSize = Math.max(1, targetSize);
+  if (ordered.length <= chunkSize) return [ordered];
   const chunks = [];
   for (let index = 0; index < ordered.length; index += chunkSize) {
     chunks.push(ordered.slice(index, index + chunkSize));
@@ -248,7 +243,7 @@ function topicGroupKey(entry) {
     ?? "general";
 }
 
-function topicPacketsForTier(vocabulary, words, tier, selectedIds) {
+function topicPacketsForTier(vocabulary, words, tier, selectedIds, targetSize) {
   const groups = new Map();
   vocabulary
     .filter((entry) => entry.tier === tier && !words[entry.id] && !selectedIds.has(entry.id))
@@ -259,39 +254,29 @@ function topicPacketsForTier(vocabulary, words, tier, selectedIds) {
       groups.get(key).push(entry);
     });
 
-  return [...groups.values()].flatMap(splitTopicGroup);
+  return [...groups.values()].flatMap((group) => splitTopicGroup(group, targetSize));
 }
 
 function selectThematicNewWords(vocabulary, words, placement, checkInIds, count) {
   const frontier = placement?.learningFrontier ?? "foundation";
   const tiers = TIER_ORDER.slice(tierIndex(frontier));
   const selectedIds = new Set(checkInIds);
+  const selected = [];
 
   for (const tier of tiers) {
-    const packets = topicPacketsForTier(vocabulary, words, tier, selectedIds);
-    const minimumPacketSize = Math.min(MIN_TOPIC_PACKET_SIZE, count);
-    const fullPacket = packets.find((packet) => packet.length >= minimumPacketSize);
-    if (fullPacket) {
-      return fullPacket.slice(0, Math.max(count, KEEP_TOGETHER_TOPIC_PACKET_SIZE));
-    }
-
-    for (let packetIndex = 0; packetIndex < packets.length; packetIndex += 1) {
-      const packet = [...packets[packetIndex]];
-      for (
-        let nextIndex = packetIndex + 1;
-        nextIndex < packets.length && packet.length < MIN_TOPIC_PACKET_SIZE;
-        nextIndex += 1
-      ) {
-        packet.push(...packets[nextIndex]);
-      }
-
-      if (packet.length > 0) {
-        return packet.slice(0, Math.max(count, KEEP_TOGETHER_TOPIC_PACKET_SIZE));
-      }
+    const packets = topicPacketsForTier(vocabulary, words, tier, selectedIds, count);
+    for (const packet of packets) {
+      packet.forEach((entry) => {
+        if (selected.length < count && !selectedIds.has(entry.id)) {
+          selected.push(entry);
+          selectedIds.add(entry.id);
+        }
+      });
+      if (selected.length >= count) return selected;
     }
   }
 
-  return [];
+  return selected;
 }
 
 function selectNewWords(vocabulary, words, placement, checkInIds, count, random, style) {
@@ -360,6 +345,18 @@ function supplementalAuditCandidates(vocabulary, words, placement, date, selecte
   return selected;
 }
 
+function supplementalFrontierCandidates(vocabulary, words, placement, date, selectedIds, random) {
+  const frontier = placement?.learningFrontier ?? "foundation";
+  const eligible = vocabulary.filter((entry) => {
+    if (entry.tier !== frontier || selectedIds.has(entry.id)) return false;
+    const word = words[entry.id];
+    return !alreadyAskedToday(word, date) && word?.masteryStatus !== "repair";
+  });
+  const seen = shuffle(eligible.filter((entry) => latestResult(words[entry.id])), random);
+  const untested = shuffle(eligible.filter((entry) => !latestResult(words[entry.id])), random);
+  return [...seen, ...untested];
+}
+
 function checkInCandidates(vocabulary, words, placement, date, random) {
   const frontier = placement?.learningFrontier ?? "foundation";
   const selected = auditCandidates(vocabulary, words, placement, date, random);
@@ -381,6 +378,17 @@ function checkInCandidates(vocabulary, words, placement, date, random) {
   selected.forEach((entry) => selectedIds.add(entry.id));
   if (selected.length < CHECK_IN_SIZE) {
     selected.push(...supplementalAuditCandidates(
+      vocabulary,
+      words,
+      placement,
+      date,
+      selectedIds,
+      random,
+    ).slice(0, CHECK_IN_SIZE - selected.length));
+  }
+  selected.forEach((entry) => selectedIds.add(entry.id));
+  if (selected.length < CHECK_IN_SIZE) {
+    selected.push(...supplementalFrontierCandidates(
       vocabulary,
       words,
       placement,

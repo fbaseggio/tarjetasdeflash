@@ -1,4 +1,4 @@
-import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.24.11";
+import { FALSE_COGNATE_RELATIONS } from "./distractor-relations.js?v=0.24.12";
 
 export const DEFAULT_DISTRACTOR_WEIGHTS = Object.freeze({
   baseWeight: 1,

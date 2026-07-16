@@ -1,46 +1,46 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.24.11";
-import { APP_VERSION } from "./app-version.js?v=0.24.11";
-import { createAssessmentSession } from "./assessment.js?v=0.24.11";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.11";
+import { createActivityStorage } from "./activity-storage.js?v=0.24.12";
+import { APP_VERSION } from "./app-version.js?v=0.24.12";
+import { createAssessmentSession } from "./assessment.js?v=0.24.12";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.12";
 import {
   buildDiagnosticExport,
   buildCognateTransparencySummary,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.24.11";
+} from "./diagnostic-export.js?v=0.24.12";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.24.11";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.11";
-import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.11";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.11";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.11";
-import { createProfileStorage } from "./profile-storage.js?v=0.24.11";
-import { buildQuizFromAnswers } from "./questions.js?v=0.24.11";
-import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.11";
-import { createQuizSession } from "./quiz-session.js?v=0.24.11";
-import { initializeRecognition } from "./recognition.js?v=0.24.11";
+} from "./indexed-history.js?v=0.24.12";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.12";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.12";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.12";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.12";
+import { createProfileStorage } from "./profile-storage.js?v=0.24.12";
+import { buildQuizFromAnswers } from "./questions.js?v=0.24.12";
+import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.12";
+import { createQuizSession } from "./quiz-session.js?v=0.24.12";
+import { initializeRecognition } from "./recognition.js?v=0.24.12";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.24.11";
+} from "./review-results.js?v=0.24.12";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   shareSessionResults,
-} from "./share-results.js?v=0.24.11";
+} from "./share-results.js?v=0.24.12";
 import {
   choiceRevealDelayMs,
   createSettingsStorage,
-} from "./settings-storage.js?v=0.24.11";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.11";
-import { TIER_LABELS } from "./tiers.js?v=0.24.11";
+} from "./settings-storage.js?v=0.24.12";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.12";
+import { TIER_LABELS } from "./tiers.js?v=0.24.12";
 
 const panels = {
   onboarding: document.querySelector("#onboarding-panel"),
@@ -1473,8 +1473,8 @@ async function loadVocabulary() {
   if (vocabulary.length > 0) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.24.11"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.11"),
+      fetch("./assets/vocabulary-official-v1.json?v=0.24.12"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.12"),
     ]).then(async ([vocabularyResponse, metadataResponse]) => {
       if (!vocabularyResponse.ok || !metadataResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
