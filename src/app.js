@@ -1,48 +1,51 @@
-import { createActivityStorage } from "./activity-storage.js?v=0.24.12";
-import { APP_VERSION } from "./app-version.js?v=0.24.12";
-import { createAssessmentSession } from "./assessment.js?v=0.24.12";
-import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.24.12";
+import { createActivityStorage } from "./activity-storage.js?v=0.25.1";
+import { APP_VERSION } from "./app-version.js?v=0.25.1";
+import { createFocusCourseController } from "./focus-course-ui.js?v=0.25.1";
+import { FOCUS_COURSE_ID } from "./focus-course.js?v=0.25.1";
+import { createAssessmentSession } from "./assessment.js?v=0.25.1";
+import { createDailySessionPlan, getReviewRoundIds } from "./daily-session.js?v=0.25.1";
 import {
   buildDiagnosticExport,
   buildCognateTransparencySummary,
   diagnosticFilename,
   downloadDiagnostic,
-} from "./diagnostic-export.js?v=0.24.12";
+} from "./diagnostic-export.js?v=0.25.1";
 import {
   createIndexedHistory,
   practiceSessionRecord,
   quizRoundRecord,
-} from "./indexed-history.js?v=0.24.12";
-import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.24.12";
-import { buildMasteryStats } from "./mastery-estimate.js?v=0.24.12";
-import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.24.12";
-import { createOnboardingStorage } from "./onboarding-storage.js?v=0.24.12";
-import { createProfileStorage } from "./profile-storage.js?v=0.24.12";
-import { buildQuizFromAnswers } from "./questions.js?v=0.24.12";
-import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.24.12";
-import { createQuizSession } from "./quiz-session.js?v=0.24.12";
-import { initializeRecognition } from "./recognition.js?v=0.24.12";
+} from "./indexed-history.js?v=0.25.1";
+import { createLearningStorage, localDateKey } from "./learning-storage.js?v=0.25.1";
+import { buildMasteryStats } from "./mastery-estimate.js?v=0.25.1";
+import { eligibleForOrdinaryQuestion } from "./mastery-policy.js?v=0.25.1";
+import { createOnboardingStorage } from "./onboarding-storage.js?v=0.25.1";
+import { createProfileStorage } from "./profile-storage.js?v=0.25.1";
+import { buildQuizFromAnswers } from "./questions.js?v=0.25.1";
+import { QuizSelectionError, selectQuizVocabulary } from "./quiz-selection.js?v=0.25.1";
+import { createQuizSession } from "./quiz-session.js?v=0.25.1";
+import { initializeRecognition } from "./recognition.js?v=0.25.1";
 import {
   answerFeedback,
   buildAllWordsReview,
   buildAssessmentReview,
   buildHistoryReview,
   reviewGapLabel,
-} from "./review-results.js?v=0.24.12";
+} from "./review-results.js?v=0.25.1";
 import {
   buildSessionSharePayload,
   buildShareCardSvg,
   createShareImageFile,
   shareSessionResults,
-} from "./share-results.js?v=0.24.12";
+} from "./share-results.js?v=0.25.1";
 import {
   choiceRevealDelayMs,
   createSettingsStorage,
-} from "./settings-storage.js?v=0.24.12";
-import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.24.12";
-import { TIER_LABELS } from "./tiers.js?v=0.24.12";
+} from "./settings-storage.js?v=0.25.1";
+import { ensureCurrentStorageGeneration } from "./storage-generation.js?v=0.25.1";
+import { TIER_LABELS } from "./tiers.js?v=0.25.1";
 
 const panels = {
+  focus: document.querySelector("#focus-course-panel"),
   onboarding: document.querySelector("#onboarding-panel"),
   placement: document.querySelector("#placement-panel"),
   session: document.querySelector("#session-panel"),
@@ -119,6 +122,12 @@ const onboardingStorage = createOnboardingStorage(window.localStorage);
 const learningStorage = createLearningStorage(window.localStorage);
 const historyStorage = createIndexedHistory(window.indexedDB);
 const settingsStorage = createSettingsStorage(window.localStorage);
+const focusController = createFocusCourseController({
+  panel: panels.focus,
+  storage: window.localStorage,
+  answerDelay: choiceRevealDelay,
+  recordActivity: activityStorage.recordCompletedQuiz,
+});
 const percentFormatter = new Intl.NumberFormat(undefined, {
   style: "percent",
   maximumFractionDigits: 1,
@@ -127,6 +136,7 @@ const percentFormatter = new Intl.NumberFormat(undefined, {
 let vocabulary = [];
 let vocabularyById = new Map();
 let datasetMetadata = null;
+let focusCourseData = null;
 let vocabularyPromise = null;
 let quizSession = null;
 let assessmentSession = null;
@@ -1447,6 +1457,7 @@ async function exportDiagnostics() {
         userAgent: navigator.userAgent,
       },
     });
+    payload.focusCourse = focusController.getExport(activeProfileId);
     downloadDiagnostic(
       document,
       URL,
@@ -1470,19 +1481,29 @@ async function exportDiagnostics() {
 }
 
 async function loadVocabulary() {
-  if (vocabulary.length > 0) return vocabulary;
+  if (vocabulary.length > 0 && focusCourseData) return vocabulary;
   if (!vocabularyPromise) {
     vocabularyPromise = Promise.all([
-      fetch("./assets/vocabulary-official-v1.json?v=0.24.12"),
-      fetch("./assets/vocabulary-official-v1.meta.json?v=0.24.12"),
-    ]).then(async ([vocabularyResponse, metadataResponse]) => {
-      if (!vocabularyResponse.ok || !metadataResponse.ok) {
+      fetch("./assets/vocabulary-official-v1.json?v=0.25.1"),
+      fetch("./assets/vocabulary-official-v1.meta.json?v=0.25.1"),
+      fetch("./assets/focus-spanish2-chapter1.json?v=0.25.1"),
+    ]).then(async ([vocabularyResponse, metadataResponse, focusResponse]) => {
+      if (!vocabularyResponse.ok || !metadataResponse.ok || !focusResponse.ok) {
         throw new Error("The official vocabulary or its metadata could not be loaded.");
       }
       vocabulary = await vocabularyResponse.json();
       vocabularyById = new Map(vocabulary.map((entry) => [entry.id, entry]));
       datasetMetadata = await metadataResponse.json();
+      const focus = await focusResponse.json();
+      if (focus.id !== FOCUS_COURSE_ID || focus.entries?.length !== 77
+          || new Set(focus.entries.map((entry) => entry.id)).size !== 77) {
+        throw new Error("The focused lesson vocabulary is invalid.");
+      }
+      focusCourseData = focus;
       return vocabulary;
+    }).catch((error) => {
+      vocabularyPromise = null;
+      throw error;
     });
   }
   return vocabularyPromise;
@@ -1565,6 +1586,7 @@ async function startAssessment() {
 }
 
 async function recognizeProfile(profile) {
+  focusController.deactivate();
   activeProfileId = profile.id;
   activeProfile = profile;
   renderSettings();
@@ -1576,13 +1598,14 @@ async function recognizeProfile(profile) {
   choicesElement.replaceChildren();
   try {
     await loadVocabulary();
+    if (activeProfileId !== profile.id) return;
     onboardingRecord = onboardingStorage.get(profile.id, datasetMetadata);
-    if (onboardingRecord) {
-      await prepareDailySession();
-    } else {
-      showOnboarding();
-    }
+    dailySession = null;
+    hideMainPanels();
+    newWordStyleSelect.closest("label").hidden = true;
+    focusController.activate(profile, focusCourseData);
   } catch (error) {
+    if (activeProfileId !== profile.id) return;
     showQuizLoadError(error, "The vocabulary could not be loaded.");
   }
 }
@@ -1602,6 +1625,10 @@ shareResultsButton.addEventListener("click", shareDailyResults);
 exportButton.addEventListener("click", exportDiagnostics);
 answerDelaySelect.addEventListener("change", updateAnswerDelaySetting);
 newWordStyleSelect.addEventListener("change", updateNewWordStyleSetting);
+document.querySelector("#change-user").addEventListener("click", () => {
+  focusController.deactivate();
+  activeProfileId = null;
+});
 reviewAssessmentButton.addEventListener("click", () => {
   reviewContext = {
     type: "assessment",
@@ -1629,6 +1656,7 @@ initializeRecognition({
   feedback: document.querySelector("#recognition-feedback"),
   quizPanel: panels.quiz,
   additionalPanels: [
+    panels.focus,
     panels.results,
     panels.onboarding,
     panels.placement,

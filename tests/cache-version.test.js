@@ -25,5 +25,6 @@ assert.match(html, new RegExp(`app\\.js\\?v=${version.replaceAll(".", "\\.")}`))
 const appSource = await readFile(new URL("../src/app.js", import.meta.url), "utf8");
 assert.match(appSource, new RegExp(`vocabulary-official-v1\\.json\\?v=${version.replaceAll(".", "\\.")}`));
 assert.match(appSource, new RegExp(`vocabulary-official-v1\\.meta\\.json\\?v=${version.replaceAll(".", "\\.")}`));
+assert.match(appSource, new RegExp(`focus-spanish2-chapter1\\.json\\?v=${version.replaceAll(".", "\\.")}`));
 
 console.log(`All browser modules and release assets use cache version ${version}.`);

@@ -8,6 +8,10 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## Implementation status — July 2026
 
+**October 19 local update:** version 0.25.0 adds the temporary section-1 course
+described near the end of this document. It is now the default local entry flow;
+the deployed features below describe the preserved regular curriculum.
+
 ### Implemented and deployed
 
 - Static GitHub Pages application at `https://fbaseggio.github.io/tarjetasdeflash/` with no build step.
@@ -781,6 +785,45 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - Whether the session's soft cap is controlled primarily by prompt count, elapsed time, or learner choice.
 - Calibration of level-estimation promotion, demotion, and confidence thresholds after early testing.
 - Whether repeated full sessions should use the same adaptive new-word policy or a lighter same-day practice mix.
+
+## Temporary section 1 course (0.25.0)
+
+This is now the default entry flow for **all profiles**, temporarily replacing
+placement and the usual three-step session. The ordinary 1,536-word vocabulary,
+placement, and word histories remain stored unchanged.
+
+- Vocabulary: the 77 section-1 entries from `gideon spanish2 chapter 1 - Sheet1.csv`,
+  stored separately in `assets/focus-spanish2-chapter1.json`. Preserve source order
+  and full teaching translations; use compact, disambiguated quiz forms.
+- Seven introduction lessons, each teaching 11 new entries before a mixed-direction
+  quiz. Add up to three previously missed words eligible on a later calendar day.
+  Multiple lessons per actual day are allowed; the clock never advances artificially.
+- After lesson seven, each review lesson selects up to seven words initially
+  answered correctly, up to four first missed but later answered correctly, and up
+  to three never answered correctly. Empty buckets make shorter lessons, with no
+  cross-bucket backfill. Oldest encounters are selected first within each bucket.
+- Only each word's first answer in a separate lesson counts toward mastery. Existing
+  immediate reprises and eliminated choices remain practice, not mastery evidence.
+  Two cumulative first-answer successes retire a word as a question for this course.
+  A miss cannot be selected in a new lesson until the next calendar day. A clean
+  answer can be tested again in a separate lesson on the same day.
+- Save introductions, question definitions, every attempt, and completion per profile
+  in a dedicated localStorage namespace. Reload resumes the same lesson and choices;
+  changing profiles cancels pending timers. A stale tab must reload before writing.
+  Course progress is included in diagnostic exports. Completed lessons receive
+  idempotent activity/streak credit, but do not modify legacy word mastery.
+- Results show first-answer accuracy, wrong submissions, and progress toward two
+  successes, with a compact expandable word-by-word review. The mixed/topic selector
+  is hidden during this course; the answer-delay preference still applies.
+- In 0.25.1 each review row offers **I know this** (retire from future questions)
+  and **Review this** (join the missed-word bucket from the next calendar day,
+  starting a fresh two-success review cycle). **Use quiz results** clears the
+  manual preference/cycle and restores scheduling from actual recorded evidence.
+  Preferences are local to the current profile. No answers, accuracy, or activity
+  totals are rewritten; the scheduling baseline and preference-change log are
+  included in diagnostic exports. Previously retired words can be reopened.
+- No automatic end date or history reset; restoring the regular curriculum is a
+  later decision. Retired words may still appear as distractors.
 
 ## 18. References
 

@@ -1,0 +1,1477 @@
+{
+  "id": "spanish2-chapter1-section1-v1",
+  "title": "Spanish II · Chapter 1 · Section 1",
+  "source": "gideon spanish2 chapter 1 - Sheet1.csv",
+  "entryCount": 77,
+  "entries": [
+    {
+      "id": "s2c1-001",
+      "spanish": "la boca",
+      "english": "mouth",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 1,
+      "partOfSpeech": "noun",
+      "lemma": "boca",
+      "quizSpanish": "la boca",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-002",
+      "spanish": "el brazo",
+      "english": "arm",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 2,
+      "partOfSpeech": "noun",
+      "lemma": "brazo",
+      "quizSpanish": "el brazo",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-003",
+      "spanish": "la cabeza",
+      "english": "head",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 3,
+      "partOfSpeech": "noun",
+      "lemma": "cabeza",
+      "quizSpanish": "la cabeza",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-004",
+      "spanish": "el corazón",
+      "english": "heart",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 4,
+      "partOfSpeech": "noun",
+      "lemma": "corazón",
+      "quizSpanish": "el corazón",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-005",
+      "spanish": "el cuello",
+      "english": "neck",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 5,
+      "partOfSpeech": "noun",
+      "lemma": "cuello",
+      "quizSpanish": "el cuello",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-006",
+      "spanish": "el dedo",
+      "english": "finger",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 6,
+      "partOfSpeech": "noun",
+      "lemma": "dedo",
+      "quizSpanish": "el dedo",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-007",
+      "spanish": "el dedo del pie",
+      "english": "toe",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 7,
+      "partOfSpeech": "noun",
+      "lemma": "dedo del pie",
+      "quizSpanish": "el dedo del pie",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-008",
+      "spanish": "el estómago",
+      "english": "stomach",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 8,
+      "partOfSpeech": "noun",
+      "lemma": "estómago",
+      "quizSpanish": "el estómago",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-009",
+      "spanish": "la garganta",
+      "english": "throat",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 9,
+      "partOfSpeech": "noun",
+      "lemma": "garganta",
+      "quizSpanish": "la garganta",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-010",
+      "spanish": "el hueso",
+      "english": "bone",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 10,
+      "partOfSpeech": "noun",
+      "lemma": "hueso",
+      "quizSpanish": "el hueso",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-011",
+      "spanish": "la nariz",
+      "english": "nose",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 11,
+      "partOfSpeech": "noun",
+      "lemma": "nariz",
+      "quizSpanish": "la nariz",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-012",
+      "spanish": "el ojo",
+      "english": "eye",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 12,
+      "partOfSpeech": "noun",
+      "lemma": "ojo",
+      "quizSpanish": "el ojo",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-013",
+      "spanish": "la oreja",
+      "english": "(outer) ear",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 13,
+      "partOfSpeech": "noun",
+      "lemma": "oreja",
+      "quizSpanish": "la oreja",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ],
+      "quizEnglish": "outer ear"
+    },
+    {
+      "id": "s2c1-014",
+      "spanish": "el pie",
+      "english": "foot",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 14,
+      "partOfSpeech": "noun",
+      "lemma": "pie",
+      "quizSpanish": "el pie",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-015",
+      "spanish": "la pierna",
+      "english": "leg",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 15,
+      "partOfSpeech": "noun",
+      "lemma": "pierna",
+      "quizSpanish": "la pierna",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-016",
+      "spanish": "la rodilla",
+      "english": "knee",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 16,
+      "partOfSpeech": "noun",
+      "lemma": "rodilla",
+      "quizSpanish": "la rodilla",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-017",
+      "spanish": "el tobillo",
+      "english": "ankle",
+      "category": "El Cuerpo",
+      "subtopic": "body part",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 17,
+      "partOfSpeech": "noun",
+      "lemma": "tobillo",
+      "quizSpanish": "el tobillo",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-018",
+      "spanish": "el doctor, la doctora",
+      "english": "doctor",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 18,
+      "partOfSpeech": "noun",
+      "lemma": "doctor",
+      "quizSpanish": "el doctor",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-019",
+      "spanish": "el enfermero, la enfermera",
+      "english": "nurse",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 19,
+      "partOfSpeech": "noun",
+      "lemma": "enfermero",
+      "quizSpanish": "el enfermero",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-020",
+      "spanish": "el paciente, la paciente",
+      "english": "patient",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 20,
+      "partOfSpeech": "noun",
+      "lemma": "paciente",
+      "quizSpanish": "el paciente",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-021",
+      "spanish": "la radiografía",
+      "english": "X-ray",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 21,
+      "partOfSpeech": "noun",
+      "lemma": "radiografía",
+      "quizSpanish": "la radiografía",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-022",
+      "spanish": "tomar la temperatura",
+      "english": "to take someone's temperature",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 22,
+      "partOfSpeech": "verb",
+      "lemma": "tomar la temperatura",
+      "quizSpanish": "tomar la temperatura",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-023",
+      "spanish": "el cuerpo",
+      "english": "body",
+      "category": "El Cuerpo",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 23,
+      "partOfSpeech": "noun",
+      "lemma": "cuerpo",
+      "quizSpanish": "el cuerpo",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ]
+    },
+    {
+      "id": "s2c1-024",
+      "spanish": "el oído",
+      "english": "(sense of) hearing; inner ear",
+      "category": "El Cuerpo",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 24,
+      "partOfSpeech": "noun",
+      "lemma": "oído",
+      "quizSpanish": "el oído",
+      "semanticTags": [
+        "body",
+        "body:anatomy"
+      ],
+      "quizEnglish": "inner ear; sense of hearing"
+    },
+    {
+      "id": "s2c1-025",
+      "spanish": "el accidente",
+      "english": "accident",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 25,
+      "partOfSpeech": "noun",
+      "lemma": "accidente",
+      "quizSpanish": "el accidente",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-026",
+      "spanish": "la clínica",
+      "english": "clinic",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 26,
+      "partOfSpeech": "noun",
+      "lemma": "clínica",
+      "quizSpanish": "la clínica",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-027",
+      "spanish": "el consultorio",
+      "english": "doctor's office",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 27,
+      "partOfSpeech": "noun",
+      "lemma": "consultorio",
+      "quizSpanish": "el consultorio",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-028",
+      "spanish": "el dentista, la dentista",
+      "english": "dentist",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 28,
+      "partOfSpeech": "noun",
+      "lemma": "dentista",
+      "quizSpanish": "el dentista",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-029",
+      "spanish": "el examen médico",
+      "english": "physical exam",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 29,
+      "partOfSpeech": "noun",
+      "lemma": "examen médico",
+      "quizSpanish": "el examen médico",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-030",
+      "spanish": "la farmacia",
+      "english": "pharmacy",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 30,
+      "partOfSpeech": "noun",
+      "lemma": "farmacia",
+      "quizSpanish": "la farmacia",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-031",
+      "spanish": "el hospital",
+      "english": "hospital",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 31,
+      "partOfSpeech": "noun",
+      "lemma": "hospital",
+      "quizSpanish": "el hospital",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-032",
+      "spanish": "la operación",
+      "english": "operation",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 32,
+      "partOfSpeech": "noun",
+      "lemma": "operación",
+      "quizSpanish": "la operación",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-033",
+      "spanish": "la sala de emergencia, la sala de emergencias",
+      "english": "emergency room",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 33,
+      "partOfSpeech": "noun",
+      "lemma": "sala de emergencia",
+      "quizSpanish": "la sala de emergencia",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-034",
+      "spanish": "la salud",
+      "english": "health",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 34,
+      "partOfSpeech": "noun",
+      "lemma": "salud",
+      "quizSpanish": "la salud",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-035",
+      "spanish": "el síntoma",
+      "english": "symptom",
+      "category": "La salud",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 35,
+      "partOfSpeech": "noun",
+      "lemma": "síntoma",
+      "quizSpanish": "el síntoma",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-036",
+      "spanish": "caerse",
+      "english": "to fall (down)",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 36,
+      "partOfSpeech": "verb",
+      "lemma": "caerse",
+      "quizSpanish": "caerse",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-037",
+      "spanish": "darse con",
+      "english": "to bump into; to run into",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 37,
+      "partOfSpeech": "verb",
+      "lemma": "darse con",
+      "quizSpanish": "darse con",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-038",
+      "spanish": "doler (o:ue)",
+      "english": "to hurt",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 38,
+      "partOfSpeech": "verb",
+      "lemma": "doler",
+      "quizSpanish": "doler",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-039",
+      "spanish": "enfermarse",
+      "english": "to get sick",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 39,
+      "partOfSpeech": "verb",
+      "lemma": "enfermarse",
+      "quizSpanish": "enfermarse",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-040",
+      "spanish": "estar enfermo, estar enferma",
+      "english": "to be sick",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 40,
+      "partOfSpeech": "verb",
+      "lemma": "estar enfermo",
+      "quizSpanish": "estar enfermo",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-041",
+      "spanish": "lastimarse",
+      "english": "to injure",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 41,
+      "partOfSpeech": "verb",
+      "lemma": "lastimarse",
+      "quizSpanish": "lastimarse",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-042",
+      "spanish": "lastimarse el pie",
+      "english": "to injure one's foot",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 42,
+      "partOfSpeech": "verb",
+      "lemma": "lastimarse el pie",
+      "quizSpanish": "lastimarse el pie",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-043",
+      "spanish": "poner una inyección",
+      "english": "to give an injection",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 43,
+      "partOfSpeech": "verb",
+      "lemma": "poner una inyección",
+      "quizSpanish": "poner una inyección",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-044",
+      "spanish": "recetar",
+      "english": "to prescribe",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 44,
+      "partOfSpeech": "verb",
+      "lemma": "recetar",
+      "quizSpanish": "recetar",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-045",
+      "spanish": "romper",
+      "english": "to break",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 45,
+      "partOfSpeech": "verb",
+      "lemma": "romper",
+      "quizSpanish": "romper",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-046",
+      "spanish": "romperse",
+      "english": "to break (like a body part)",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 46,
+      "partOfSpeech": "verb",
+      "lemma": "romperse",
+      "quizSpanish": "romperse",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ],
+      "quizEnglish": "to break a body part"
+    },
+    {
+      "id": "s2c1-047",
+      "spanish": "romperse la pierna",
+      "english": "to break one's leg",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 47,
+      "partOfSpeech": "verb",
+      "lemma": "romperse la pierna",
+      "quizSpanish": "romperse la pierna",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-048",
+      "spanish": "sacar un diente",
+      "english": "to pull out a tooth",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 48,
+      "partOfSpeech": "verb",
+      "lemma": "sacar un diente",
+      "quizSpanish": "sacar un diente",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-049",
+      "spanish": "sacarse un diente",
+      "english": "to have one's tooth removed",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 49,
+      "partOfSpeech": "verb",
+      "lemma": "sacarse un diente",
+      "quizSpanish": "sacarse un diente",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-050",
+      "spanish": "sufrir una enfermedad",
+      "english": "to suffer an illness",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 50,
+      "partOfSpeech": "verb",
+      "lemma": "sufrir una enfermedad",
+      "quizSpanish": "sufrir una enfermedad",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-051",
+      "spanish": "torcerse (o:ue)",
+      "english": "to sprain",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 51,
+      "partOfSpeech": "verb",
+      "lemma": "torcerse",
+      "quizSpanish": "torcerse",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-052",
+      "spanish": "torcerse (o:ue) el tobillo",
+      "english": "to sprain one's ankle",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 52,
+      "partOfSpeech": "verb",
+      "lemma": "torcerse el tobillo",
+      "quizSpanish": "torcerse el tobillo",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-053",
+      "spanish": "toser",
+      "english": "to cough",
+      "category": "verbos",
+      "subtopic": "more vocabulary",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 53,
+      "partOfSpeech": "verb",
+      "lemma": "toser",
+      "quizSpanish": "toser",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-054",
+      "spanish": "el antibiótico",
+      "english": "antibiotic",
+      "category": "La salud",
+      "subtopic": "medicine",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 54,
+      "partOfSpeech": "noun",
+      "lemma": "antibiótico",
+      "quizSpanish": "el antibiótico",
+      "semanticTags": [
+        "health",
+        "health:medicine"
+      ]
+    },
+    {
+      "id": "s2c1-055",
+      "spanish": "la aspirina",
+      "english": "aspirin",
+      "category": "La salud",
+      "subtopic": "medicine",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 55,
+      "partOfSpeech": "noun",
+      "lemma": "aspirina",
+      "quizSpanish": "la aspirina",
+      "semanticTags": [
+        "health",
+        "health:medicine"
+      ]
+    },
+    {
+      "id": "s2c1-056",
+      "spanish": "el medicamento",
+      "english": "medication",
+      "senses": ["medication", "medicine"],
+      "category": "La salud",
+      "subtopic": "medicine",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 56,
+      "partOfSpeech": "noun",
+      "lemma": "medicamento",
+      "quizSpanish": "el medicamento",
+      "semanticTags": [
+        "health",
+        "health:medicine"
+      ]
+    },
+    {
+      "id": "s2c1-057",
+      "spanish": "la medicina",
+      "english": "medicine",
+      "senses": ["medicine", "medication"],
+      "category": "La salud",
+      "subtopic": "medicine",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 57,
+      "partOfSpeech": "noun",
+      "lemma": "medicina",
+      "quizSpanish": "la medicina",
+      "semanticTags": [
+        "health",
+        "health:medicine"
+      ]
+    },
+    {
+      "id": "s2c1-058",
+      "spanish": "la pastilla",
+      "english": "pill; tablet",
+      "category": "La salud",
+      "subtopic": "medicine",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 58,
+      "partOfSpeech": "noun",
+      "lemma": "pastilla",
+      "quizSpanish": "la pastilla",
+      "semanticTags": [
+        "health",
+        "health:medicine"
+      ]
+    },
+    {
+      "id": "s2c1-059",
+      "spanish": "la receta",
+      "english": "prescription",
+      "category": "La salud",
+      "subtopic": "medicine",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 59,
+      "partOfSpeech": "noun",
+      "lemma": "receta",
+      "quizSpanish": "la receta",
+      "semanticTags": [
+        "health",
+        "health:medicine"
+      ]
+    },
+    {
+      "id": "s2c1-060",
+      "spanish": "congestionado, congestionada",
+      "english": "congested; stuffed-up",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 60,
+      "partOfSpeech": "adjective",
+      "lemma": "congestionado",
+      "quizSpanish": "congestionado",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-061",
+      "spanish": "embarazada",
+      "english": "pregnant",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 61,
+      "partOfSpeech": "adjective",
+      "lemma": "embarazada",
+      "quizSpanish": "embarazada",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-062",
+      "spanish": "grave",
+      "english": "grave; serious",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 62,
+      "partOfSpeech": "adjective",
+      "lemma": "grave",
+      "quizSpanish": "grave",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-063",
+      "spanish": "mareado, mareada",
+      "english": "dizzy; nauseated",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 63,
+      "partOfSpeech": "adjective",
+      "lemma": "mareado",
+      "quizSpanish": "mareado",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-064",
+      "spanish": "médico, médica",
+      "english": "medical",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 64,
+      "partOfSpeech": "adjective",
+      "lemma": "médico",
+      "quizSpanish": "médico",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-065",
+      "spanish": "saludable",
+      "english": "healthy",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 65,
+      "partOfSpeech": "adjective",
+      "lemma": "saludable",
+      "quizSpanish": "saludable",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-066",
+      "spanish": "sano, sana",
+      "english": "healthy",
+      "category": "adjectivos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 66,
+      "partOfSpeech": "adjective",
+      "lemma": "sano",
+      "quizSpanish": "sano",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-067",
+      "spanish": "el dolor",
+      "english": "ache; pain",
+      "category": "La salud",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 67,
+      "partOfSpeech": "noun",
+      "lemma": "dolor",
+      "quizSpanish": "el dolor",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-068",
+      "spanish": "el dolor de cabeza",
+      "english": "headache",
+      "category": "La salud",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 68,
+      "partOfSpeech": "noun",
+      "lemma": "dolor de cabeza",
+      "quizSpanish": "el dolor de cabeza",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-069",
+      "spanish": "la gripe",
+      "english": "flu",
+      "category": "La salud",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 69,
+      "partOfSpeech": "noun",
+      "lemma": "gripe",
+      "quizSpanish": "la gripe",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-070",
+      "spanish": "la infección",
+      "english": "infection",
+      "category": "La salud",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 70,
+      "partOfSpeech": "noun",
+      "lemma": "infección",
+      "quizSpanish": "la infección",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-071",
+      "spanish": "el resfriado",
+      "english": "cold (illness)",
+      "category": "La salud",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 71,
+      "partOfSpeech": "noun",
+      "lemma": "resfriado",
+      "quizSpanish": "el resfriado",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ],
+      "quizEnglish": "cold (illness)"
+    },
+    {
+      "id": "s2c1-072",
+      "spanish": "la tos",
+      "english": "cough",
+      "category": "La salud",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 72,
+      "partOfSpeech": "noun",
+      "lemma": "tos",
+      "quizSpanish": "la tos",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-073",
+      "spanish": "estornudar",
+      "english": "to sneeze",
+      "category": "verbos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 73,
+      "partOfSpeech": "verb",
+      "lemma": "estornudar",
+      "quizSpanish": "estornudar",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-074",
+      "spanish": "ser alérgico a, ser alérgica a",
+      "english": "to be allergic to",
+      "category": "verbos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 74,
+      "partOfSpeech": "verb",
+      "lemma": "ser alérgico a",
+      "quizSpanish": "ser alérgico a",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-075",
+      "spanish": "ser alérgico, ser alérgica",
+      "english": "to be allergic",
+      "category": "verbos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 75,
+      "partOfSpeech": "verb",
+      "lemma": "ser alérgico",
+      "quizSpanish": "ser alérgico",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-076",
+      "spanish": "tener dolor (m.)",
+      "english": "to have pain",
+      "category": "verbos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 76,
+      "partOfSpeech": "verb",
+      "lemma": "tener dolor",
+      "quizSpanish": "tener dolor",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    },
+    {
+      "id": "s2c1-077",
+      "spanish": "tener fiebre (f.)",
+      "english": "to have a fever",
+      "category": "verbos",
+      "subtopic": "symptoms and conditions",
+      "section": 1,
+      "year": 2,
+      "chapter": 1,
+      "tier": "expanding2",
+      "curriculumRank": 77,
+      "partOfSpeech": "verb",
+      "lemma": "tener fiebre",
+      "quizSpanish": "tener fiebre",
+      "semanticTags": [
+        "health",
+        "health:illness"
+      ]
+    }
+  ]
+}

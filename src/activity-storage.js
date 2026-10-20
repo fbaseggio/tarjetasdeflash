@@ -50,6 +50,7 @@ function normalizeActivity(value, today) {
       : [],
     firstQuizzes: normalizeTotals(value.firstQuizzes),
     allQuizzes: normalizeTotals(value.allQuizzes),
+    ...(Array.isArray(value.completedQuizIds) ? { completedQuizIds: [...value.completedQuizIds] } : {}),
   };
 }
 
@@ -128,6 +129,13 @@ export function createActivityStorage(storage, now = () => new Date()) {
     const today = localDateKey(effectiveDate);
     const activity = read(profileId, today);
     const firstQuizToday = !activity.practiceDates.includes(today);
+    if (result.completionId && activity.completedQuizIds?.includes(result.completionId)) {
+      return Object.freeze({ ...summarize(activity, today), firstQuizToday: false });
+    }
+    if (result.completionId) {
+      activity.completedQuizIds ??= [];
+      activity.completedQuizIds.push(result.completionId);
+    }
 
     addQuiz(activity.allQuizzes, result);
 

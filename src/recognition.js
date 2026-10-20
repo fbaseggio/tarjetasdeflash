@@ -4,7 +4,7 @@ import {
   isCorrectSwallowAnswer,
   resolveProfile,
   resolveSelfRegisteredProfile,
-} from "./profiles.js?v=0.24.12";
+} from "./profiles.js?v=0.25.1";
 
 export function initializeRecognition({
   form,

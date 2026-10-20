@@ -484,6 +484,43 @@ h1 {
   gap: 12px;
 }
 
+.focus-course-panel .last-result {
+  margin: 12px 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.focus-course-panel .last-result-main,
+.focus-course-panel .last-result-teaching,
+.focus-course-panel .last-result-reminder {
+  display: block;
+  margin-left: 0;
+  white-space: normal;
+}
+
+.focus-course-panel .word-card {
+  overflow-wrap: anywhere;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.focus-course-panel .next-button,
+.focus-course-panel .secondary-button {
+  margin: 12px 8px 12px 0;
+}
+
+.focus-course-panel details {
+  margin-top: 16px;
+}
+
+.focus-course-panel summary { cursor: pointer; }
+.focus-course-panel .review-items { padding: 0; list-style: none; }
+.focus-review-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.focus-review-item strong,
+.focus-review-item span { display: block; overflow-wrap: anywhere; }
+.focus-word-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.focus-word-controls .secondary-button { margin: 0; min-height: 44px; padding: 8px 12px; font-size: 0.85rem; }
+.focus-word-controls button[aria-pressed="true"] { background: var(--violet-soft); border-color: var(--violet); }
+
 .choices-pending {
   grid-template-columns: 1fr;
 }
