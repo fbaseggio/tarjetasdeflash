@@ -1,7 +1,6 @@
 // Temporary course policy. Legacy curriculum history and schedules stay separate.
 export const FOCUS_COURSE_ID = "spanish2-chapter1-section1-v1";
-export const INTRO_LESSONS = 7;
-export const NEW_WORDS_PER_LESSON = 11;
+export const FOCUS_QUIZ_SIZE = 11;
 
 function nextDay(date) {
   const [year, month, day] = date.split("-").map(Number);
@@ -19,7 +18,8 @@ export function focusWordStatus(word) {
   const known = word?.manualPriority === "known";
   const pendingReview = word?.manualPriority === "review";
   return {
-    successes, known, retired: known || successes >= 2,
+    successes, known, mastered: successes >= 2, retired: known,
+    needsReview: !known && (pendingReview || word?.lastCorrect === false || successes === 0),
     firstCorrect: Boolean(word?.firstCorrect) && word?.reviewStartSuccesses === undefined,
     eligibleDate: pendingReview ? nextDay(word.manualPriorityDate) : word?.eligibleDate,
   };
@@ -52,7 +52,9 @@ export function courseProgress(state, entries) {
   return {
     tested: tested.length,
     retired: statuses.filter((word) => word.retired).length,
+    mastered: statuses.filter((word) => !word.known && word.mastered).length,
     known: statuses.filter((word) => word.known).length,
+    needsReview: statuses.filter((word) => word.needsReview).length,
     neverCorrect: statuses.filter((word) => !word.retired && word.successes === 0).length,
     firstCorrect: statuses.filter((word) => !word.retired && word.successes === 1 && word.firstCorrect).length,
     recovered: statuses.filter((word) => !word.retired && word.successes === 1 && !word.firstCorrect).length,
@@ -60,40 +62,53 @@ export function courseProgress(state, entries) {
   };
 }
 
-export function planFocusLesson(entries, state, date) {
-  const introducing = state.introductionLessons < INTRO_LESSONS;
-  const newWordIds = introducing
-    ? entries.slice(state.introductionLessons * NEW_WORDS_PER_LESSON,
-      (state.introductionLessons + 1) * NEW_WORDS_PER_LESSON).map((entry) => entry.id)
-    : [];
+export function planFocusLesson(entries, state, date, random = Math.random) {
+  // Shuffle before a stable count sort: ties are random, lower counts always win.
+  const leastCorrectFirst = (pool) => {
+    const shuffled = [...pool];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(random() * (index + 1));
+      [shuffled[index], shuffled[swap]] = [shuffled[swap], shuffled[index]];
+    }
+    return shuffled.sort((a, b) => (state.words[a.id]?.successes ?? 0)
+      - (state.words[b.id]?.successes ?? 0));
+  };
+  const unseen = entries.filter((entry) => !state.words[entry.id]?.encounters);
+  const introducing = unseen.length > 0;
   const eligible = entries.filter((entry) => {
     const word = state.words[entry.id];
     const status = focusWordStatus(word);
-    return word?.encounters > 0 && !status.retired && status.eligibleDate <= date;
-  }).sort((a, b) => {
-    const left = state.words[a.id];
-    const right = state.words[b.id];
-    return left.lastLesson - right.lastLesson || a.curriculumRank - b.curriculumRank;
+    return word?.encounters > 0 && !status.known && status.eligibleDate <= date;
   });
-  const firstCorrectIds = introducing ? [] : eligible.filter((entry) => (
-    focusWordStatus(state.words[entry.id]).successes === 1 && focusWordStatus(state.words[entry.id]).firstCorrect
-  )).slice(0, 7).map((entry) => entry.id);
-  const recoveredIds = introducing ? [] : eligible.filter((entry) => (
-    focusWordStatus(state.words[entry.id]).successes === 1 && !focusWordStatus(state.words[entry.id]).firstCorrect
-  )).slice(0, 4).map((entry) => entry.id);
-  const retryIds = eligible.filter((entry) => {
+  const retryIds = leastCorrectFirst(eligible.filter((entry) => {
     const word = state.words[entry.id];
-    return introducing
-      ? (word.everMissed || word.reviewStartSuccesses !== undefined) && word.lastDate < date
-      : focusWordStatus(word).successes === 0;
-  }).slice(0, 3).map((entry) => entry.id);
-  const questionIds = [...newWordIds, ...firstCorrectIds, ...recoveredIds, ...retryIds];
+    const status = focusWordStatus(word);
+    return word.lastCorrect === false || status.successes === 0
+      || (introducing && status.successes < 2
+        && (word.everMissed || word.reviewStartSuccesses !== undefined) && word.lastDate < date);
+  })).slice(0, 3).map((entry) => entry.id);
+  const newWordIds = unseen.slice(0, FOCUS_QUIZ_SIZE - retryIds.length).map((entry) => entry.id);
+  const chosen = new Set([...retryIds, ...newWordIds]);
+  const scheduled = leastCorrectFirst(eligible.filter((entry) => !chosen.has(entry.id)
+    && focusWordStatus(state.words[entry.id]).successes === 1
+    && state.words[entry.id].lastCorrect !== false))
+    .slice(0, FOCUS_QUIZ_SIZE - chosen.size);
+  const firstCorrectIds = scheduled.filter((entry) => focusWordStatus(state.words[entry.id]).firstCorrect)
+    .map((entry) => entry.id);
+  const recoveredIds = scheduled.filter((entry) => !focusWordStatus(state.words[entry.id]).firstCorrect)
+    .map((entry) => entry.id);
+  scheduled.forEach((entry) => chosen.add(entry.id));
+  const fillIds = leastCorrectFirst(eligible.filter((entry) => !chosen.has(entry.id)
+    && focusWordStatus(state.words[entry.id]).successes > 0
+    && state.words[entry.id].lastCorrect !== false))
+    .slice(0, FOCUS_QUIZ_SIZE - chosen.size).map((entry) => entry.id);
+  const questionIds = [...retryIds, ...newWordIds, ...firstCorrectIds, ...recoveredIds, ...fillIds];
   return {
     id: `${FOCUS_COURSE_ID}:lesson-${state.lessons.length + 1}`,
     number: state.lessons.length + 1,
     introductionNumber: introducing ? state.introductionLessons + 1 : null,
-    date, status: "in-progress", stage: newWordIds.length ? "new-words" : "quiz",
-    newWordIds, firstCorrectIds, recoveredIds, retryIds, questionIds,
+    date, status: "in-progress", stage: "quiz",
+    newWordIds, firstCorrectIds, recoveredIds, retryIds, fillIds, questionIds,
     presentationIndex: 0, definitions: null, attempts: [], firstAnswers: {},
   };
 }
@@ -143,7 +158,7 @@ export function createFocusStorage(storage) {
     const state = JSON.parse(raw);
     if (state.courseId !== FOCUS_COURSE_ID || !state.words || !Array.isArray(state.lessons)
         || !Number.isInteger(state.introductionLessons)
-        || state.introductionLessons < 0 || state.introductionLessons > INTRO_LESSONS) {
+        || state.introductionLessons < 0) {
       throw new Error("The saved course data could not be read. Your data has not been reset.");
     }
     return state;

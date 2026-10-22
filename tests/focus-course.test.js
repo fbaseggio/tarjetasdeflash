@@ -22,8 +22,8 @@ function memory() {
 function attempt(state, lesson, id, correct, phase = "main", date = lesson.date) {
   recordFocusAttempt(state, lesson, { vocabularyId: id, correct, phase, date });
 }
-function complete(state, date, wrong = []) {
-  const lesson = planFocusLesson(entries, state, date);
+function complete(state, date, wrong = [], random = Math.random) {
+  const lesson = planFocusLesson(entries, state, date, random);
   state.lessons.push(lesson);
   for (const id of lesson.questionIds) {
     attempt(state, lesson, id, !wrong.includes(id));
@@ -33,23 +33,27 @@ function complete(state, date, wrong = []) {
   return lesson;
 }
 
-// Seven same-day lessons teach every entry exactly once in source order.
+// Seven clean same-day quizzes test every entry once, with no teaching stage.
 const perfect = emptyCourse();
 for (let n = 0; n < 7; n += 1) {
   const lesson = complete(perfect, "2026-10-19");
   assert.deepEqual(lesson.newWordIds, entries.slice(n * 11, n * 11 + 11).map((e) => e.id));
   assert.equal(lesson.retryIds.length, 0);
+  assert.equal(lesson.stage, "quiz");
   finishFocusLesson(perfect, lesson, "ignored"); // completion is idempotent
   assert.equal(perfect.introductionLessons, n + 1);
 }
-assert.equal(courseProgress(perfect, entries).retired, 0);
-for (let n = 0; n < 11; n += 1) {
+assert.equal(courseProgress(perfect, entries).mastered, 0);
+for (let n = 0; n < 7; n += 1) {
   const lesson = complete(perfect, "2026-10-19");
-  assert.equal(lesson.questionIds.length, 7);
+  assert.equal(lesson.questionIds.length, 11);
   assert.equal(lesson.newWordIds.length, 0);
 }
-assert.equal(courseProgress(perfect, entries).retired, 77);
-assert.equal(planFocusLesson(entries, perfect, "2026-10-20").questionIds.length, 0);
+assert.equal(courseProgress(perfect, entries).mastered, 77);
+assert.equal(planFocusLesson(entries, perfect, "2026-10-20").fillIds.length, 11);
+// Practice continues indefinitely: all 77 advance evenly, never re-teaching them.
+for (let n = 0; n < 14; n += 1) complete(perfect, "2026-10-20");
+assert.ok(Object.values(perfect.words).every((word) => word.successes === 4));
 
 // Reprises never turn a miss into a mastery success; only three carry forward.
 const missed = emptyCourse();
@@ -59,37 +63,64 @@ assert.equal(missed.words[missedIds[0]].successes, 0);
 assert.equal(missed.words[missedIds[0]].encounters, 1);
 assert.equal(missed.words[missedIds[0]].eligibleDate, "2026-10-20");
 assert.equal(planFocusLesson(entries, missed, "2026-10-19").retryIds.length, 0);
-assert.deepEqual(planFocusLesson(entries, missed, "2026-10-20").retryIds, missedIds.slice(0, 3));
-complete(missed, "2026-10-20", [missedIds[0]]);
-assert.deepEqual(planFocusLesson(entries, missed, "2026-10-20").retryIds, missedIds.slice(3));
-assert.equal(missed.words[missedIds[1]].successes, 1);
-assert.equal(missed.words[missedIds[1]].firstCorrect, false);
-assert.equal(missed.words[missedIds[0]].eligibleDate, "2026-10-21");
+const tomorrow = planFocusLesson(entries, missed, "2026-10-20", () => 0.5);
+assert.equal(tomorrow.retryIds.length, 3);
+assert.ok(tomorrow.retryIds.every((id) => missedIds.includes(id)));
+assert.equal(tomorrow.newWordIds.length, 8);
+assert.equal(tomorrow.questionIds.length, 11);
+const missedAgain = tomorrow.retryIds[0];
+const recovered = tomorrow.retryIds[1];
+complete(missed, "2026-10-20", [missedAgain], () => 0.5);
+assert.deepEqual(new Set(planFocusLesson(entries, missed, "2026-10-20").retryIds),
+  new Set(missedIds.filter((id) => !tomorrow.retryIds.includes(id))));
+assert.equal(missed.words[recovered].successes, 1);
+assert.equal(missed.words[recovered].firstCorrect, false);
+assert.equal(missed.words[missedAgain].eligibleDate, "2026-10-21");
+// Reduced new-word slots must not skip any words or duplicate an introduction.
+let guard = 0;
+while (courseProgress(missed, entries).tested < 77) {
+  const lesson = complete(missed, "2026-10-21");
+  assert.equal(lesson.questionIds.length, 11);
+  assert.ok(++guard < 15);
+}
+assert.equal(new Set(missed.lessons.flatMap((lesson) => lesson.newWordIds)).size, 77);
+assert.equal(missed.lessons.flatMap((lesson) => lesson.newWordIds).length, 77);
 
-// Review buckets are separate and capped at 7 / 4 / 3; no arbitrary filling.
+// Missed words get up to three slots, then other scheduled reviews, capped at 11.
 const buckets = emptyCourse();
 buckets.introductionLessons = 7;
 entries.forEach((entry, i) => {
-  if (i >= 30) return;
   buckets.words[entry.id] = {
-    encounters: 1, successes: i < 20 ? 1 : 0, firstCorrect: i < 10,
-    everMissed: i >= 10, eligibleDate: "2026-10-19", lastDate: "2026-10-18", lastLesson: i,
+    encounters: 4, successes: i < 20 ? 1 : i < 30 ? 0 : 4, firstCorrect: i < 10,
+    lastCorrect: i < 20 || i >= 30, everMissed: i >= 10,
+    eligibleDate: "2026-10-19", lastDate: "2026-10-18", lastLesson: i,
   };
 });
 let plan = planFocusLesson(entries, buckets, "2026-10-19");
-assert.equal(plan.firstCorrectIds.length, 7);
-assert.equal(plan.recoveredIds.length, 4);
+assert.equal(plan.firstCorrectIds.length + plan.recoveredIds.length, 8);
 assert.equal(plan.retryIds.length, 3);
-assert.equal(new Set(plan.questionIds).size, 14);
-complete(buckets, "2026-10-19");
-assert.equal(courseProgress(buckets, entries).retired, 11);
-for (const id of plan.firstCorrectIds.concat(plan.recoveredIds)) {
-  assert.ok(!planFocusLesson(entries, buckets, "2026-10-20").questionIds.includes(id));
-}
-const tiny = emptyCourse();
-tiny.introductionLessons = 7;
-tiny.words[entries[0].id] = { ...buckets.words[entries[20].id], successes: 0 };
+assert.equal(new Set(plan.questionIds).size, 11);
+assert.equal(plan.fillIds.length, 0);
+const tiny = structuredClone(perfect);
+entries.forEach((entry) => { tiny.words[entry.id].manualPriority = "known"; });
+delete tiny.words[entries[0].id].manualPriority;
 assert.equal(planFocusLesson(entries, tiny, "2026-10-20").questionIds.length, 1);
+
+// Fillers use real first-answer counts: all eligible 3s before any 4s, random ties.
+const ranked = structuredClone(perfect);
+entries.slice(0, 6).forEach((entry) => { ranked.words[entry.id].successes = 3; });
+const fillPlan = planFocusLesson(entries, ranked, "2026-10-22", () => 0.25);
+assert.deepEqual(new Set(fillPlan.fillIds.slice(0, 6)), new Set(entries.slice(0, 6).map((entry) => entry.id)));
+assert.equal(fillPlan.fillIds.length, 11);
+assert.notDeepEqual(fillPlan.fillIds, planFocusLesson(entries, ranked, "2026-10-22", () => 0.75).fillIds);
+assert.deepEqual(fillPlan.fillIds, planFocusLesson(entries, ranked, "2026-10-22", () => 0.25).fillIds);
+// High-success words that are missed later still enter the next-day missed queue.
+const formerlyStrong = entries[40].id;
+ranked.words[formerlyStrong].lastCorrect = false;
+ranked.words[formerlyStrong].eligibleDate = "2026-10-23";
+assert.equal(courseProgress(ranked, entries).needsReview, 1);
+assert.ok(!planFocusLesson(entries, ranked, "2026-10-22").questionIds.includes(formerlyStrong));
+assert.ok(planFocusLesson(entries, ranked, "2026-10-23").retryIds.includes(formerlyStrong));
 
 // Manual preferences preserve real answers and activity; known retires even a miss.
 const manual = emptyCourse();
@@ -117,18 +148,18 @@ assert.ok(!planFocusLesson(entries, manual, "2026-10-20").retryIds.includes(manu
 // Previously completed words can be reopened; they move through the 3 then 4 buckets.
 const reopened = structuredClone(perfect);
 setFocusWordPriority(reopened, manualId, "review", "2026-10-19");
-assert.equal(courseProgress(reopened, entries).retired, 76);
-assert.equal(planFocusLesson(entries, reopened, "2026-10-19").questionIds.length, 0);
+assert.equal(courseProgress(reopened, entries).mastered, 76);
+assert.ok(!planFocusLesson(entries, reopened, "2026-10-19").questionIds.includes(manualId));
 assert.deepEqual(planFocusLesson(entries, reopened, "2026-10-20").retryIds, [manualId]);
 complete(reopened, "2026-10-20", [manualId]);
 assert.equal(focusWordStatus(reopened.words[manualId]).successes, 0);
-assert.equal(planFocusLesson(entries, reopened, "2026-10-20").questionIds.length, 0);
+assert.ok(!planFocusLesson(entries, reopened, "2026-10-20").questionIds.includes(manualId));
 complete(reopened, "2026-10-21");
 assert.equal(focusWordStatus(reopened.words[manualId]).successes, 1);
 assert.deepEqual(planFocusLesson(entries, reopened, "2026-10-21").recoveredIds, [manualId]);
 complete(reopened, "2026-10-21");
-assert.equal(courseProgress(reopened, entries).retired, 77);
-assert.equal(planFocusLesson(entries, reopened, "2026-10-22").questionIds.length, 0);
+assert.equal(courseProgress(reopened, entries).mastered, 77);
+assert.equal(planFocusLesson(entries, reopened, "2026-10-22").questionIds.length, 11);
 assert.throws(() => setFocusWordPriority(reopened, manualId, "invalid", "2026-10-22"), /Unknown/);
 assert.throws(() => setFocusWordPriority(emptyCourse(), manualId, "known", "2026-10-22"), /tested/);
 
@@ -207,8 +238,8 @@ const click = (text) => {
 };
 ui.activate(profile, course);
 click("Begin lesson");
-for (let i = 0; i < 10; i += 1) click("Next word");
-click("Begin questions");
+assert.equal(ui.getExport(profile.id).lessons[0].stage, "quiz");
+assert.ok(!panel.textContent.includes("Meet this word"));
 let submissions = 0;
 let firstMiss = null;
 while (ui.getExport(profile.id).lessons.at(-1).status !== "complete") {
@@ -254,10 +285,8 @@ assert.equal(ui.getExport(profile.id).words[reviewedId].manualPriority, undefine
 assert.equal(JSON.stringify(ui.getExport(profile.id).lessons[0]), scoredLesson);
 ui.activate(profile, course);
 assert.equal(uiActivity.getSummary(profile.id).totalQuizzes, 1);
-click("Begin lesson");
 delay = 1500;
-for (let i = 0; i < 10; i += 1) click("Next word");
-click("Begin questions");
+click("Begin lesson");
 assert.equal(panel.querySelectorAll("button").length, 0);
 assert.ok(pending);
 ui.deactivate();
@@ -280,4 +309,26 @@ panel.querySelectorAll("button")[0].click();
 console.error = previousError;
 assert.ok(panel.textContent.includes("updated in another tab"));
 assert.deepEqual(otherTab.read(profile.id), changed);
+// An older saved teaching stage jumps directly into its quiz without losing its IDs.
+ui.deactivate();
+const legacy = emptyCourse();
+const legacyLesson = planFocusLesson(entries, legacy, "2026-10-19");
+legacyLesson.stage = "new-words";
+legacyLesson.presentationIndex = 5;
+legacy.lessons.push(legacyLesson);
+otherTab.save("legacy", legacy);
+ui.activate({ id: "legacy" }, course);
+click("Resume lesson");
+assert.equal(ui.getExport("legacy").lessons[0].stage, "quiz");
+assert.deepEqual(ui.getExport("legacy").lessons[0].questionIds, legacyLesson.questionIds);
+assert.ok(!panel.textContent.includes("Meet this word"));
+flush();
+assert.equal(panel.querySelectorAll("button").length, 4);
+ui.deactivate();
+// A fully mastered profile still gets a Begin button, not a terminal course screen.
+otherTab.save("perfect", perfect);
+ui.activate({ id: "perfect" }, course);
+click("Begin lesson");
+assert.equal(ui.getExport("perfect").lessons.at(-1).questionIds.length, 11);
+assert.equal(ui.getExport("perfect").lessons.at(-1).fillIds.length, 11);
 console.log("Focused course policy, vocabulary, persistence, activity and UI tests passed.");

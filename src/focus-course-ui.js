@@ -1,10 +1,10 @@
-import { buildQuizFromAnswers } from "./questions.js?v=0.25.1";
-import { createQuizSession } from "./quiz-session.js?v=0.25.1";
-import { localDateKey } from "./learning-storage.js?v=0.25.1";
+import { buildQuizFromAnswers } from "./questions.js?v=0.25.2";
+import { createQuizSession } from "./quiz-session.js?v=0.25.2";
+import { localDateKey } from "./learning-storage.js?v=0.25.2";
 import {
   createFocusStorage, courseProgress, planFocusLesson, recordFocusAttempt, finishFocusLesson,
   focusWordStatus, setFocusWordPriority,
-} from "./focus-course.js?v=0.25.1";
+} from "./focus-course.js?v=0.25.2";
 
 export function createFocusCourseController({ panel, storage, answerDelay, recordActivity }) {
   const persistence = createFocusStorage(storage);
@@ -75,27 +75,24 @@ export function createFocusCourseController({ panel, storage, answerDelay, recor
 
   function progressText() {
     const progress = courseProgress(state, course.entries);
-    return `${progress.tested} / ${progress.total} words tested · ${progress.retired} complete${progress.known ? ` (${progress.known} marked “I know this”)` : ""}`;
+    return `${progress.tested} / ${progress.total} words tested · ${progress.mastered} with two or more review successes${progress.known ? ` · ${progress.known} marked “I know this”` : ""}`;
   }
 
   function showHome() {
     const unfinished = currentLesson()?.status === "in-progress" ? currentLesson() : null;
     const plan = unfinished ?? planFocusLesson(course.entries, state, today());
-    const progress = courseProgress(state, course.entries);
-    const complete = progress.retired === course.entries.length;
-    screen(complete ? "All 77 words completed!" : unfinished ? "Continue your lesson." : "Your next lesson.");
+    screen(unfinished ? "Continue your quiz." : "Your next quiz.");
     panel.append(element("p", progressText(), "results-intro"));
-    if (complete) {
-      panel.append(element("p", "Every word has two successful encounters or is marked “I know this”."));
-    } else if (plan.questionIds.length === 0) {
-      panel.append(element("p", "You’re caught up for now. Missed words will be available on the next calendar day."));
+    if (plan.questionIds.length === 0) {
+      panel.append(element("p", "No eligible words right now. Missed words return on the next calendar day; words marked “I know this” stay excluded."));
       panel.append(button("Check for available reviews", showHome));
     } else {
-      const description = plan.introductionNumber
-        ? `Lesson ${plan.introductionNumber} of 7: ${plan.newWordIds.length} new words, plus ${plan.retryIds.length} earlier missed words.`
-        : `Review: ${plan.firstCorrectIds.length} initially correct, ${plan.recoveredIds.length} correct on a later encounter, and ${plan.retryIds.length} still to get right.`;
+      const description = `${plan.questionIds.length} words: ${plan.newWordIds.length} not yet tested, ${plan.retryIds.length} missed-word reviews, ${plan.firstCorrectIds.length + plan.recoveredIds.length} scheduled reviews, and ${plan.fillIds?.length ?? 0} extra practice words.`;
       panel.append(element("p", description, "onboarding-copy"),
-        element("p", "Only the first answer on each encounter counts. Two successes retire a word; immediate retries are practice.", "onboarding-note"));
+        element("p", "Straight to the quiz—no teaching cards. Extra practice favors words with fewer correct first answers, with random choices among ties. Immediate retries don’t add to that count.", "onboarding-note"));
+      if (plan.questionIds.length < 11) {
+        panel.append(element("p", "This set is shorter because the other words are marked known or waiting until tomorrow.", "onboarding-note"));
+      }
       panel.append(button(unfinished ? "Resume lesson" : "Begin lesson", startLesson));
     }
     if (currentLesson()?.status === "complete") {
@@ -113,29 +110,11 @@ export function createFocusCourseController({ panel, storage, answerDelay, recor
   }
 
   function resumeLesson() {
-    if (currentLesson().stage === "new-words") showPresentation();
-    else showQuestion();
-  }
-
-  function showPresentation() {
-    const lesson = currentLesson();
-    const id = lesson.newWordIds[lesson.presentationIndex];
-    if (!id) {
+    // Preserve saved lessons and answers, but bypass an old teaching-card stage.
+    if (currentLesson().stage === "new-words") {
       update((draft) => { draft.lessons.at(-1).stage = "quiz"; });
-      showQuestion();
-      return;
     }
-    const entry = course.entries.find((entry) => entry.id === id);
-    screen("Meet this word.", `Lesson ${lesson.introductionNumber} of 7 · New word ${lesson.presentationIndex + 1} of 11`);
-    const card = element("div", "", "presentation-card");
-    const spanish = element("strong", entry.spanish);
-    spanish.lang = "es";
-    card.append(spanish, element("p", entry.english));
-    panel.append(card, element("p", entry.category, "onboarding-note"),
-      button(lesson.presentationIndex + 1 === lesson.newWordIds.length ? "Begin questions" : "Next word", () => {
-        update((draft) => { draft.lessons.at(-1).presentationIndex += 1; });
-        showPresentation();
-      }));
+    showQuestion();
   }
 
   function restoredQuiz() {
@@ -255,13 +234,13 @@ export function createFocusCourseController({ panel, storage, answerDelay, recor
     screen("¡Buen trabajo!", `Lesson ${lesson.number} complete`);
     panel.append(element("p", `${firstRight} / ${firstAnswers.length} correct on first answers · ${lesson.wrongCount} wrong submissions`, "results-intro"),
       element("p", progressText()),
-      element("p", `${state.introductionLessons} / 7 introduction lessons complete. ${progress.firstCorrect} initially correct, ${progress.recovered} correct later, ${progress.neverCorrect} needing review.`, "onboarding-note"));
+      element("p", `${progress.needsReview} needing review. Keep practicing as often as you like.`, "onboarding-note"));
     const next = planFocusLesson(course.entries, state, today());
     panel.append(button(next.questionIds.length ? "Next lesson" : "See course progress", showHome));
     const details = element("details");
     details.open = reviewOpen;
     details.append(element("summary", "Review results"));
-    details.append(element("p", "These choices only affect your future reviews, not your score. “Review this” starts a fresh two-success review cycle, available from tomorrow.", "onboarding-note"));
+    details.append(element("p", "These choices only affect your future reviews, not your score. “Review this” starts a fresh priority review cycle, available from tomorrow. Ordinary words remain available for extra practice even after two successes.", "onboarding-note"));
     const list = element("ul", "", "review-items");
     let focusTarget = null;
     firstAnswers.forEach((attempt) => {
@@ -270,7 +249,7 @@ export function createFocusCourseController({ panel, storage, answerDelay, recor
       const status = focusWordStatus(word);
       const line = element("li", "", "focus-review-item");
       line.append(element("strong", `${entry.spanish} — ${entry.english}`),
-        element("span", `${attempt.correct ? "First answer correct" : "First answer missed"} · ${status.known ? "Marked as known — no more questions" : `${Math.min(2, status.successes)}/2 ${word.reviewStartSuccesses !== undefined ? "review " : ""}successes${status.retired ? " · Complete" : ""}`}`, "review-answer"));
+        element("span", `${attempt.correct ? "First answer correct" : "First answer missed"} · ${word.successes} correct first answers${word.reviewStartSuccesses !== undefined ? ` · ${status.successes} in this review cycle` : ""}${status.known ? " · Marked as known — no more questions" : ""}`, "review-answer"));
       if (word.manualPriority === "review") {
         line.append(element("span", `Review requested · available from ${status.eligibleDate}`, "review-answer"));
       }

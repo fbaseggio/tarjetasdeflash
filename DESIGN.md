@@ -8,7 +8,7 @@ The application should make short practice sessions pleasant, preserve multi-day
 
 ## Implementation status — July 2026
 
-**October 19 local update:** version 0.25.0 adds the temporary section-1 course
+**October 22 local update:** version 0.25.2 updates the temporary section-1 course
 described near the end of this document. It is now the default local entry flow;
 the deployed features below describe the preserved regular curriculum.
 
@@ -786,7 +786,7 @@ Shared-persistence acceptance criteria are added in Phase 2: activity recorded o
 - Calibration of level-estimation promotion, demotion, and confidence thresholds after early testing.
 - Whether repeated full sessions should use the same adaptive new-word policy or a lighter same-day practice mix.
 
-## Temporary section 1 course (0.25.0)
+## Temporary section 1 course (current: 0.25.2)
 
 This is now the default entry flow for **all profiles**, temporarily replacing
 placement and the usual three-step session. The ordinary 1,536-word vocabulary,
@@ -795,16 +795,25 @@ placement, and word histories remain stored unchanged.
 - Vocabulary: the 77 section-1 entries from `gideon spanish2 chapter 1 - Sheet1.csv`,
   stored separately in `assets/focus-spanish2-chapter1.json`. Preserve source order
   and full teaching translations; use compact, disambiguated quiz forms.
-- Seven introduction lessons, each teaching 11 new entries before a mixed-direction
-  quiz. Add up to three previously missed words eligible on a later calendar day.
-  Multiple lessons per actual day are allowed; the clock never advances artificially.
-- After lesson seven, each review lesson selects up to seven words initially
-  answered correctly, up to four first missed but later answered correctly, and up
-  to three never answered correctly. Empty buckets make shorter lessons, with no
-  cross-bucket backfill. Oldest encounters are selected first within each bucket.
+- Each new lesson is an **11-word mixed-direction quiz**, with no teaching-card
+  stage. Multiple quizzes per actual day are allowed. Saved lessons retain their
+  questions/answers; any old teaching stage is skipped when resuming.
+- Fill slots in this order: up to three eligible missed/requested-review words;
+  still-untested words in source order; remaining scheduled reviews; and previously
+  correct words for extra practice. All groups share the 11-word limit, replacing
+  the old 7/4/3 review quotas. New-word batches may therefore be smaller than 11;
+  select untested IDs, not fixed lesson-number slices, so no words are skipped.
+- Within review groups and the extra-practice pool, use the fewest cumulative
+  **first-answer successes**, randomly breaking ties. Thus all eligible three-success
+  fillers precede four-success fillers. Immediate reprises never inflate that count.
+  Manual review-cycle resets do not rewrite the cumulative selection count.
+- Two successes no longer retire ordinary words: quizzes remain available after all
+  77 have reached that milestone. Explicit “I know this” exclusions and next-day
+  waits for misses still apply, even to fillers. If those constraints leave fewer
+  than 11 eligible words, show the shorter count and explain why; never duplicate
+  a question within a quiz or silently override an exclusion.
 - Only each word's first answer in a separate lesson counts toward mastery. Existing
   immediate reprises and eliminated choices remain practice, not mastery evidence.
-  Two cumulative first-answer successes retire a word as a question for this course.
   A miss cannot be selected in a new lesson until the next calendar day. A clean
   answer can be tested again in a separate lesson on the same day.
 - Save introductions, question definitions, every attempt, and completion per profile
@@ -812,16 +821,17 @@ placement, and word histories remain stored unchanged.
   changing profiles cancels pending timers. A stale tab must reload before writing.
   Course progress is included in diagnostic exports. Completed lessons receive
   idempotent activity/streak credit, but do not modify legacy word mastery.
-- Results show first-answer accuracy, wrong submissions, and progress toward two
-  successes, with a compact expandable word-by-word review. The mixed/topic selector
+- Results show first-answer accuracy, wrong submissions, and uncapped cumulative
+  success counts, with a compact expandable word-by-word review. The mixed/topic selector
   is hidden during this course; the answer-delay preference still applies.
 - In 0.25.1 each review row offers **I know this** (retire from future questions)
   and **Review this** (join the missed-word bucket from the next calendar day,
-  starting a fresh two-success review cycle). **Use quiz results** clears the
+  starting a fresh two-success priority review cycle). **Use quiz results** clears the
   manual preference/cycle and restores scheduling from actual recorded evidence.
   Preferences are local to the current profile. No answers, accuracy, or activity
   totals are rewritten; the scheduling baseline and preference-change log are
-  included in diagnostic exports. Previously retired words can be reopened.
+  included in diagnostic exports. After the priority cycle, words remain available
+  for extra practice unless explicitly marked known.
 - No automatic end date or history reset; restoring the regular curriculum is a
   later decision. Retired words may still appear as distractors.
 
